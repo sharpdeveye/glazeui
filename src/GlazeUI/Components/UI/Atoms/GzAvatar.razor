@@ -1,0 +1,98 @@
+@using GlazeUI.Models
+@using GlazeUI.Utilities
+
+@if (!string.IsNullOrWhiteSpace(Src) && !_imageError)
+{
+    <img @attributes="FilteredAttributes"
+         src="@Src"
+         alt="@Alt"
+         class="@ComputedClass"
+         @onerror="HandleImageError" />
+}
+else
+{
+    <div @attributes="FilteredAttributes"
+         class="@FallbackClass"
+         role="img"
+         aria-label="@Alt">
+        @if (!string.IsNullOrWhiteSpace(Initials))
+        {
+            @Initials
+        }
+        else
+        {
+            @* Default user icon *@
+            <svg class="@IconSizeClass" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+        }
+    </div>
+}
+
+@code {
+    /// <summary>Image source URL.</summary>
+    [Parameter] public string? Src { get; set; }
+
+    /// <summary>Alt text for the image.</summary>
+    [Parameter] public string? Alt { get; set; }
+
+    /// <summary>Fallback initials shown when image fails or is not provided (e.g., "JD").</summary>
+    [Parameter] public string? Initials { get; set; }
+
+    /// <summary>Avatar size.</summary>
+    [Parameter] public AvatarSize Size { get; set; } = AvatarSize.Medium;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _imageError;
+
+    private string ComputedClass => CssBuilder.Create("shrink-0 rounded-full object-cover")
+        .AddFromEnum(Size, GetSizeClasses)
+        .Add(UserClass)
+        .Build();
+
+    private string FallbackClass => CssBuilder.Create(
+            "shrink-0 inline-flex items-center justify-center rounded-full " +
+            "bg-muted text-muted-foreground font-medium")
+        .AddFromEnum(Size, GetSizeClasses)
+        .AddFromEnum(Size, GetTextSizeClasses)
+        .Add(UserClass)
+        .Build();
+
+    private string IconSizeClass => Size switch
+    {
+        AvatarSize.Small  => "h-4 w-4",
+        AvatarSize.Medium => "h-5 w-5",
+        AvatarSize.Large  => "h-6 w-6",
+        _                 => "h-5 w-5"
+    };
+
+    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
+        ? cls?.ToString()
+        : null;
+
+    private Dictionary<string, object>? FilteredAttributes =>
+        AdditionalAttributes?.Where(kv => kv.Key != "class")
+            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
+            ? filtered
+            : null;
+
+    private static string GetSizeClasses(AvatarSize size) => size switch
+    {
+        AvatarSize.Small  => "h-8 w-8",
+        AvatarSize.Medium => "h-10 w-10",
+        AvatarSize.Large  => "h-14 w-14",
+        _                 => "h-10 w-10"
+    };
+
+    private static string GetTextSizeClasses(AvatarSize size) => size switch
+    {
+        AvatarSize.Small  => "text-xs",
+        AvatarSize.Medium => "text-sm",
+        AvatarSize.Large  => "text-lg",
+        _                 => "text-sm"
+    };
+
+    private void HandleImageError() => _imageError = true;
+}

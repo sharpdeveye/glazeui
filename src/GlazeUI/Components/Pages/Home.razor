@@ -348,6 +348,64 @@
                     <GzSwitch Checked="false" Disabled="true">Always off (disabled)</GzSwitch>
                 </div>
             </div>
+            @* --- Avatar --- *@
+            <div class="rounded-xl border border-border bg-card p-8">
+                <h3 class="text-lg font-semibold text-foreground">Avatar</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Circular avatar with image, fallback initials, and default icon. Handles broken images gracefully.</p>
+
+                <GzSeparator class="my-6" />
+
+                <div class="space-y-6">
+                    <div class="space-y-3">
+                        <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">With image</p>
+                        <div class="flex items-center gap-4">
+                            <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=JD" Alt="John Doe" Size="AvatarSize.Small" />
+                            <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=AS" Alt="Alice Smith" Size="AvatarSize.Medium" />
+                            <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=BW" Alt="Bob Wilson" Size="AvatarSize.Large" />
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">Initials fallback</p>
+                        <div class="flex items-center gap-4">
+                            <GzAvatar Initials="JD" Alt="John Doe" Size="AvatarSize.Small" />
+                            <GzAvatar Initials="AS" Alt="Alice Smith" Size="AvatarSize.Medium" />
+                            <GzAvatar Initials="BW" Alt="Bob Wilson" Size="AvatarSize.Large" />
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">Default icon</p>
+                        <div class="flex items-center gap-4">
+                            <GzAvatar Alt="User" Size="AvatarSize.Small" />
+                            <GzAvatar Alt="User" Size="AvatarSize.Medium" />
+                            <GzAvatar Alt="User" Size="AvatarSize.Large" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* --- Typography --- *@
+            <div class="rounded-xl border border-border bg-card p-8">
+                <h3 class="text-lg font-semibold text-foreground">Typography</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Semantic heading levels, paragraph variants, and inline code styling.</p>
+
+                <GzSeparator class="my-6" />
+
+                <div class="space-y-4">
+                    <GzTypography As="TypographyElement.H1">Heading 1</GzTypography>
+                    <GzTypography As="TypographyElement.H2">Heading 2</GzTypography>
+                    <GzTypography As="TypographyElement.H3">Heading 3</GzTypography>
+                    <GzTypography As="TypographyElement.H4">Heading 4</GzTypography>
+
+                    <GzSeparator class="my-4" />
+
+                    <GzTypography As="TypographyElement.P">This is a standard paragraph with default leading and foreground color. It's designed for body text and long-form content.</GzTypography>
+                    <GzTypography As="TypographyElement.Lead">This is a lead paragraph — larger, muted text for introductions.</GzTypography>
+                    <GzTypography As="TypographyElement.Large">Large text for emphasis</GzTypography>
+                    <GzTypography As="TypographyElement.Small">Small text for captions</GzTypography>
+                    <GzTypography As="TypographyElement.Muted">Muted text for secondary information</GzTypography>
+                    <GzTypography As="TypographyElement.P">Use <GzTypography As="TypographyElement.InlineCode">GzTypography</GzTypography> for consistent text styling.</GzTypography>
+                </div>
+            </div>
         </div>
     </div>
 </section>

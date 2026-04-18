@@ -1,0 +1,76 @@
+@using GlazeUI.Models
+@using GlazeUI.Utilities
+
+@switch (As)
+{
+    case TypographyElement.H1:
+        <h1 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h1>
+        break;
+    case TypographyElement.H2:
+        <h2 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h2>
+        break;
+    case TypographyElement.H3:
+        <h3 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h3>
+        break;
+    case TypographyElement.H4:
+        <h4 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h4>
+        break;
+    case TypographyElement.P:
+        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        break;
+    case TypographyElement.Lead:
+        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        break;
+    case TypographyElement.Large:
+        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        break;
+    case TypographyElement.Small:
+        <small @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</small>
+        break;
+    case TypographyElement.Muted:
+        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        break;
+    case TypographyElement.InlineCode:
+        <code @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</code>
+        break;
+}
+
+@code {
+    /// <summary>Text content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>The typographic element to render.</summary>
+    [Parameter] public TypographyElement As { get; set; } = TypographyElement.P;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => CssBuilder.Create(GetElementClasses(As))
+        .Add(UserClass)
+        .Build();
+
+    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
+        ? cls?.ToString()
+        : null;
+
+    private Dictionary<string, object>? FilteredAttributes =>
+        AdditionalAttributes?.Where(kv => kv.Key != "class")
+            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
+            ? filtered
+            : null;
+
+    private static string GetElementClasses(TypographyElement el) => el switch
+    {
+        TypographyElement.H1         => "scroll-m-20 text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl",
+        TypographyElement.H2         => "scroll-m-20 text-3xl font-semibold tracking-tight text-foreground",
+        TypographyElement.H3         => "scroll-m-20 text-2xl font-semibold tracking-tight text-foreground",
+        TypographyElement.H4         => "scroll-m-20 text-xl font-semibold tracking-tight text-foreground",
+        TypographyElement.P          => "leading-7 text-foreground",
+        TypographyElement.Lead       => "text-xl text-muted-foreground",
+        TypographyElement.Large      => "text-lg font-semibold text-foreground",
+        TypographyElement.Small      => "text-sm font-medium leading-none text-foreground",
+        TypographyElement.Muted      => "text-sm text-muted-foreground",
+        TypographyElement.InlineCode => "relative rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground",
+        _                            => ""
+    };
+}

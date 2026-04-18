@@ -41,3 +41,30 @@ public enum SeparatorOrientation
     Horizontal,
     Vertical
 }
+
+// ─── Avatar ─────────────────────────────────────────────
+
+/// <summary>Size preset for GzAvatar.</summary>
+public enum AvatarSize
+{
+    Small,
+    Medium,
+    Large
+}
+
+// ─── Typography ─────────────────────────────────────────
+
+/// <summary>Typographic element for GzTypography.</summary>
+public enum TypographyElement
+{
+    H1,
+    H2,
+    H3,
+    H4,
+    P,
+    Lead,
+    Large,
+    Small,
+    Muted,
+    InlineCode
+}
