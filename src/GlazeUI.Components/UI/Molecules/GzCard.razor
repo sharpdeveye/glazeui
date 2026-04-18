@@ -1,0 +1,68 @@
+@* GzCard — Container with optional header, footer, and content slots *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass">
+    @if (Header is not null)
+    {
+        <div class="@HeaderClass">
+            @Header
+        </div>
+    }
+    <div class="@ContentClass">
+        @ChildContent
+    </div>
+    @if (Footer is not null)
+    {
+        <div class="@FooterClass">
+            @Footer
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Main body content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Optional header slot — rendered above content with a bottom border.</summary>
+    [Parameter] public RenderFragment? Header { get; set; }
+
+    /// <summary>Optional footer slot — rendered below content with a top border.</summary>
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string BaseClasses =
+        "rounded-xl border border-border/50 bg-card text-card-foreground shadow-xs";
+
+    private const string HeaderBaseClasses =
+        "border-b border-border/50 px-6 py-4";
+
+    private const string ContentBaseClasses =
+        "px-6 py-5";
+
+    private const string FooterBaseClasses =
+        "border-t border-border/50 px-6 py-4";
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetUserClass()
+    );
+
+    private string HeaderClass => Tw.Merge(HeaderBaseClasses);
+    private string ContentClass => Tw.Merge(ContentBaseClasses);
+    private string FooterClass => Tw.Merge(FooterBaseClasses);
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

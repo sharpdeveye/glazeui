@@ -1,0 +1,51 @@
+@* GzBadge — Semantic status badge with 4 variants *@
+
+<span
+    @attributes="GetFilteredAttributes()"
+    class="@ComputedClass">
+    @ChildContent
+</span>
+
+@code {
+    /// <summary>Badge content (text).</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Visual style variant.</summary>
+    [Parameter] public BadgeVariant Variant { get; set; } = BadgeVariant.Default;
+
+    /// <summary>Additional HTML attributes passed through to the span element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string BaseClasses =
+        "inline-flex items-center rounded-md border px-2.5 py-0.5 " +
+        "text-xs font-semibold transition-colors " +
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background";
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetVariantClass(),
+        GetUserClass()
+    );
+
+    private string GetVariantClass() => Variant switch
+    {
+        BadgeVariant.Default     => "border-transparent bg-primary text-primary-foreground shadow-sm inset-shadow-sm inset-shadow-white/20",
+        BadgeVariant.Secondary   => "border-transparent bg-secondary text-secondary-foreground",
+        BadgeVariant.Destructive => "border-transparent bg-destructive text-destructive-foreground shadow-sm inset-shadow-sm inset-shadow-white/20",
+        BadgeVariant.Outline     => "border-border/50 text-foreground",
+        _ => ""
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

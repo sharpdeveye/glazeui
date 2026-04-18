@@ -1,0 +1,48 @@
+@* GzLabel — Crisp form label with required indicator *@
+
+<label
+    @attributes="GetFilteredAttributes()"
+    for="@For"
+    class="@ComputedClass">
+    @ChildContent
+    @if (Required)
+    {
+        <span class="ml-0.5 text-destructive" aria-hidden="true">*</span>
+    }
+</label>
+
+@code {
+    /// <summary>Label content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>The id of the form element this label is associated with.</summary>
+    [Parameter] public string? For { get; set; }
+
+    /// <summary>Whether to show a required indicator (asterisk).</summary>
+    [Parameter] public bool Required { get; set; }
+
+    /// <summary>Additional HTML attributes passed through to the label element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string BaseClasses =
+        "text-sm font-medium leading-none " +
+        "peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

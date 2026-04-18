@@ -1,0 +1,92 @@
+@* GzAlert — Semantic status banner with icon, title, and description *@
+
+<div @attributes="GetFilteredAttributes()"
+     role="alert"
+     class="@ComputedClass">
+    @if (Icon is not null)
+    {
+        <div class="shrink-0">@Icon</div>
+    }
+    else
+    {
+        <div class="shrink-0">@GetDefaultIcon()</div>
+    }
+    <div class="flex-1 space-y-1">
+        @if (!string.IsNullOrWhiteSpace(Title))
+        {
+            <h5 class="text-sm font-semibold leading-none tracking-tight">@Title</h5>
+        }
+        @if (ChildContent is not null)
+        {
+            <div class="text-sm opacity-90">@ChildContent</div>
+        }
+    </div>
+</div>
+
+@code {
+    /// <summary>Description content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Optional custom icon — overrides the default variant icon.</summary>
+    [Parameter] public RenderFragment? Icon { get; set; }
+
+    /// <summary>Alert title — rendered as a bold heading.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Semantic variant controlling color and default icon.</summary>
+    [Parameter] public AlertVariant Variant { get; set; } = AlertVariant.Default;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetVariantClass(),
+        GetUserClass()
+    );
+
+    private const string BaseClasses =
+        "relative flex gap-3 rounded-lg border p-4 text-sm";
+
+    private string GetVariantClass() => Variant switch
+    {
+        AlertVariant.Default     => "border-border/50 bg-card text-foreground",
+        AlertVariant.Info        => "border-info/30 bg-info/5 text-info",
+        AlertVariant.Success     => "border-success/30 bg-success/5 text-success",
+        AlertVariant.Warning     => "border-warning/30 bg-warning/5 text-warning",
+        AlertVariant.Destructive => "border-destructive/30 bg-destructive/5 text-destructive",
+        _ => ""
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
+    private RenderFragment GetDefaultIcon() => Variant switch
+    {
+        AlertVariant.Info => @<svg class="size-4 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>,
+        AlertVariant.Success => @<svg class="size-4 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>,
+        AlertVariant.Warning => @<svg class="size-4 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>,
+        AlertVariant.Destructive => @<svg class="size-4 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+        </svg>,
+        _ => @<svg class="size-4 mt-0.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+    };
+}

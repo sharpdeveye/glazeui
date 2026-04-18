@@ -1,0 +1,100 @@
+@* GzAvatar — Circular avatar with image, initials fallback, and default user icon *@
+
+@if (!string.IsNullOrWhiteSpace(Src) && !_imageError)
+{
+    <img @attributes="GetFilteredAttributes()"
+         src="@Src"
+         alt="@Alt"
+         class="@ComputedClass"
+         @onerror="HandleImageError" />
+}
+else
+{
+    <div @attributes="GetFilteredAttributes()"
+         class="@FallbackClass"
+         role="img"
+         aria-label="@Alt">
+        @if (!string.IsNullOrWhiteSpace(Initials))
+        {
+            @Initials
+        }
+        else
+        {
+            <svg class="@IconSizeClass" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+        }
+    </div>
+}
+
+@code {
+    /// <summary>Image source URL.</summary>
+    [Parameter] public string? Src { get; set; }
+
+    /// <summary>Alt text for the image.</summary>
+    [Parameter] public string? Alt { get; set; }
+
+    /// <summary>Fallback initials shown when image fails or is not provided.</summary>
+    [Parameter] public string? Initials { get; set; }
+
+    /// <summary>Avatar size.</summary>
+    [Parameter] public AvatarSize Size { get; set; } = AvatarSize.Md;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _imageError;
+
+    private string ComputedClass => Tw.Merge(
+        "shrink-0 rounded-full object-cover",
+        GetSizeClass(),
+        GetUserClass()
+    );
+
+    private string FallbackClass => Tw.Merge(
+        "shrink-0 inline-flex items-center justify-center rounded-full",
+        "bg-muted text-muted-foreground font-medium",
+        GetSizeClass(),
+        GetTextSizeClass(),
+        GetUserClass()
+    );
+
+    private string IconSizeClass => Size switch
+    {
+        AvatarSize.Sm => "size-4",
+        AvatarSize.Md => "size-5",
+        AvatarSize.Lg => "size-6",
+        _             => "size-5"
+    };
+
+    private string GetSizeClass() => Size switch
+    {
+        AvatarSize.Sm => "size-8",
+        AvatarSize.Md => "size-10",
+        AvatarSize.Lg => "size-14",
+        _             => "size-10"
+    };
+
+    private string GetTextSizeClass() => Size switch
+    {
+        AvatarSize.Sm => "text-xs",
+        AvatarSize.Md => "text-sm",
+        AvatarSize.Lg => "text-lg",
+        _             => "text-sm"
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
+    private void HandleImageError() => _imageError = true;
+}

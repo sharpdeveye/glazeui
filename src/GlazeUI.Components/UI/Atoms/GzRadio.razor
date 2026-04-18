@@ -1,0 +1,83 @@
+@* GzRadio — Radio button with inner dot, focus ring, and tactile press *@
+
+<label class="@WrapperClass">
+    <div class="relative flex items-center justify-center">
+        <input
+            @attributes="GetFilteredAttributes()"
+            type="radio"
+            name="@Name"
+            value="@Value"
+            checked="@Checked"
+            disabled="@Disabled"
+            class="peer sr-only"
+            @onchange="HandleChange" />
+        <div class="@CircleClass">
+            @if (Checked)
+            {
+                <div class="size-2 rounded-full bg-primary-foreground"></div>
+            }
+        </div>
+    </div>
+    @if (ChildContent is not null)
+    {
+        <span class="@LabelClass">@ChildContent</span>
+    }
+</label>
+
+@code {
+    /// <summary>Label content displayed beside the radio button.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Radio group name — all radios with the same name form a group.</summary>
+    [Parameter] public string? Name { get; set; }
+
+    /// <summary>The value this radio represents in the group.</summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>Whether this radio is selected — supports two-way binding via @bind-Checked.</summary>
+    [Parameter] public bool Checked { get; set; }
+
+    /// <summary>Callback when selection changes — enables @bind-Checked.</summary>
+    [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+
+    /// <summary>Whether the radio is disabled.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Additional HTML attributes passed through to the input element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string WrapperClass => Tw.Merge(
+        "flex items-start gap-3 cursor-pointer group",
+        "active:scale-[0.98] transition-transform duration-200 ease-out",
+        Disabled ? "cursor-not-allowed" : null
+    );
+
+    private string CircleClass => Tw.Merge(
+        "flex size-4 shrink-0 items-center justify-center rounded-full",
+        "border border-border/50 shadow-xs",
+        "transition-all duration-200 ease-out",
+        "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 ring-offset-background",
+        Checked ? "bg-primary border-primary" : "bg-transparent",
+        Disabled ? "opacity-50 cursor-not-allowed" : null
+    );
+
+    private string LabelClass => Tw.Merge(
+        "text-sm leading-none",
+        Disabled ? "text-muted-foreground cursor-not-allowed" : "text-foreground"
+    );
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+
+    private async Task HandleChange(ChangeEventArgs e)
+    {
+        Checked = true;
+        await CheckedChanged.InvokeAsync(Checked);
+    }
+}

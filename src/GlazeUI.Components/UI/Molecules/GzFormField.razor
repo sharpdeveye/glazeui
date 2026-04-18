@@ -1,0 +1,61 @@
+@* GzFormField — Composable label + control + error message wrapper *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass">
+    @if (!string.IsNullOrWhiteSpace(Label))
+    {
+        <GzLabel For="@Id" Required="@Required">@Label</GzLabel>
+    }
+    @ChildContent
+    @if (!string.IsNullOrWhiteSpace(Description) && string.IsNullOrWhiteSpace(Error))
+    {
+        <p class="text-xs text-muted-foreground">@Description</p>
+    }
+    @if (!string.IsNullOrWhiteSpace(Error))
+    {
+        <p class="text-xs text-destructive">@Error</p>
+    }
+</div>
+
+@code {
+    /// <summary>The form control (GzInput, GzTextarea, GzSelect, etc.).</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Label text shown above the control.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>HTML id linking the label to the control's id attribute.</summary>
+    [Parameter] public string? Id { get; set; }
+
+    /// <summary>Help text shown below the control when no error is present.</summary>
+    [Parameter] public string? Description { get; set; }
+
+    /// <summary>Error message — replaces description when set.</summary>
+    [Parameter] public string? Error { get; set; }
+
+    /// <summary>Whether a required indicator (*) appears on the label.</summary>
+    [Parameter] public bool Required { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string BaseClasses = "grid gap-2";
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}
