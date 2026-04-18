@@ -1,0 +1,30 @@
+@using GlazeUI.Models
+@using GlazeUI.Utilities
+
+<div @attributes="AdditionalAttributes"
+     role="separator"
+     aria-orientation="@OrientationValue"
+     class="@ComputedClass">
+</div>
+
+@code {
+    /// <summary>Separator direction.</summary>
+    [Parameter] public SeparatorOrientation Orientation { get; set; } = SeparatorOrientation.Horizontal;
+
+    /// <summary>Additional HTML attributes passed through to the div element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string OrientationValue => Orientation == SeparatorOrientation.Horizontal
+        ? "horizontal"
+        : "vertical";
+
+    private string ComputedClass => CssBuilder.Create("shrink-0 bg-border")
+        .AddWhen("h-px w-full", Orientation == SeparatorOrientation.Horizontal)
+        .AddWhen("h-full w-px", Orientation == SeparatorOrientation.Vertical)
+        .Add(UserClass)
+        .Build();
+
+    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
+        ? cls?.ToString()
+        : null;
+}

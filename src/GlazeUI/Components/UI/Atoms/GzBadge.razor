@@ -1,0 +1,41 @@
+@using GlazeUI.Models
+@using GlazeUI.Utilities
+
+<span @attributes="AdditionalAttributes"
+      class="@ComputedClass">
+    @ChildContent
+</span>
+
+@code {
+    /// <summary>Badge content (text).</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Visual style variant.</summary>
+    [Parameter] public BadgeVariant Variant { get; set; } = BadgeVariant.Default;
+
+    /// <summary>Additional HTML attributes passed through to the span element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string BaseClasses =
+        "inline-flex items-center rounded-md px-2 py-0.5 " +
+        "text-xs font-medium transition-colors " +
+        "focus:outline-2 focus:outline-offset-2 focus:outline-ring";
+
+    private string ComputedClass => CssBuilder.Create(BaseClasses)
+        .AddFromEnum(Variant, GetVariantClasses)
+        .Add(UserClass)
+        .Build();
+
+    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
+        ? cls?.ToString()
+        : null;
+
+    private static string GetVariantClasses(BadgeVariant variant) => variant switch
+    {
+        BadgeVariant.Default     => "bg-primary-500 text-white",
+        BadgeVariant.Secondary   => "bg-muted text-foreground",
+        BadgeVariant.Destructive => "bg-destructive text-destructive-foreground",
+        BadgeVariant.Outline     => "border border-border text-foreground",
+        _                        => ""
+    };
+}
