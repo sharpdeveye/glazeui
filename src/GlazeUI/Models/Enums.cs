@@ -68,3 +68,34 @@ public enum TypographyElement
     Muted,
     InlineCode
 }
+
+// ─── Alert ──────────────────────────────────────────────
+
+/// <summary>Semantic variant for GzAlert.</summary>
+public enum AlertVariant
+{
+    Default,
+    Info,
+    Success,
+    Warning,
+    Destructive
+}
+
+// ─── Progress ───────────────────────────────────────────
+
+/// <summary>Size preset for GzProgress.</summary>
+public enum ProgressSize
+{
+    Sm,
+    Md,
+    Lg
+}
+
+// ─── Skeleton ───────────────────────────────────────────
+
+/// <summary>Shape variant for GzSkeleton.</summary>
+public enum SkeletonVariant
+{
+    Line,
+    Circle
+}

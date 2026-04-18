@@ -1,0 +1,44 @@
+@* GzSkeleton — Animated loading placeholder with line and circle variants *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass"
+     role="status"
+     aria-label="Loading">
+</div>
+
+@code {
+    /// <summary>Shape of the skeleton placeholder.</summary>
+    [Parameter] public SkeletonVariant Variant { get; set; } = SkeletonVariant.Line;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetVariantClass(),
+        GetUserClass()
+    );
+
+    private const string BaseClasses =
+        "animate-pulse bg-muted";
+
+    private string GetVariantClass() => Variant switch
+    {
+        SkeletonVariant.Line   => "h-4 w-full rounded-md",
+        SkeletonVariant.Circle => "size-10 rounded-full",
+        _ => "h-4 w-full rounded-md"
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

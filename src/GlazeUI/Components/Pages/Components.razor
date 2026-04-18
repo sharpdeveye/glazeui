@@ -312,6 +312,174 @@
             </div>
         </div>
 
+        @* ═══════════════════════════════════════════════ *@
+        @* ═══       MOLECULES                        ═══ *@
+        @* ═══════════════════════════════════════════════ *@
+
+        <div class="pt-8">
+            <GzSeparator />
+            <p class="mt-6 text-xs font-medium uppercase tracking-widest text-primary">Molecules</p>
+        </div>
+
+        @* ─── Card ────────────────────────────────────── *@
+        <div id="card">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Card</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Container with optional header, content, and footer slots. Clean border and shadow.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="grid gap-6 sm:grid-cols-2">
+                    @* Basic card *@
+                    <GzCard>
+                        <Header>
+                            <h3 class="text-base font-semibold text-foreground">Card Title</h3>
+                            <p class="mt-1 text-sm text-muted-foreground">Card subtitle</p>
+                        </Header>
+                        <ChildContent>
+                            <p class="text-sm text-muted-foreground">This is the card body content. Cards can hold any content — forms, lists, images, or text.</p>
+                        </ChildContent>
+                        <Footer>
+                            <div class="flex justify-end gap-2">
+                                <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Sm">Cancel</GzButton>
+                                <GzButton Size="ButtonSize.Sm">Save</GzButton>
+                            </div>
+                        </Footer>
+                    </GzCard>
+
+                    @* Content-only card *@
+                    <GzCard>
+                        <ChildContent>
+                            <div class="space-y-3">
+                                <h3 class="text-base font-semibold text-foreground">Simple Card</h3>
+                                <p class="text-sm text-muted-foreground">A card with content only — no header or footer. Useful for basic containers.</p>
+                                <GzBadge Variant="BadgeVariant.Secondary">New</GzBadge>
+                            </div>
+                        </ChildContent>
+                    </GzCard>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Alert ───────────────────────────────────── *@
+        <div id="alert">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Alert</h2>
+                <p class="mt-1 text-sm text-muted-foreground">5 semantic variants with auto-icons, title, and description. Uses subtle tinted backgrounds.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzAlert Variant="AlertVariant.Default" Title="Default">
+                    This is a default alert for general information.
+                </GzAlert>
+                <GzAlert Variant="AlertVariant.Info" Title="Info">
+                    Your workspace is syncing. This may take a few seconds.
+                </GzAlert>
+                <GzAlert Variant="AlertVariant.Success" Title="Success">
+                    Your changes have been saved successfully.
+                </GzAlert>
+                <GzAlert Variant="AlertVariant.Warning" Title="Warning">
+                    Your trial expires in 3 days. Upgrade to keep your data.
+                </GzAlert>
+                <GzAlert Variant="AlertVariant.Destructive" Title="Error">
+                    Failed to deploy. Check your build logs for details.
+                </GzAlert>
+            </div>
+        </div>
+
+        @* ─── FormField ──────────────────────────────── *@
+        <div id="formfield">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">FormField</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Composes label + control + description/error into a single wrapper. Error replaces description when set.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="max-w-sm">
+                    <GzFormField Label="Username" Id="ff-username" Description="This is your public display name." Required="true">
+                        <GzInput Id="ff-username" Placeholder="glazeui" />
+                    </GzFormField>
+                </div>
+
+                <div class="max-w-sm">
+                    <GzFormField Label="Email" Id="ff-email" Error="Please enter a valid email address." Required="true">
+                        <GzInput Id="ff-email" Type="email" Value="invalid-email" Error="Please enter a valid email address." />
+                    </GzFormField>
+                </div>
+
+                <div class="max-w-lg">
+                    <GzFormField Label="Bio" Id="ff-bio" Description="Write a short introduction about yourself.">
+                        <GzTextarea Id="ff-bio" Placeholder="Tell us about yourself..." Rows="3" />
+                    </GzFormField>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Skeleton ───────────────────────────────── *@
+        <div id="skeleton">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Skeleton</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Animated loading placeholders. Line and circle variants. Override dimensions via class.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Card skeleton</p>
+                    <div class="max-w-sm space-y-4 rounded-xl border border-border/50 p-6">
+                        <div class="flex items-center gap-3">
+                            <GzSkeleton Variant="SkeletonVariant.Circle" />
+                            <div class="flex-1 space-y-2">
+                                <GzSkeleton class="h-4 w-3/4" />
+                                <GzSkeleton class="h-3 w-1/2" />
+                            </div>
+                        </div>
+                        <GzSkeleton class="h-32 w-full" />
+                        <div class="space-y-2">
+                            <GzSkeleton />
+                            <GzSkeleton class="w-4/5" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Progress ───────────────────────────────── *@
+        <div id="progress">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Progress</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Horizontal progress bar with smooth transition. 3 sizes, proper ARIA progressbar role.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="max-w-lg space-y-4">
+                    <div>
+                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Small (25%)</p>
+                        <GzProgress Value="25" Size="ProgressSize.Sm" />
+                    </div>
+                    <div>
+                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Medium (60%)</p>
+                        <GzProgress Value="60" Size="ProgressSize.Md" />
+                    </div>
+                    <div>
+                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Large (85%)</p>
+                        <GzProgress Value="85" Size="ProgressSize.Lg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Tabs ────────────────────────────────────── *@
+        <div id="tabs">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Tabs</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Tab navigation with ARIA tablist/tab/tabpanel pattern. Active tab has elevated background.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzTabs Tabs="_demoPanels" @bind-ActiveTab="_activeTab" />
+            </div>
+        </div>
+
     </div>
 </section>
 
@@ -321,6 +489,54 @@
     private bool _notifications = true;
     private bool _analytics;
     private string _selectedPlan = "pro";
+    private string? _activeTab;
+
+    private List<TabItem> _demoPanels = new();
+
+    protected override void OnInitialized()
+    {
+        _demoPanels = new List<TabItem>
+        {
+            new TabItem
+            {
+                Key = "account",
+                Label = "Account",
+                Content = @<div class="space-y-4">
+                    <GzFormField Label="Name" Id="tab-name" Description="Your full name as shown on your profile.">
+                        <GzInput Id="tab-name" Placeholder="John Doe" />
+                    </GzFormField>
+                    <GzFormField Label="Email" Id="tab-email">
+                        <GzInput Id="tab-email" Type="email" Placeholder="john@example.com" />
+                    </GzFormField>
+                    <GzButton Size="ButtonSize.Sm">Save Changes</GzButton>
+                </div>
+            },
+            new TabItem
+            {
+                Key = "password",
+                Label = "Password",
+                Content = @<div class="space-y-4">
+                    <GzFormField Label="Current Password" Id="tab-current-pw">
+                        <GzInput Id="tab-current-pw" Type="password" Placeholder="Enter current password" />
+                    </GzFormField>
+                    <GzFormField Label="New Password" Id="tab-new-pw">
+                        <GzInput Id="tab-new-pw" Type="password" Placeholder="Enter new password" />
+                    </GzFormField>
+                    <GzButton Size="ButtonSize.Sm">Update Password</GzButton>
+                </div>
+            },
+            new TabItem
+            {
+                Key = "notifications",
+                Label = "Notifications",
+                Content = @<div class="space-y-4">
+                    <GzSwitch @bind-Checked="_notifications">Email notifications</GzSwitch>
+                    <GzSwitch @bind-Checked="_analytics">Marketing emails</GzSwitch>
+                    <GzSwitch Checked="true" Disabled="true">Security alerts (always on)</GzSwitch>
+                </div>
+            }
+        };
+    }
 
     private void SelectPlan(string plan)
     {

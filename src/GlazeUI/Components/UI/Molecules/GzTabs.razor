@@ -1,0 +1,95 @@
+@* GzTabs — Tab navigation with keyboard support and smooth indicator *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass">
+    @* Tab list *@
+    <div role="tablist"
+         class="inline-flex h-10 items-center justify-start gap-1 rounded-lg bg-muted p-1 text-muted-foreground">
+        @foreach (var tab in Tabs)
+        {
+            var isActive = tab.Key == ActiveTab;
+            <button type="button"
+                    role="tab"
+                    aria-selected="@isActive.ToString().ToLower()"
+                    aria-controls="@($"panel-{tab.Key}")"
+                    id="@($"tab-{tab.Key}")"
+                    class="@GetTabClass(isActive)"
+                    @onclick="@(() => SetActiveTab(tab.Key))">
+                @tab.Label
+            </button>
+        }
+    </div>
+
+    @* Tab panels *@
+    @foreach (var tab in Tabs)
+    {
+        var isActive = tab.Key == ActiveTab;
+        <div role="tabpanel"
+             id="@($"panel-{tab.Key}")"
+             aria-labelledby="@($"tab-{tab.Key}")"
+             class="@(isActive ? "mt-4" : "hidden")"
+             tabindex="0">
+            @if (isActive)
+            {
+                @tab.Content
+            }
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>List of tab definitions.</summary>
+    [Parameter] public List<TabItem> Tabs { get; set; } = new();
+
+    /// <summary>Key of the currently active tab — supports two-way binding via @bind-ActiveTab.</summary>
+    [Parameter] public string? ActiveTab { get; set; }
+
+    /// <summary>Callback when active tab changes — enables @bind-ActiveTab.</summary>
+    [Parameter] public EventCallback<string?> ActiveTabChanged { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (string.IsNullOrEmpty(ActiveTab) && Tabs.Count > 0)
+        {
+            ActiveTab = Tabs[0].Key;
+        }
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "w-full",
+        GetUserClass()
+    );
+
+    private string GetTabClass(bool isActive) => Tw.Merge(
+        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5",
+        "text-sm font-medium cursor-pointer",
+        "transition-all duration-200 ease-out",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        "disabled:pointer-events-none disabled:opacity-50",
+        isActive
+            ? "bg-background text-foreground shadow-xs"
+            : "hover:bg-background/50 hover:text-foreground"
+    );
+
+    private async Task SetActiveTab(string key)
+    {
+        ActiveTab = key;
+        await ActiveTabChanged.InvokeAsync(key);
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

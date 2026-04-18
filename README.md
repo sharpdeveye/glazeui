@@ -48,7 +48,9 @@
 
 ## Components
 
-GlazeUI ships 11 atom components with full variant coverage, loading states, accessible focus rings, and dark mode support via semantic tokens.
+GlazeUI ships **17 components** — 13 atoms and 4 molecules — with full variant coverage, loading states, accessible focus rings, and dark mode support via semantic tokens.
+
+### Atoms
 
 | Component | Variants | Features |
 |---|---|---|
@@ -63,6 +65,17 @@ GlazeUI ships 11 atom components with full variant coverage, loading states, acc
 | **GzAvatar** | — | Image, initials fallback, default icon, 3 sizes |
 | **GzTypography** | H1–H4, P, Lead, Large, Small, Muted, InlineCode | Semantic HTML elements |
 | **GzSeparator** | Horizontal, Vertical | Decorative by default, ARIA semantics |
+| **GzSkeleton** | Line, Circle | Animated pulse placeholder, dimension overrides via class |
+| **GzProgress** | — | 3 sizes, smooth fill transition, ARIA progressbar role |
+
+### Molecules
+
+| Component | Features |
+|---|---|
+| **GzCard** | Header, Content, Footer slots. Subtle border + shadow |
+| **GzAlert** | 5 semantic variants (Default, Info, Success, Warning, Destructive) with auto-icons |
+| **GzFormField** | Composes Label + Control + Description/Error. Required indicator |
+| **GzTabs** | ARIA tablist/tab/tabpanel pattern, two-way binding, lazy panel rendering |
 
 ### Premium by Default
 
@@ -189,7 +202,7 @@ glazeui/
 |---|---|---|
 | **Phase 0** | ✅ Complete | Blazor + Tailwind v4 template, design tokens, dark mode, project infrastructure |
 | **Phase 1** | ✅ Complete | Semantic token system, 11 atom components, TailwindMerge, showcase page |
-| **Phase 2** | 🔜 Next | 6-8 molecules (Card, Alert, Tabs...), UX guidelines, writing guidelines |
+| **Phase 2** | 🟡 In Progress | Molecules (Card, Alert, FormField, Tabs), UX guidelines, writing guidelines |
 | **Phase 3** | 📋 Planned | Headless primitives, organisms (Dialog, Dropdown, Popover...), pattern recipes |
 | **Phase 4** | 📋 Planned | CLI tool, accessibility matrices, community contribution model, v1.0 release |
 

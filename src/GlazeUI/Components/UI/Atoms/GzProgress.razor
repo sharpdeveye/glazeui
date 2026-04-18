@@ -1,0 +1,63 @@
+@* GzProgress — Horizontal progress bar with smooth fill transition *@
+
+<div @attributes="GetFilteredAttributes()"
+     role="progressbar"
+     aria-valuenow="@Value"
+     aria-valuemin="0"
+     aria-valuemax="@Max"
+     aria-label="@(string.IsNullOrWhiteSpace(Label) ? "Progress" : Label)"
+     class="@TrackClass">
+    <div class="@FillClass"
+         style="@($"width: {Percentage}%")">
+    </div>
+</div>
+
+@code {
+    /// <summary>Current progress value.</summary>
+    [Parameter] public double Value { get; set; }
+
+    /// <summary>Maximum value (default 100).</summary>
+    [Parameter] public double Max { get; set; } = 100;
+
+    /// <summary>Accessible label for screen readers.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>Size of the progress bar.</summary>
+    [Parameter] public ProgressSize Size { get; set; } = ProgressSize.Md;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private double Percentage => Max > 0 ? Math.Clamp(Value / Max * 100, 0, 100) : 0;
+
+    private string TrackClass => Tw.Merge(
+        "w-full overflow-hidden rounded-full bg-muted",
+        GetSizeClass(),
+        GetUserClass()
+    );
+
+    private string FillClass => Tw.Merge(
+        "h-full rounded-full bg-primary transition-all duration-500 ease-out"
+    );
+
+    private string GetSizeClass() => Size switch
+    {
+        ProgressSize.Sm => "h-1.5",
+        ProgressSize.Md => "h-2.5",
+        ProgressSize.Lg => "h-4",
+        _ => "h-2.5"
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}
