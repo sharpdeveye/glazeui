@@ -1,0 +1,73 @@
+@using GlazeUI.Utilities
+
+<label class="flex items-start gap-3 cursor-pointer group">
+    <div class="relative flex items-center justify-center">
+        <input @attributes="FilteredAttributes"
+               type="radio"
+               name="@Name"
+               value="@Value"
+               checked="@Checked"
+               disabled="@Disabled"
+               class="peer sr-only"
+               @onchange="HandleChange" />
+        <div class="@CircleClass">
+            @if (Checked)
+            {
+                <div class="h-2 w-2 rounded-full bg-white"></div>
+            }
+        </div>
+    </div>
+    @if (ChildContent is not null)
+    {
+        <span class="@LabelClass">@ChildContent</span>
+    }
+</label>
+
+@code {
+    /// <summary>Label content displayed beside the radio button.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Radio group name — all radios with the same name form a group.</summary>
+    [Parameter] public string? Name { get; set; }
+
+    /// <summary>The value this radio represents in the group.</summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>Whether this radio is selected — supports two-way binding via @bind-Checked.</summary>
+    [Parameter] public bool Checked { get; set; }
+
+    /// <summary>Callback when selection changes — enables @bind-Checked.</summary>
+    [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+
+    /// <summary>Whether the radio is disabled.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Additional HTML attributes passed through to the input element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string CircleClass => CssBuilder.Create(
+            "flex h-4 w-4 shrink-0 items-center justify-center rounded-full " +
+            "border border-input shadow-xs transition-colors " +
+            "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring")
+        .AddWhen("bg-primary-500 border-primary-500", Checked)
+        .AddWhen("bg-surface", !Checked)
+        .AddWhen("opacity-50 cursor-not-allowed", Disabled)
+        .Build();
+
+    private string LabelClass => CssBuilder.Create("text-sm leading-none")
+        .AddWhen("text-foreground", !Disabled)
+        .AddWhen("text-muted-foreground cursor-not-allowed", Disabled)
+        .Build();
+
+    private Dictionary<string, object>? FilteredAttributes =>
+        AdditionalAttributes?.Where(kv => kv.Key != "class")
+            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
+            ? filtered
+            : null;
+
+    private async Task HandleChange(ChangeEventArgs e)
+    {
+        Checked = true;
+        await CheckedChanged.InvokeAsync(Checked);
+    }
+}

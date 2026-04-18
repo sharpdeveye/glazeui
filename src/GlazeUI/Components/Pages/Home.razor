@@ -304,6 +304,50 @@
                     </div>
                 </div>
             </div>
+            @* --- Checkbox --- *@
+            <div class="rounded-xl border border-border bg-card p-8">
+                <h3 class="text-lg font-semibold text-foreground">Checkbox</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Custom-styled checkbox with checkmark icon, two-way binding, and disabled state.</p>
+
+                <GzSeparator class="my-6" />
+
+                <div class="space-y-4">
+                    <GzCheckbox @bind-Checked="_acceptTerms">Accept terms and conditions</GzCheckbox>
+                    <GzCheckbox @bind-Checked="_newsletter">Subscribe to newsletter</GzCheckbox>
+                    <GzCheckbox Checked="true" Disabled="true">Disabled (checked)</GzCheckbox>
+                    <GzCheckbox Checked="false" Disabled="true">Disabled (unchecked)</GzCheckbox>
+                </div>
+            </div>
+
+            @* --- Radio --- *@
+            <div class="rounded-xl border border-border bg-card p-8">
+                <h3 class="text-lg font-semibold text-foreground">Radio</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Radio buttons with group naming, inner dot indicator, and label support.</p>
+
+                <GzSeparator class="my-6" />
+
+                <div class="space-y-4">
+                    <GzRadio Name="plan" Value="free" Checked="@(_selectedPlan == "free")" CheckedChanged="@(_ => SelectPlan("free"))">Free plan</GzRadio>
+                    <GzRadio Name="plan" Value="pro" Checked="@(_selectedPlan == "pro")" CheckedChanged="@(_ => SelectPlan("pro"))">Pro plan — $9/mo</GzRadio>
+                    <GzRadio Name="plan" Value="enterprise" Checked="@(_selectedPlan == "enterprise")" CheckedChanged="@(_ => SelectPlan("enterprise"))">Enterprise — Contact us</GzRadio>
+                    <GzRadio Name="disabled-group" Value="x" Checked="true" Disabled="true">Disabled (selected)</GzRadio>
+                </div>
+            </div>
+
+            @* --- Switch --- *@
+            <div class="rounded-xl border border-border bg-card p-8">
+                <h3 class="text-lg font-semibold text-foreground">Switch</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Toggle switch with sliding animation, ARIA role=switch, and disabled state.</p>
+
+                <GzSeparator class="my-6" />
+
+                <div class="space-y-4">
+                    <GzSwitch @bind-Checked="_notifications">Enable notifications</GzSwitch>
+                    <GzSwitch @bind-Checked="_analytics">Share analytics</GzSwitch>
+                    <GzSwitch Checked="true" Disabled="true">Always on (disabled)</GzSwitch>
+                    <GzSwitch Checked="false" Disabled="true">Always off (disabled)</GzSwitch>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -330,3 +374,15 @@
     </div>
 </section>
 
+@code {
+    private bool _acceptTerms;
+    private bool _newsletter = true;
+    private bool _notifications = true;
+    private bool _analytics;
+    private string _selectedPlan = "pro";
+
+    private void SelectPlan(string plan)
+    {
+        _selectedPlan = plan;
+    }
+}

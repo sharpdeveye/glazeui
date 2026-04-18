@@ -1,0 +1,68 @@
+@using GlazeUI.Utilities
+
+<label class="flex items-start gap-3 cursor-pointer group">
+    <div class="relative flex items-center justify-center">
+        <input @attributes="FilteredAttributes"
+               type="checkbox"
+               checked="@Checked"
+               disabled="@Disabled"
+               class="peer sr-only"
+               @onchange="HandleChange" />
+        <div class="@BoxClass">
+            @if (Checked)
+            {
+                <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+            }
+        </div>
+    </div>
+    @if (ChildContent is not null)
+    {
+        <span class="@LabelClass">@ChildContent</span>
+    }
+</label>
+
+@code {
+    /// <summary>Label content displayed beside the checkbox.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Whether the checkbox is checked — supports two-way binding via @bind-Checked.</summary>
+    [Parameter] public bool Checked { get; set; }
+
+    /// <summary>Callback when checked state changes — enables @bind-Checked.</summary>
+    [Parameter] public EventCallback<bool> CheckedChanged { get; set; }
+
+    /// <summary>Whether the checkbox is disabled.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Additional HTML attributes passed through to the input element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string BoxClass => CssBuilder.Create(
+            "flex h-4 w-4 shrink-0 items-center justify-center rounded " +
+            "border border-input shadow-xs transition-colors " +
+            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring " +
+            "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring")
+        .AddWhen("bg-primary-500 border-primary-500", Checked)
+        .AddWhen("bg-surface", !Checked)
+        .AddWhen("opacity-50 cursor-not-allowed", Disabled)
+        .Build();
+
+    private string LabelClass => CssBuilder.Create("text-sm leading-none")
+        .AddWhen("text-foreground", !Disabled)
+        .AddWhen("text-muted-foreground cursor-not-allowed", Disabled)
+        .Build();
+
+    private Dictionary<string, object>? FilteredAttributes =>
+        AdditionalAttributes?.Where(kv => kv.Key != "class")
+            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
+            ? filtered
+            : null;
+
+    private async Task HandleChange(ChangeEventArgs e)
+    {
+        Checked = e.Value is bool b ? b : bool.TryParse(e.Value?.ToString(), out var parsed) && parsed;
+        await CheckedChanged.InvokeAsync(Checked);
+    }
+}
