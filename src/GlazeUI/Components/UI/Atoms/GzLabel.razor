@@ -1,0 +1,44 @@
+@using GlazeUI.Utilities
+
+<label @attributes="FilteredAttributes"
+       for="@For"
+       class="@ComputedClass">
+    @ChildContent
+    @if (Required)
+    {
+        <span class="ml-0.5 text-destructive" aria-hidden="true">*</span>
+    }
+</label>
+
+@code {
+    /// <summary>Label content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>The id of the form element this label is associated with.</summary>
+    [Parameter] public string? For { get; set; }
+
+    /// <summary>Whether to show a required indicator (asterisk).</summary>
+    [Parameter] public bool Required { get; set; }
+
+    /// <summary>Additional HTML attributes passed through to the label element.</summary>
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string BaseClasses =
+        "text-sm font-medium leading-none " +
+        "peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
+
+    private string ComputedClass => CssBuilder.Create(BaseClasses)
+        .Add(UserClass)
+        .Build();
+
+    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
+        ? cls?.ToString()
+        : null;
+
+    /// <summary>Filters out the 'class' key so it doesn't conflict with the computed class.</summary>
+    private Dictionary<string, object>? FilteredAttributes =>
+        AdditionalAttributes?.Where(kv => kv.Key != "class")
+            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
+            ? filtered
+            : null;
+}

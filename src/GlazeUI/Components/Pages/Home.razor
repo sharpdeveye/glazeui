@@ -250,6 +250,60 @@
                     </div>
                 </div>
             </div>
+
+            @* --- Input + Label --- *@
+            <div class="rounded-xl border border-border bg-card p-8">
+                <h3 class="text-lg font-semibold text-foreground">Input + Label</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Text input with two-way binding, file upload styling, and form labels with required indicators.</p>
+
+                <GzSeparator class="my-6" />
+
+                <div class="space-y-6">
+                    @* Basic input with label *@
+                    <div class="grid max-w-sm gap-2">
+                        <GzLabel For="demo-email" Required="true">Email</GzLabel>
+                        <GzInput id="demo-email" Type="email" Placeholder="you@example.com" />
+                    </div>
+
+                    @* Password input *@
+                    <div class="grid max-w-sm gap-2">
+                        <GzLabel For="demo-password">Password</GzLabel>
+                        <GzInput id="demo-password" Type="password" Placeholder="Enter password" />
+                    </div>
+
+                    @* Disabled input *@
+                    <div class="grid max-w-sm gap-2">
+                        <GzLabel For="demo-disabled">Disabled</GzLabel>
+                        <GzInput id="demo-disabled" Placeholder="Cannot type here" Disabled="true" />
+                    </div>
+
+                    @* File input *@
+                    <div class="grid max-w-sm gap-2">
+                        <GzLabel For="demo-file">Upload file</GzLabel>
+                        <GzInput id="demo-file" Type="file" />
+                    </div>
+                </div>
+            </div>
+
+            @* --- Textarea --- *@
+            <div class="rounded-xl border border-border bg-card p-8">
+                <h3 class="text-lg font-semibold text-foreground">Textarea</h3>
+                <p class="mt-1 text-sm text-muted-foreground">Multi-line text input with configurable rows and two-way binding.</p>
+
+                <GzSeparator class="my-6" />
+
+                <div class="space-y-6">
+                    <div class="grid max-w-lg gap-2">
+                        <GzLabel For="demo-message" Required="true">Message</GzLabel>
+                        <GzTextarea id="demo-message" Placeholder="Tell us what you think..." Rows="4" />
+                    </div>
+
+                    <div class="grid max-w-lg gap-2">
+                        <GzLabel For="demo-readonly">Read-only</GzLabel>
+                        <GzTextarea id="demo-readonly" Value="This content cannot be edited by the user." ReadOnly="true" />
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
