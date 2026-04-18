@@ -1,0 +1,88 @@
+name: 🧩 Component Request
+description: Request a new component for the GlazeUI design system
+title: "[Component]: "
+labels: ["component-request", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new component! GlazeUI aims to include components that solve common, well-understood UI patterns. Please provide as much detail as possible.
+
+  - type: input
+    id: name
+    attributes:
+      label: Component Name
+      description: What would you call this component?
+      placeholder: "e.g., DatePicker, Breadcrumb, Stepper"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Atomic Design Layer
+      description: Where does this component fit in the atomic design hierarchy?
+      options:
+        - Atom (single-purpose element)
+        - Molecule (composed atoms)
+        - Organism (complex interactive section)
+        - Primitive (headless behavior)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What does this component do? What problem does it solve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use Cases
+      description: Describe 2-3 real-world scenarios where this component would be used.
+      value: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: api
+    attributes:
+      label: Proposed API
+      description: What parameters/props would this component expose?
+      placeholder: |
+        - Variant (enum: Default, Outline, Ghost)
+        - Size (enum: Small, Medium, Large)
+        - Disabled (bool)
+        - OnChange (EventCallback)
+
+  - type: textarea
+    id: accessibility
+    attributes:
+      label: Accessibility Requirements
+      description: What keyboard interactions and ARIA requirements should this component have?
+      placeholder: |
+        - Tab: Focus the component
+        - Enter/Space: Activate
+        - Escape: Close/dismiss
+        - ARIA role: button/dialog/etc.
+
+  - type: textarea
+    id: references
+    attributes:
+      label: References
+      description: Links to similar components in other design systems (Cloudscape, Material, Radix, shadcn, etc.)
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How important is this to you?
+      options:
+        - Nice to have
+        - Would significantly improve my project
+        - Blocking my adoption of GlazeUI

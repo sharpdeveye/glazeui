@@ -1,0 +1,79 @@
+# =========================
+# GlazeUI .gitignore
+# =========================
+
+# --- .NET / Blazor ---
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
+bld/
+[Oo]ut/
+msbuild.log
+msbuild.err
+msbuild.wrn
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# --- IDE / Editor ---
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# --- Node / Tailwind ---
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- Environment / Secrets ---
+.env
+.env.*
+appsettings.Development.json
+appsettings.*.json
+!appsettings.json
+
+# --- Build Artifacts ---
+dist/
+*.log
+*.vsix
+*.pdf
+
+# --- Design Document (private research) ---
+*-design.md
+*-design.pdf
+*-img.png
+
+# --- AI Agent Configs (editor-specific) ---
+.agents/
+.claude/
+.codex/
+.cursor/
+.gemini/
+.kiro/
+.opencode/
+.pi/
+.trae/
+.trae-cn/
+CLAUDE.md
+.cmd
