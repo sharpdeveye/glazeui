@@ -1,0 +1,336 @@
+@page "/docs"
+@page "/docs/getting-started"
+
+<PageTitle>Getting Started — GlazeUI</PageTitle>
+<HeadContent>
+    <meta name="description" content="Get started with GlazeUI — install, configure design tokens, add your first component, and customize themes." />
+</HeadContent>
+
+<div class="mx-auto flex max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:px-8">
+
+    @* ─── Sidebar ──────────────────────────────── *@
+    <aside class="hidden w-56 shrink-0 lg:block">
+        <nav class="sticky top-24 space-y-1">
+            <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">On this page</p>
+            <a href="#installation" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Installation</a>
+            <a href="#tokens" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Design Tokens</a>
+            <a href="#first-component" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">First Component</a>
+            <a href="#dark-mode" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Dark Mode</a>
+            <a href="#customization" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Customization</a>
+            <a href="#architecture" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Architecture</a>
+        </nav>
+    </aside>
+
+    @* ─── Content ──────────────────────────────── *@
+    <div class="min-w-0 flex-1">
+        <p class="text-sm font-medium text-primary">Documentation</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Getting Started
+        </h1>
+        <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
+            Set up GlazeUI in your Blazor project in under 5 minutes.
+        </p>
+
+        @* ─── Installation ────────────────────── *@
+        <section id="installation" class="mt-12 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Installation</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="space-y-6">
+                <div>
+                    <h3 class="mb-2 text-sm font-semibold text-foreground">1. Prerequisites</h3>
+                    <GzCard>
+                        <ChildContent>
+                            <div class="space-y-2 text-sm text-muted-foreground">
+                                <div class="flex items-center justify-between">
+                                    <span>.NET SDK</span>
+                                    <GzBadge Variant="BadgeVariant.Secondary">9.0+</GzBadge>
+                                </div>
+                                <GzSeparator />
+                                <div class="flex items-center justify-between">
+                                    <span>Node.js</span>
+                                    <GzBadge Variant="BadgeVariant.Secondary">18+</GzBadge>
+                                </div>
+                                <GzSeparator />
+                                <div class="flex items-center justify-between">
+                                    <span>Tailwind CSS</span>
+                                    <GzBadge Variant="BadgeVariant.Secondary">v4</GzBadge>
+                                </div>
+                            </div>
+                        </ChildContent>
+                    </GzCard>
+                </div>
+
+                <div>
+                    <h3 class="mb-2 text-sm font-semibold text-foreground">2. Clone & Run</h3>
+                    <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                        <div class="border-b border-border/50 px-4 py-2">
+                            <span class="text-xs text-muted-foreground">Terminal</span>
+                        </div>
+                        <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>git clone https://github.com/sharpdeveye/glazeui.git
+cd glazeui/src/GlazeUI
+dotnet restore
+npm install
+dotnet build
+dotnet run</code></pre>
+                    </div>
+                </div>
+
+                <GzAlert Variant="AlertVariant.Info" Title="Live Preview">
+                    After running, open <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">http://localhost:5011</code> and navigate to <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">/components</code>.
+                </GzAlert>
+            </div>
+        </section>
+
+        @* ─── Design Tokens ───────────────────── *@
+        <section id="tokens" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Design Tokens</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-4 text-sm text-muted-foreground">
+                GlazeUI uses Tailwind v4's <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">@@theme</code> directive for all design decisions. Every color, radius, shadow, and font is a token.
+            </p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">Styles/input.css</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>@@theme {
+  --color-primary: oklch(0.55 0.18 250);
+  --color-primary-foreground: oklch(0.99 0.005 250);
+  --color-destructive: oklch(0.58 0.22 25);
+  --color-background: oklch(0.99 0 0);
+  --color-foreground: oklch(0.14 0 0);
+  --color-border: oklch(0.90 0 0);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --radius-md: 0.375rem;
+}</code></pre>
+            </div>
+
+            <div class="mt-6">
+                <h3 class="mb-3 text-sm font-semibold text-foreground">Token categories</h3>
+                <GzCard>
+                    <ChildContent>
+                        <div class="space-y-2 text-sm">
+                            @foreach (var (cat, examples) in _tokenCategories)
+                            {
+                                <div class="flex gap-3">
+                                    <span class="w-20 shrink-0 font-medium text-foreground">@cat</span>
+                                    <span class="text-muted-foreground">@examples</span>
+                                </div>
+                                if (cat != "Shadow")
+                                {
+                                    <GzSeparator />
+                                }
+                            }
+                        </div>
+                    </ChildContent>
+                </GzCard>
+            </div>
+        </section>
+
+        @* ─── First Component ─────────────────── *@
+        <section id="first-component" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Your First Component</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-4 text-sm text-muted-foreground">
+                Copy any component from <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Components/UI/Atoms/</code> into your project. Components use <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Tw.Merge()</code> for class composition — install the <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">TwMerge</code> NuGet package first.
+            </p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">Terminal</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>dotnet add package TwMerge</code></pre>
+            </div>
+
+            <p class="mt-4 mb-4 text-sm text-muted-foreground">Then use components in any <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">.razor</code> file:</p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">MyPage.razor</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>&lt;GzButton Variant="ButtonVariant.Default"&gt;
+    Click me
+&lt;/GzButton&gt;
+
+&lt;GzButton Loading="true"&gt;
+    Saving...
+&lt;/GzButton&gt;
+
+&lt;GzFormField Label="Email" Id="my-email" Required="true"&gt;
+    &lt;GzInput Id="my-email" Type="email" 
+             Placeholder="you@@example.com" /&gt;
+&lt;/GzFormField&gt;</code></pre>
+            </div>
+
+            <p class="mt-4 mb-4 text-sm text-muted-foreground">Live preview of the code above:</p>
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-4">
+                        <div class="flex gap-3">
+                            <GzButton>Click me</GzButton>
+                            <GzButton Loading="true">Saving...</GzButton>
+                        </div>
+                        <GzFormField Label="Email" Id="docs-email" Required="true">
+                            <GzInput Id="docs-email" Type="email" Placeholder="you@example.com" />
+                        </GzFormField>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Dark Mode ──────────────────────── *@
+        <section id="dark-mode" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Dark Mode</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-4 text-sm text-muted-foreground">
+                GlazeUI uses the <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">.dark</code> class on the <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">&lt;html&gt;</code> element. All tokens automatically switch via CSS — zero JavaScript re-renders.
+            </p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">Styles/input.css</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>@@custom-variant dark (&:where(.dark, .dark *));
+
+@@layer base {
+  .dark {
+    --color-primary: oklch(0.65 0.18 250);
+    --color-background: oklch(0.12 0 0);
+    --color-foreground: oklch(0.93 0 0);
+    --color-border: oklch(0.28 0 0);
+    /* ... all tokens override */
+  }
+}</code></pre>
+            </div>
+
+            <GzAlert Variant="AlertVariant.Success" Title="No component changes needed" class="mt-4">
+                Components use semantic tokens like <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">bg-primary</code> and <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">text-foreground</code>. Dark mode works automatically.
+            </GzAlert>
+        </section>
+
+        @* ─── Customization ────────────────────── *@
+        <section id="customization" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Customization</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-4 text-sm text-muted-foreground">
+                Override any class on any component via the <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">class</code> attribute. TailwindMerge resolves conflicts automatically.
+            </p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">Usage</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>@* Override width and add margin *@
+&lt;GzButton class="w-full mt-4"&gt;Full Width&lt;/GzButton&gt;
+
+@* Override border radius *@
+&lt;GzInput class="rounded-full" Placeholder="Search..." /&gt;
+
+@* Custom card sizing *@
+&lt;GzCard class="max-w-md mx-auto"&gt;
+    ...
+&lt;/GzCard&gt;</code></pre>
+            </div>
+
+            <p class="mt-4 mb-4 text-sm text-muted-foreground">Live preview:</p>
+
+            <div class="flex flex-col gap-4 max-w-md">
+                <GzButton class="w-full">Full Width Button</GzButton>
+                <GzInput class="rounded-full" Placeholder="Search..." />
+            </div>
+        </section>
+
+        @* ─── Architecture ─────────────────────── *@
+        <section id="architecture" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Architecture</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-6 text-sm text-muted-foreground">
+                Every component follows the same contract for consistency and predictability.
+            </p>
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">1</GzBadge>
+                            <div>
+                                <p class="font-medium text-foreground">TwMerge class composition</p>
+                                <p class="text-muted-foreground">Resolves Tailwind class conflicts. User overrides always win.</p>
+                            </div>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">2</GzBadge>
+                            <div>
+                                <p class="font-medium text-foreground">GetFilteredAttributes()</p>
+                                <p class="text-muted-foreground">Filters <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">class</code> from splatted attributes so it only flows through TwMerge.</p>
+                            </div>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">3</GzBadge>
+                            <div>
+                                <p class="font-medium text-foreground">Semantic tokens only</p>
+                                <p class="text-muted-foreground">Zero raw colors (<code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">bg-blue-500</code>). Everything uses <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">bg-primary</code> etc.</p>
+                            </div>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">4</GzBadge>
+                            <div>
+                                <p class="font-medium text-foreground">CSS-only states</p>
+                                <p class="text-muted-foreground">Hover, focus, active handled via CSS — no SignalR roundtrips.</p>
+                            </div>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">5</GzBadge>
+                            <div>
+                                <p class="font-medium text-foreground">Full state coverage</p>
+                                <p class="text-muted-foreground">Default, hover, active, focus-visible, disabled, loading — all defined.</p>
+                            </div>
+                        </div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Next Steps ─────────────────────── *@
+        <section class="mt-16 mb-8 scroll-mt-24">
+            <GzCard>
+                <ChildContent>
+                    <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="font-semibold text-foreground">Ready to explore?</p>
+                            <p class="mt-1 text-sm text-muted-foreground">Browse all 17 components with live interactive examples.</p>
+                        </div>
+                        <GzButton OnClick="@(() => Navigation.NavigateTo("/components"))">
+                            View Components →
+                        </GzButton>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+    </div>
+</div>
+
+@inject NavigationManager Navigation
+
+@code {
+    private readonly (string Category, string Examples)[] _tokenCategories = new[]
+    {
+        ("Color", "primary, secondary, accent, destructive, success, warning, info"),
+        ("Surface", "background, foreground, surface, muted, card, popover"),
+        ("Border", "border, input, ring"),
+        ("Font", "Inter (sans), JetBrains Mono (mono)"),
+        ("Radius", "sm (4px), md (6px), lg (8px), xl (12px)"),
+        ("Shadow", "xs, sm, md, lg, xl — warm and soft")
+    };
+}
