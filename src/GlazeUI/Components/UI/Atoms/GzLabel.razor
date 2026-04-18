@@ -1,8 +1,9 @@
-@using GlazeUI.Utilities
+@* GzLabel — Crisp form label with required indicator *@
 
-<label @attributes="FilteredAttributes"
-       for="@For"
-       class="@ComputedClass">
+<label
+    @attributes="GetFilteredAttributes()"
+    for="@For"
+    class="@ComputedClass">
     @ChildContent
     @if (Required)
     {
@@ -21,24 +22,27 @@
     [Parameter] public bool Required { get; set; }
 
     /// <summary>Additional HTML attributes passed through to the label element.</summary>
-    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
     private const string BaseClasses =
         "text-sm font-medium leading-none " +
         "peer-disabled:cursor-not-allowed peer-disabled:opacity-70";
 
-    private string ComputedClass => CssBuilder.Create(BaseClasses)
-        .Add(UserClass)
-        .Build();
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetUserClass()
+    );
 
-    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
-        ? cls?.ToString()
-        : null;
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
 
-    /// <summary>Filters out the 'class' key so it doesn't conflict with the computed class.</summary>
-    private Dictionary<string, object>? FilteredAttributes =>
-        AdditionalAttributes?.Where(kv => kv.Key != "class")
-            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
-            ? filtered
-            : null;
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
 }

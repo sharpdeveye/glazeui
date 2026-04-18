@@ -5,7 +5,7 @@
 <h1 align="center">GlazeUI</h1>
 
 <p align="center">
-  <strong>The design system for Blazor + TailwindCSS</strong><br/>
+  <strong>The design system for Blazor + Tailwind CSS v4</strong><br/>
   Beautifully designed. Fully accessible. You own the code.
 </p>
 
@@ -17,13 +17,14 @@
   <a href="https://github.com/sharpdeveye/glazeui/stargazers"><img src="https://img.shields.io/github/stars/sharpdeveye/glazeui?style=flat-square&color=e2b340" alt="GitHub Stars" /></a>
   <a href="https://github.com/sharpdeveye/glazeui/issues"><img src="https://img.shields.io/github/issues/sharpdeveye/glazeui?style=flat-square&color=f97316" alt="Issues" /></a>
   <img src="https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square" alt="PRs Welcome" />
-  <img src="https://img.shields.io/badge/Status-Phase_0-f59e0b?style=flat-square" alt="Status: Phase 0" />
+  <img src="https://img.shields.io/badge/Status-Phase_1-f59e0b?style=flat-square" alt="Status: Phase 1" />
 </p>
 
 <p align="center">
   <a href="#about">About</a> •
-  <a href="#philosophy">Philosophy</a> •
+  <a href="#components">Components</a> •
   <a href="#quick-start">Quick Start</a> •
+  <a href="#design-tokens">Design Tokens</a> •
   <a href="#roadmap">Roadmap</a> •
   <a href="#contributing">Contributing</a> •
   <a href="#license">License</a>
@@ -33,46 +34,53 @@
 
 ## About
 
-**GlazeUI** is an open-source design system that combines the power of [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) (.NET) with [TailwindCSS](https://tailwindcss.com/) v4 to deliver production-ready UI components, comprehensive UX guidelines, and pixel-perfect design resources.
+**GlazeUI** is an open-source design system that combines [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/blazor) (.NET 9) with [Tailwind CSS](https://tailwindcss.com/) v4 to deliver premium, production-ready UI components.
 
-Inspired by [shadcn/ui](https://ui.shadcn.com/)'s ownership model and [Amazon Cloudscape](https://cloudscape.design/)'s design philosophy, GlazeUI gives you:
-
-- 🧩 **Components you own** — Copy source code into your project. Modify everything. No hidden dependencies.
-- 📖 **UX guidelines** — Research-backed guidance on *when* and *why* to use each component.
-- 🎨 **Design tokens** — A unified token system via Tailwind v4's `@theme` that keeps Figma and code in sync.
-- ♿ **Accessibility** — WCAG 2.1 AA compliant with keyboard interaction tables and screen reader specs.
-- 🖌️ **Figma kit** — Pixel-perfect components with shared token variables.
-- ⌨️ **CLI distribution** — Install components with a single command.
+- **Components you own** — Copy source code into your project. Modify everything. No hidden dependencies.
+- **UX guidelines** — Research-backed guidance on *when* and *why* to use each component.
+- **Design tokens** — A unified semantic token system via Tailwind v4's `@theme` directive.
+- **Accessible** — WCAG 2.1 AA compliant with keyboard interaction tables and ARIA specs.
+- **Figma kit** — Pixel-perfect components with shared token variables.
+- **CLI distribution** — Install components with a single command.
 
 > *"Glazing" is the process of applying a refined, aesthetic finish to raw structural material.*
-> *Blazor provides the structure — TailwindCSS provides the glaze.*
+> *Blazor provides the structure — Tailwind CSS provides the glaze.*
 
-## Philosophy
+## Components
 
-GlazeUI is **not a component library**. It's a **design system**.
+GlazeUI ships 11 atom components with full variant coverage, loading states, accessible focus rings, and dark mode support via semantic tokens.
 
-| Component Library | GlazeUI Design System |
-|---|---|
-| Pre-built UI elements you import | Pre-built UI elements **you own and modify** |
-| A theme object | A **design token pipeline** synced between code and Figma |
-| API reference docs | **UX guidelines** — when to use a Modal vs. a Drawer, error message patterns, cognitive load analysis |
-| Isolated components | **Pattern recipes** — auth flows, dashboards, settings pages, empty states |
-| Compiled package dependency | **Source code** copied into your project with zero runtime dependencies |
-
-### Technical Stack
-
-| Layer | Technology | Why |
+| Component | Variants | Features |
 |---|---|---|
-| **Framework** | Blazor Interactive Server (.NET 9+) | Full .NET ecosystem, real-time interactivity via SignalR |
-| **Styling** | TailwindCSS v4 | CSS-first `@theme` tokens, automatic content detection, Oxide engine |
-| **Tokens** | `@theme` in `input.css` | Single source of truth — no `tailwind.config.js`, tokens become CSS variables |
-| **Design** | Figma | Pixel-perfect components with shared variable system |
-| **Distribution** | CLI (.NET Global Tool) | `glaze add button` copies source files with namespace adjustment |
-| **License** | Apache 2.0 | Explicit patent grant for enterprise confidence |
+| **GzButton** | Default, Secondary, Destructive, Outline, Ghost, Link | 4 sizes, Loading spinner, Icon slot, tactile press |
+| **GzBadge** | Default, Secondary, Destructive, Outline | Inset-shadow depth on solid variants |
+| **GzInput** | — | Inset-ring border, StartContent/EndContent slots, validation error |
+| **GzTextarea** | — | Inset-ring border, validation error, configurable rows |
+| **GzLabel** | — | Required indicator, peer-disabled styling |
+| **GzCheckbox** | — | SVG checkmark, tactile press wrapper |
+| **GzRadio** | — | Inner dot indicator, group naming |
+| **GzSwitch** | — | Sliding thumb, role="switch", ARIA checked |
+| **GzAvatar** | — | Image, initials fallback, default icon, 3 sizes |
+| **GzTypography** | H1–H4, P, Lead, Large, Small, Muted, InlineCode | Semantic HTML elements |
+| **GzSeparator** | Horizontal, Vertical | Decorative by default, ARIA semantics |
+
+### Premium by Default
+
+Every component includes:
+
+```
+✓ TailwindMerge class composition (user overrides work)
+✓ active:scale-[0.98] tactile press
+✓ focus-visible:ring-2 accessible focus rings
+✓ inset-shadow-sm depth on solid variants
+✓ Semantic tokens only — zero hardcoded colors
+✓ Light + Dark mode via tokens alone
+✓ GetFilteredAttributes() for clean attribute splatting
+```
 
 ## Quick Start
 
-> 🚧 **GlazeUI is in active development.** We're in Phase 0 (foundational template). Star the repo to follow progress.
+> 🚧 **GlazeUI is in active development.** Star the repo to follow progress.
 
 ### Prerequisites
 
@@ -101,6 +109,8 @@ dotnet build
 dotnet run
 ```
 
+Then open `http://localhost:5011` and navigate to `/components` to see all atoms.
+
 ### Development Workflow
 
 ```bash
@@ -111,7 +121,39 @@ dotnet watch
 npm run css:watch
 ```
 
-The Tailwind CLI watches your `.razor` files and recompiles on every change. Blazor hot reload picks up the new CSS automatically.
+## Design Tokens
+
+GlazeUI uses Tailwind v4's CSS-first `@theme` directive for design tokens. No JavaScript config files.
+
+```css
+/* Styles/input.css — Single source of truth */
+@import "tailwindcss";
+
+@theme {
+  --color-primary: oklch(0.55 0.18 250);
+  --color-primary-foreground: oklch(0.99 0.005 250);
+  --color-secondary: oklch(0.96 0 0);
+  --color-destructive: oklch(0.58 0.22 25);
+  --color-background: oklch(0.99 0 0);
+  --color-foreground: oklch(0.14 0 0);
+  --font-sans: "Inter", system-ui, sans-serif;
+  --radius-md: 0.375rem;
+  /* ... full palette, shadows, transitions */
+}
+```
+
+Tokens flow to Tailwind utilities (`bg-primary`), CSS variables (`var(--color-primary)`), and Figma variables — all from one file.
+
+### Token Categories
+
+| Category | Examples |
+|---|---|
+| **Color** | `primary`, `secondary`, `accent`, `destructive`, `success`, `warning` |
+| **Surface** | `background`, `foreground`, `surface`, `muted`, `card`, `popover` |
+| **Border** | `border`, `input`, `ring` |
+| **Typography** | `--font-sans` (Inter), `--font-mono` (JetBrains Mono) |
+| **Radius** | `sm` (4px), `md` (6px), `lg` (8px), `xl` (12px) |
+| **Shadow** | `xs`, `sm`, `md`, `lg`, `xl` — warm and soft |
 
 ## Project Structure
 
@@ -119,22 +161,25 @@ The Tailwind CLI watches your `.razor` files and recompiles on every change. Bla
 glazeui/
 ├── src/GlazeUI/
 │   ├── Components/
-│   │   ├── App.razor                 # Root layout with SEO, fonts, theme
-│   │   ├── Layout/
-│   │   │   └── MainLayout.razor      # Header, footer, dark mode toggle
-│   │   └── Pages/
-│   │       └── Home.razor            # Landing page
-│   ├── Styles/
-│   │   └── input.css                 # 🎨 Design token source of truth
-│   ├── wwwroot/
-│   │   ├── css/app.css               # Compiled Tailwind output
-│   │   └── js/glaze-theme.js         # Dark mode interop
-│   ├── GlazeUI.csproj                # MSBuild + Tailwind pipeline
-│   └── package.json                  # Tailwind CLI dependency
+│   │   ├── Layout/MainLayout.razor   # Header, footer, dark mode toggle
+│   │   ├── Pages/
+│   │   │   ├── Home.razor            # Landing page
+│   │   │   └── Components.razor      # Atom library showcase
+│   │   └── UI/Atoms/                 # All atom components
+│   │       ├── GzButton.razor
+│   │       ├── GzBadge.razor
+│   │       ├── GzInput.razor
+│   │       └── ...
+│   ├── Models/Enums.cs               # Shared enums (variants, sizes)
+│   ├── Utilities/Tw.cs               # TailwindMerge static wrapper
+│   ├── Styles/input.css              # 🎨 Design token source of truth
+│   └── wwwroot/
+│       ├── css/app.css               # Compiled Tailwind output
+│       └── js/glaze-theme.js         # Dark mode interop
 ├── .github/                          # Issue templates, PR template
-├── CONTRIBUTING.md                   # Contribution guidelines
-├── CODE_OF_CONDUCT.md                # Contributor Covenant
-├── SECURITY.md                       # Security policy
+├── CONTRIBUTING.md
+├── CODE_OF_CONDUCT.md
+├── SECURITY.md
 └── LICENSE                           # Apache 2.0
 ```
 
@@ -143,47 +188,24 @@ glazeui/
 | Phase | Status | Deliverables |
 |---|---|---|
 | **Phase 0** | ✅ Complete | Blazor + Tailwind v4 template, design tokens, dark mode, project infrastructure |
-| **Phase 1** | 🔜 Next | Token system, 10-12 atom components (Button, Input, Badge...), docs scaffold, Figma kit start |
-| **Phase 2** | 📋 Planned | 6-8 molecules (Card, Alert, Tabs...), UX guidelines, writing guidelines |
-| **Phase 3** | 📋 Planned | Headless primitives, 4-5 organisms (Dialog, Dropdown, Popover...), pattern recipes |
+| **Phase 1** | ✅ Complete | Semantic token system, 11 atom components, TailwindMerge, showcase page |
+| **Phase 2** | 🔜 Next | 6-8 molecules (Card, Alert, Tabs...), UX guidelines, writing guidelines |
+| **Phase 3** | 📋 Planned | Headless primitives, organisms (Dialog, Dropdown, Popover...), pattern recipes |
 | **Phase 4** | 📋 Planned | CLI tool, accessibility matrices, community contribution model, v1.0 release |
 
 ### Every component ships with:
 
 | Deliverable | Description |
 |---|---|
-| 🧩 **Source code** | `.razor` + `.razor.cs` — yours to modify |
-| 🎨 **Design tokens** | Tailwind utilities via `@theme` — no hardcoded values |
-| 📖 **UX guidelines** | When to use, when not to, alternatives, cognitive load analysis |
-| ✍️ **Writing guidelines** | Microcopy standards — button labels, error messages, tone |
-| ♿ **Accessibility matrix** | Keyboard interaction table, ARIA roles, screen reader behavior |
+| 🧩 **Source code** | `.razor` — yours to modify |
+| 🎨 **Design tokens** | Semantic utilities via `@theme` — no hardcoded values |
+| 📖 **UX guidelines** | When to use, when not to, alternatives |
+| ♿ **Accessibility** | Keyboard interaction, ARIA roles, focus management |
 | 🖌️ **Figma component** | Pixel-perfect, all states, light + dark mode |
-
-## Design Tokens
-
-GlazeUI uses Tailwind v4's CSS-first `@theme` for design tokens. No JavaScript config files.
-
-```css
-/* Styles/input.css — Single source of truth */
-@import "tailwindcss";
-
-@theme {
-  --color-primary-500: oklch(0.62 0.18 250);
-  --color-destructive:  oklch(0.58 0.22 25);
-  --color-surface:      oklch(1 0 0);
-  --font-sans: "Inter", system-ui, sans-serif;
-  --radius-md: 0.375rem;
-  /* ... full palette, shadows, transitions */
-}
-```
-
-Tokens flow to Tailwind utilities (`bg-primary-500`), CSS variables (`var(--color-primary-500)`), and Figma variables — all from one file.
 
 ## Contributing
 
 We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
-
-GlazeUI is currently in its foundational phase under a **BDFL** governance model. As the project matures toward v1.0, governance will transition to a community-driven model with defined roles.
 
 ### Ways to contribute
 
@@ -206,5 +228,5 @@ The Apache 2.0 license includes an **explicit patent grant**, providing enterpri
 </p>
 
 <p align="center">
-  <a href="https://github.com/sharpdeveye/glazeui/stargazers">⭐ Star this repo</a> to follow the journey from Phase 0 to v1.0
+  <a href="https://github.com/sharpdeveye/glazeui/stargazers">⭐ Star this repo</a> to follow the journey to v1.0
 </p>

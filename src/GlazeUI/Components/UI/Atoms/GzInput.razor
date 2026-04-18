@@ -1,13 +1,40 @@
-@using GlazeUI.Utilities
+@* GzInput — Premium text input with validation, icon slots, and inset-ring border *@
 
-<input @attributes="FilteredAttributes"
-       type="@Type"
-       value="@Value"
-       placeholder="@Placeholder"
-       disabled="@Disabled"
-       readonly="@ReadOnly"
-       class="@ComputedClass"
-       @oninput="HandleInput" />
+<div class="@WrapperClass">
+    @if (StartContent is not null)
+    {
+        <span class="pointer-events-none absolute left-3 flex size-4 items-center text-muted-foreground">
+            @StartContent
+        </span>
+    }
+
+    <input
+        @attributes="GetFilteredAttributes()"
+        type="@Type"
+        value="@Value"
+        placeholder="@Placeholder"
+        disabled="@Disabled"
+        readonly="@ReadOnly"
+        aria-invalid="@(!string.IsNullOrEmpty(Error) ? "true" : null)"
+        aria-describedby="@(!string.IsNullOrEmpty(Error) && !string.IsNullOrEmpty(Id) ? $"{Id}-error" : null)"
+        class="@ComputedClass"
+        @oninput="HandleInput" />
+
+    @if (EndContent is not null)
+    {
+        <span class="pointer-events-none absolute right-3 flex size-4 items-center text-muted-foreground">
+            @EndContent
+        </span>
+    }
+</div>
+
+@if (!string.IsNullOrEmpty(Error))
+{
+    <p id="@(!string.IsNullOrEmpty(Id) ? $"{Id}-error" : null)"
+       class="mt-1.5 text-xs text-destructive">
+        @Error
+    </p>
+}
 
 @code {
     /// <summary>HTML input type (text, email, password, number, search, tel, url).</summary>
@@ -28,30 +55,56 @@
     /// <summary>Whether the input is read-only.</summary>
     [Parameter] public bool ReadOnly { get; set; }
 
+    /// <summary>Element ID for label association and error linking.</summary>
+    [Parameter] public string? Id { get; set; }
+
+    /// <summary>Error message — when set, shows destructive styling and error text.</summary>
+    [Parameter] public string? Error { get; set; }
+
+    /// <summary>Optional leading content (icon, prefix).</summary>
+    [Parameter] public RenderFragment? StartContent { get; set; }
+
+    /// <summary>Optional trailing content (icon, suffix, button).</summary>
+    [Parameter] public RenderFragment? EndContent { get; set; }
+
     /// <summary>Additional HTML attributes passed through to the input element.</summary>
-    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string WrapperClass => StartContent is not null || EndContent is not null
+        ? "relative flex items-center"
+        : "";
 
     private const string BaseClasses =
-        "flex h-9 w-full rounded-lg border border-input bg-surface px-3 py-1 " +
-        "text-sm text-foreground shadow-xs transition-colors " +
+        "flex h-9 w-full rounded-md bg-transparent px-3 py-1 " +
+        "text-sm text-foreground " +
+        "inset-ring inset-ring-border/50 " +
+        "transition-all duration-200 ease-out " +
         "file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground " +
         "placeholder:text-muted-foreground " +
-        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring " +
-        "disabled:cursor-not-allowed disabled:opacity-50";
+        "selection:bg-primary selection:text-primary-foreground " +
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background " +
+        "disabled:cursor-not-allowed disabled:opacity-50 " +
+        "aria-[invalid=true]:inset-ring-destructive/50 aria-[invalid=true]:focus-visible:ring-destructive/40";
 
-    private string ComputedClass => CssBuilder.Create(BaseClasses)
-        .Add(UserClass)
-        .Build();
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        StartContent is not null ? "pl-9" : null,
+        EndContent is not null ? "pr-9" : null,
+        GetUserClass()
+    );
 
-    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
-        ? cls?.ToString()
-        : null;
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
 
-    private Dictionary<string, object>? FilteredAttributes =>
-        AdditionalAttributes?.Where(kv => kv.Key != "class")
-            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
-            ? filtered
-            : null;
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
 
     private async Task HandleInput(ChangeEventArgs e)
     {

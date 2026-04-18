@@ -7,11 +7,13 @@
     <RootNamespace>GlazeUI</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="TwMerge" Version="1.0.7" />
+  </ItemGroup>
+
   <!-- Tailwind CSS v4 Build Pipeline -->
   <Target Name="TailwindBuild" BeforeTargets="Build" Condition="'$(DesignTimeBuild)' != 'true'">
-    <Exec Command="npx @tailwindcss/cli -i Styles/input.css -o wwwroot/css/app.css --minify"
-          WorkingDirectory="$(MSBuildProjectDirectory)"
-          StandardOutputImportance="low" />
+    <Exec Command="npx @tailwindcss/cli -i Styles/input.css -o wwwroot/css/app.css --minify" WorkingDirectory="$(MSBuildProjectDirectory)" StandardOutputImportance="low" />
   </Target>
 
   <!-- Tailwind CSS Watch (for development) -->

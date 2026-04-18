@@ -1,0 +1,329 @@
+@page "/components"
+
+<PageTitle>Components — GlazeUI</PageTitle>
+<HeadContent>
+    <meta name="description" content="Browse all GlazeUI atoms — buttons, badges, inputs, form controls, avatars, and typography. Live interactive examples with all variants, sizes, and states." />
+</HeadContent>
+
+@* === Page Header === *@
+<section class="border-b border-border/50 py-12 sm:py-16">
+    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <p class="text-sm font-medium text-primary">Components</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Atom Library
+        </h1>
+        <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
+            Every component below ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition. Click, tab, and explore.
+        </p>
+    </div>
+</section>
+
+@* === Components Grid === *@
+<section class="py-12 sm:py-16">
+    <div class="mx-auto max-w-5xl space-y-16 px-4 sm:px-6 lg:px-8">
+
+        @* ─── Button ─────────────────────────────────── *@
+        <div id="button">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Button</h2>
+                <p class="mt-1 text-sm text-muted-foreground">6 variants × 4 sizes. Loading state, icon slots, tactile press, and premium inset-shadow depth.</p>
+            </div>
+
+            <div class="space-y-8 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                @* Variants *@
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Variants</p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <GzButton>Default</GzButton>
+                        <GzButton Variant="ButtonVariant.Secondary">Secondary</GzButton>
+                        <GzButton Variant="ButtonVariant.Destructive">Destructive</GzButton>
+                        <GzButton Variant="ButtonVariant.Outline">Outline</GzButton>
+                        <GzButton Variant="ButtonVariant.Ghost">Ghost</GzButton>
+                        <GzButton Variant="ButtonVariant.Link">Link</GzButton>
+                    </div>
+                </div>
+
+                <GzSeparator />
+
+                @* Sizes *@
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Sizes</p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <GzButton Size="ButtonSize.Sm">Small</GzButton>
+                        <GzButton Size="ButtonSize.Md">Medium</GzButton>
+                        <GzButton Size="ButtonSize.Lg">Large</GzButton>
+                        <GzButton Size="ButtonSize.Icon" aria-label="Settings">
+                            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                        </GzButton>
+                    </div>
+                </div>
+
+                <GzSeparator />
+
+                @* States *@
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">States</p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <GzButton Disabled="true">Disabled</GzButton>
+                        <GzButton Variant="ButtonVariant.Outline" Disabled="true">Disabled Outline</GzButton>
+                        <GzButton Loading="true">Loading...</GzButton>
+                        <GzButton Variant="ButtonVariant.Secondary" Loading="true">Saving</GzButton>
+                        <GzButton Variant="ButtonVariant.Destructive" Loading="true">Deleting</GzButton>
+                    </div>
+                </div>
+
+                <GzSeparator />
+
+                @* With Icon *@
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">With Icon</p>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <GzButton>
+                            <Icon>
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                            </Icon>
+                            <ChildContent>New Project</ChildContent>
+                        </GzButton>
+                        <GzButton Variant="ButtonVariant.Outline">
+                            <Icon>
+                                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                </svg>
+                            </Icon>
+                            <ChildContent>Download</ChildContent>
+                        </GzButton>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Badge ──────────────────────────────────── *@
+        <div id="badge">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Badge</h2>
+                <p class="mt-1 text-sm text-muted-foreground">4 semantic variants for status indicators, labels, and counts. Solid variants feature inset-shadow depth.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap items-center gap-3">
+                    <GzBadge>Default</GzBadge>
+                    <GzBadge Variant="BadgeVariant.Secondary">Secondary</GzBadge>
+                    <GzBadge Variant="BadgeVariant.Destructive">Destructive</GzBadge>
+                    <GzBadge Variant="BadgeVariant.Outline">Outline</GzBadge>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Separator ──────────────────────────────── *@
+        <div id="separator">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Separator</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Subtle dividers with proper ARIA semantics. Decorative by default.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Horizontal</p>
+                    <div class="rounded-lg bg-surface p-4">
+                        <p class="text-sm text-foreground">Content above</p>
+                        <GzSeparator class="my-3" />
+                        <p class="text-sm text-foreground">Content below</p>
+                    </div>
+                </div>
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Vertical</p>
+                    <div class="flex h-8 items-center gap-3 rounded-lg bg-surface px-4">
+                        <span class="text-sm text-foreground">Left</span>
+                        <GzSeparator Orientation="SeparatorOrientation.Vertical" />
+                        <span class="text-sm text-foreground">Center</span>
+                        <GzSeparator Orientation="SeparatorOrientation.Vertical" />
+                        <span class="text-sm text-foreground">Right</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Input + Label ──────────────────────────── *@
+        <div id="input">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Input + Label</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Text input with inset-ring border, validation states, icon slots, and two-way binding.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="grid max-w-sm gap-2">
+                    <GzLabel For="demo-email" Required="true">Email</GzLabel>
+                    <GzInput Id="demo-email" Type="email" Placeholder="you@example.com" />
+                </div>
+
+                <div class="grid max-w-sm gap-2">
+                    <GzLabel For="demo-password">Password</GzLabel>
+                    <GzInput Id="demo-password" Type="password" Placeholder="Enter password" />
+                </div>
+
+                <div class="grid max-w-sm gap-2">
+                    <GzLabel For="demo-error">With validation error</GzLabel>
+                    <GzInput Id="demo-error" Type="email" Value="not-an-email" Error="Please enter a valid email address" />
+                </div>
+
+                <div class="grid max-w-sm gap-2">
+                    <GzLabel For="demo-disabled">Disabled</GzLabel>
+                    <GzInput Id="demo-disabled" Placeholder="Cannot type here" Disabled="true" />
+                </div>
+
+                <div class="grid max-w-sm gap-2">
+                    <GzLabel For="demo-file">Upload file</GzLabel>
+                    <GzInput Id="demo-file" Type="file" />
+                </div>
+            </div>
+        </div>
+
+        @* ─── Textarea ───────────────────────────────── *@
+        <div id="textarea">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Textarea</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Multi-line input with inset-ring border, validation, and configurable rows.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="grid max-w-lg gap-2">
+                    <GzLabel For="demo-message" Required="true">Message</GzLabel>
+                    <GzTextarea Id="demo-message" Placeholder="Tell us what you think..." Rows="4" />
+                </div>
+
+                <div class="grid max-w-lg gap-2">
+                    <GzLabel For="demo-textarea-error">With validation error</GzLabel>
+                    <GzTextarea Id="demo-textarea-error" Value="Too short" Error="Message must be at least 20 characters" />
+                </div>
+
+                <div class="grid max-w-lg gap-2">
+                    <GzLabel For="demo-readonly">Read-only</GzLabel>
+                    <GzTextarea Id="demo-readonly" Value="This content cannot be edited by the user." ReadOnly="true" />
+                </div>
+            </div>
+        </div>
+
+        @* ─── Checkbox ───────────────────────────────── *@
+        <div id="checkbox">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Checkbox</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Custom checkbox with SVG checkmark, tactile press, and accessible focus ring.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzCheckbox @bind-Checked="_acceptTerms">Accept terms and conditions</GzCheckbox>
+                <GzCheckbox @bind-Checked="_newsletter">Subscribe to newsletter</GzCheckbox>
+                <GzCheckbox Checked="true" Disabled="true">Disabled (checked)</GzCheckbox>
+                <GzCheckbox Checked="false" Disabled="true">Disabled (unchecked)</GzCheckbox>
+            </div>
+        </div>
+
+        @* ─── Radio ──────────────────────────────────── *@
+        <div id="radio">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Radio</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Radio buttons with inner dot, group naming, and label support.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzRadio Name="plan" Value="free" Checked="@(_selectedPlan == "free")" CheckedChanged="@(_ => SelectPlan("free"))">Free plan</GzRadio>
+                <GzRadio Name="plan" Value="pro" Checked="@(_selectedPlan == "pro")" CheckedChanged="@(_ => SelectPlan("pro"))">Pro plan — $9/mo</GzRadio>
+                <GzRadio Name="plan" Value="enterprise" Checked="@(_selectedPlan == "enterprise")" CheckedChanged="@(_ => SelectPlan("enterprise"))">Enterprise — Contact us</GzRadio>
+                <GzRadio Name="disabled-group" Value="x" Checked="true" Disabled="true">Disabled (selected)</GzRadio>
+            </div>
+        </div>
+
+        @* ─── Switch ─────────────────────────────────── *@
+        <div id="switch">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Switch</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Toggle with sliding thumb, role="switch", and ARIA checked state.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzSwitch @bind-Checked="_notifications">Enable notifications</GzSwitch>
+                <GzSwitch @bind-Checked="_analytics">Share analytics</GzSwitch>
+                <GzSwitch Checked="true" Disabled="true">Always on (disabled)</GzSwitch>
+                <GzSwitch Checked="false" Disabled="true">Always off (disabled)</GzSwitch>
+            </div>
+        </div>
+
+        @* ─── Avatar ─────────────────────────────────── *@
+        <div id="avatar">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Avatar</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Circular avatar with image, fallback initials, and default icon. Handles broken images gracefully.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">With image</p>
+                    <div class="flex items-center gap-4">
+                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=JD" Alt="John Doe" Size="AvatarSize.Sm" />
+                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=AS" Alt="Alice Smith" Size="AvatarSize.Md" />
+                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=BW" Alt="Bob Wilson" Size="AvatarSize.Lg" />
+                    </div>
+                </div>
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Initials fallback</p>
+                    <div class="flex items-center gap-4">
+                        <GzAvatar Initials="JD" Alt="John Doe" Size="AvatarSize.Sm" />
+                        <GzAvatar Initials="AS" Alt="Alice Smith" Size="AvatarSize.Md" />
+                        <GzAvatar Initials="BW" Alt="Bob Wilson" Size="AvatarSize.Lg" />
+                    </div>
+                </div>
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Default icon</p>
+                    <div class="flex items-center gap-4">
+                        <GzAvatar Alt="User" Size="AvatarSize.Sm" />
+                        <GzAvatar Alt="User" Size="AvatarSize.Md" />
+                        <GzAvatar Alt="User" Size="AvatarSize.Lg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Typography ─────────────────────────────── *@
+        <div id="typography">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Typography</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Semantic HTML elements with predefined typographic scales. Renders correct heading levels, paragraphs, and inline code.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzTypography As="TypographyElement.H1">Heading 1</GzTypography>
+                <GzTypography As="TypographyElement.H2">Heading 2</GzTypography>
+                <GzTypography As="TypographyElement.H3">Heading 3</GzTypography>
+                <GzTypography As="TypographyElement.H4">Heading 4</GzTypography>
+
+                <GzSeparator class="my-4" />
+
+                <GzTypography As="TypographyElement.P">This is a standard paragraph with default leading and foreground color. It's designed for body text and long-form content.</GzTypography>
+                <GzTypography As="TypographyElement.Lead">This is a lead paragraph — larger, muted text for introductions.</GzTypography>
+                <GzTypography As="TypographyElement.Large">Large text for emphasis</GzTypography>
+                <GzTypography As="TypographyElement.Small">Small text for captions</GzTypography>
+                <GzTypography As="TypographyElement.Muted">Muted text for secondary information</GzTypography>
+                <GzTypography As="TypographyElement.P">Use <GzTypography As="TypographyElement.InlineCode">GzTypography</GzTypography> for consistent text styling.</GzTypography>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+@code {
+    private bool _acceptTerms;
+    private bool _newsletter = true;
+    private bool _notifications = true;
+    private bool _analytics;
+    private string _selectedPlan = "pro";
+
+    private void SelectPlan(string plan)
+    {
+        _selectedPlan = plan;
+    }
+}

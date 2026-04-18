@@ -1,17 +1,18 @@
-@using GlazeUI.Utilities
+@* GzCheckbox — Custom checkbox with checkmark, focus ring, and tactile press *@
 
-<label class="flex items-start gap-3 cursor-pointer group">
+<label class="@WrapperClass">
     <div class="relative flex items-center justify-center">
-        <input @attributes="FilteredAttributes"
-               type="checkbox"
-               checked="@Checked"
-               disabled="@Disabled"
-               class="peer sr-only"
-               @onchange="HandleChange" />
+        <input
+            @attributes="GetFilteredAttributes()"
+            type="checkbox"
+            checked="@Checked"
+            disabled="@Disabled"
+            class="peer sr-only"
+            @onchange="HandleChange" />
         <div class="@BoxClass">
             @if (Checked)
             {
-                <svg class="h-3.5 w-3.5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+                <svg class="size-3.5 text-primary-foreground" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                 </svg>
             }
@@ -37,28 +38,36 @@
     [Parameter] public bool Disabled { get; set; }
 
     /// <summary>Additional HTML attributes passed through to the input element.</summary>
-    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private string BoxClass => CssBuilder.Create(
-            "flex h-4 w-4 shrink-0 items-center justify-center rounded " +
-            "border border-input shadow-xs transition-colors " +
-            "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring " +
-            "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring")
-        .AddWhen("bg-primary-500 border-primary-500", Checked)
-        .AddWhen("bg-surface", !Checked)
-        .AddWhen("opacity-50 cursor-not-allowed", Disabled)
-        .Build();
+    private string WrapperClass => Tw.Merge(
+        "flex items-start gap-3 cursor-pointer group",
+        "active:scale-[0.98] transition-transform duration-200 ease-out",
+        Disabled ? "cursor-not-allowed" : null
+    );
 
-    private string LabelClass => CssBuilder.Create("text-sm leading-none")
-        .AddWhen("text-foreground", !Disabled)
-        .AddWhen("text-muted-foreground cursor-not-allowed", Disabled)
-        .Build();
+    private string BoxClass => Tw.Merge(
+        "flex size-4 shrink-0 items-center justify-center rounded",
+        "border border-border/50 shadow-xs",
+        "transition-all duration-200 ease-out",
+        "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 ring-offset-background",
+        Checked ? "bg-primary border-primary" : "bg-transparent",
+        Disabled ? "opacity-50 cursor-not-allowed" : null
+    );
 
-    private Dictionary<string, object>? FilteredAttributes =>
-        AdditionalAttributes?.Where(kv => kv.Key != "class")
-            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
-            ? filtered
-            : null;
+    private string LabelClass => Tw.Merge(
+        "text-sm leading-none",
+        Disabled ? "text-muted-foreground cursor-not-allowed" : "text-foreground"
+    );
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
 
     private async Task HandleChange(ChangeEventArgs e)
     {

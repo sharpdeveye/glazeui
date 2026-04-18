@@ -1,37 +1,36 @@
-@using GlazeUI.Models
-@using GlazeUI.Utilities
+@* GzTypography — Semantic HTML elements with predefined typographic styles *@
 
 @switch (As)
 {
     case TypographyElement.H1:
-        <h1 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h1>
+        <h1 @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</h1>
         break;
     case TypographyElement.H2:
-        <h2 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h2>
+        <h2 @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</h2>
         break;
     case TypographyElement.H3:
-        <h3 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h3>
+        <h3 @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</h3>
         break;
     case TypographyElement.H4:
-        <h4 @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</h4>
+        <h4 @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</h4>
         break;
     case TypographyElement.P:
-        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        <p @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</p>
         break;
     case TypographyElement.Lead:
-        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        <p @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</p>
         break;
     case TypographyElement.Large:
-        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        <p @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</p>
         break;
     case TypographyElement.Small:
-        <small @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</small>
+        <small @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</small>
         break;
     case TypographyElement.Muted:
-        <p @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</p>
+        <p @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</p>
         break;
     case TypographyElement.InlineCode:
-        <code @attributes="FilteredAttributes" class="@ComputedClass">@ChildContent</code>
+        <code @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</code>
         break;
 }
 
@@ -43,23 +42,15 @@
     [Parameter] public TypographyElement As { get; set; } = TypographyElement.P;
 
     /// <summary>Additional HTML attributes.</summary>
-    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
-    private string ComputedClass => CssBuilder.Create(GetElementClasses(As))
-        .Add(UserClass)
-        .Build();
+    private string ComputedClass => Tw.Merge(
+        GetElementClasses(),
+        GetUserClass()
+    );
 
-    private string? UserClass => AdditionalAttributes?.TryGetValue("class", out var cls) == true
-        ? cls?.ToString()
-        : null;
-
-    private Dictionary<string, object>? FilteredAttributes =>
-        AdditionalAttributes?.Where(kv => kv.Key != "class")
-            .ToDictionary(kv => kv.Key, kv => kv.Value) is { Count: > 0 } filtered
-            ? filtered
-            : null;
-
-    private static string GetElementClasses(TypographyElement el) => el switch
+    private string GetElementClasses() => As switch
     {
         TypographyElement.H1         => "scroll-m-20 text-4xl font-extrabold tracking-tight text-foreground lg:text-5xl",
         TypographyElement.H2         => "scroll-m-20 text-3xl font-semibold tracking-tight text-foreground",
@@ -73,4 +64,16 @@
         TypographyElement.InlineCode => "relative rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground",
         _                            => ""
     };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
 }

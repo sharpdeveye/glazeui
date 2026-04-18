@@ -16,9 +16,9 @@ public enum ButtonVariant
 /// <summary>Size preset for GzButton.</summary>
 public enum ButtonSize
 {
-    Small,
-    Medium,
-    Large,
+    Sm,
+    Md,
+    Lg,
     Icon
 }
 
@@ -47,9 +47,9 @@ public enum SeparatorOrientation
 /// <summary>Size preset for GzAvatar.</summary>
 public enum AvatarSize
 {
-    Small,
-    Medium,
-    Large
+    Sm,
+    Md,
+    Lg
 }
 
 // ─── Typography ─────────────────────────────────────────

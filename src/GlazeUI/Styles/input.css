@@ -11,52 +11,51 @@
 
 /* === Design Tokens via @theme === */
 @theme {
-  /* --- Color System (oklch for perceptual uniformity) --- */
+  /* --- Semantic Color System (oklch for perceptual uniformity) --- */
+  /* Primary — the signature action color (graphite blue) */
+  --color-primary: oklch(0.55 0.18 250);
+  --color-primary-foreground: oklch(0.99 0.005 250);
 
-  /* Primary — the signature brand color */
-  --color-primary-50:  oklch(0.97 0.01 250);
-  --color-primary-100: oklch(0.93 0.03 250);
-  --color-primary-200: oklch(0.87 0.06 250);
-  --color-primary-300: oklch(0.79 0.10 250);
-  --color-primary-400: oklch(0.70 0.14 250);
-  --color-primary-500: oklch(0.62 0.18 250);
-  --color-primary-600: oklch(0.54 0.18 250);
-  --color-primary-700: oklch(0.46 0.16 250);
-  --color-primary-800: oklch(0.38 0.12 250);
-  --color-primary-900: oklch(0.30 0.09 250);
-  --color-primary-950: oklch(0.22 0.06 250);
+  /* Secondary — neutral fill for less prominent actions */
+  --color-secondary: oklch(0.96 0 0);
+  --color-secondary-foreground: oklch(0.14 0 0);
 
-  /* Semantic Colors */
+  /* Accent — hover/focus background for outline/ghost variants */
+  --color-accent: oklch(0.96 0 0);
+  --color-accent-foreground: oklch(0.14 0 0);
+
+  /* Destructive — danger actions */
   --color-destructive: oklch(0.58 0.22 25);
   --color-destructive-foreground: oklch(0.98 0.01 25);
+
+  /* Success */
   --color-success: oklch(0.62 0.17 145);
   --color-success-foreground: oklch(0.98 0.01 145);
+
+  /* Warning */
   --color-warning: oklch(0.75 0.15 85);
   --color-warning-foreground: oklch(0.25 0.05 85);
-  --color-info: oklch(0.62 0.14 250);
-  --color-info-foreground: oklch(0.98 0.01 250);
 
-  /* Surface Colors (light mode defaults) */
+  /* --- Surface Colors (light mode defaults) --- */
   --color-background: oklch(0.99 0 0);
   --color-foreground: oklch(0.14 0 0);
   --color-surface: oklch(1 0 0);
   --color-surface-foreground: oklch(0.14 0 0);
   --color-muted: oklch(0.96 0 0);
   --color-muted-foreground: oklch(0.45 0 0);
-  --color-border: oklch(0.90 0 0);
-  --color-ring: oklch(0.62 0.18 250);
-  --color-input: oklch(0.90 0 0);
   --color-card: oklch(1 0 0);
   --color-card-foreground: oklch(0.14 0 0);
   --color-popover: oklch(1 0 0);
   --color-popover-foreground: oklch(0.14 0 0);
 
+  /* --- Border / Ring / Input --- */
+  --color-border: oklch(0.90 0 0);
+  --color-input: oklch(0.90 0 0);
+  --color-ring: oklch(0.55 0.18 250);
+
   /* --- Typography --- */
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
-
-  /* --- Spacing (4px base grid) --- */
-  /* Tailwind v4 includes default spacing, these extend it */
 
   /* --- Border Radius --- */
   --radius-sm: 0.25rem;    /* 4px */
@@ -66,33 +65,43 @@
   --radius-2xl: 1rem;      /* 16px */
   --radius-full: 9999px;
 
-  /* --- Shadows --- */
+  /* --- Shadows (warm and soft, never harsh black) --- */
   --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 0.03);
   --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 0.06), 0 1px 2px -1px oklch(0 0 0 / 0.06);
   --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.08), 0 2px 4px -2px oklch(0 0 0 / 0.05);
   --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.08), 0 4px 6px -4px oklch(0 0 0 / 0.04);
   --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 0.1), 0 8px 10px -6px oklch(0 0 0 / 0.04);
 
-  /* --- Transitions --- */
+  /* --- Motion --- */
   --ease-glaze: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* === Dark Mode Token Overrides === */
 @layer base {
   .dark {
+    --color-primary: oklch(0.65 0.18 250);
+    --color-primary-foreground: oklch(0.12 0.01 250);
+
+    --color-secondary: oklch(0.22 0 0);
+    --color-secondary-foreground: oklch(0.93 0 0);
+
+    --color-accent: oklch(0.22 0 0);
+    --color-accent-foreground: oklch(0.93 0 0);
+
     --color-background: oklch(0.12 0 0);
     --color-foreground: oklch(0.93 0 0);
     --color-surface: oklch(0.16 0 0);
     --color-surface-foreground: oklch(0.93 0 0);
     --color-muted: oklch(0.22 0 0);
     --color-muted-foreground: oklch(0.64 0 0);
-    --color-border: oklch(0.28 0 0);
-    --color-ring: oklch(0.62 0.18 250);
-    --color-input: oklch(0.28 0 0);
     --color-card: oklch(0.16 0 0);
     --color-card-foreground: oklch(0.93 0 0);
     --color-popover: oklch(0.16 0 0);
     --color-popover-foreground: oklch(0.93 0 0);
+
+    --color-border: oklch(0.28 0 0);
+    --color-input: oklch(0.28 0 0);
+    --color-ring: oklch(0.65 0.18 250);
   }
 }
 

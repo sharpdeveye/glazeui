@@ -60,6 +60,7 @@ dist/
 *.pdf
 
 # --- Design Document (private research) ---
+critical.md
 *-design.md
 *-design.pdf
 *-img.png
