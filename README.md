@@ -140,13 +140,13 @@ glazeui/
 
 ## Roadmap
 
-| Phase | Timeline | Status | Deliverables |
-|---|---|---|---|
-| **Phase 0** | Foundation | ✅ Complete | Blazor + Tailwind v4 template, design tokens, dark mode, project infrastructure |
-| **Phase 1** | Months 1-3 | 🔜 Next | Token system, 10-12 atom components (Button, Input, Badge...), docs scaffold, Figma kit start |
-| **Phase 2** | Months 4-6 | 📋 Planned | 6-8 molecules (Card, Alert, Tabs...), UX guidelines, writing guidelines |
-| **Phase 3** | Months 7-10 | 📋 Planned | Headless primitives, 4-5 organisms (Dialog, Dropdown, Popover...), pattern recipes |
-| **Phase 4** | Months 11-13 | 📋 Planned | CLI tool, accessibility matrices, community contribution model, v1.0 release |
+| Phase | Status | Deliverables |
+|---|---|---|
+| **Phase 0** | ✅ Complete | Blazor + Tailwind v4 template, design tokens, dark mode, project infrastructure |
+| **Phase 1** | 🔜 Next | Token system, 10-12 atom components (Button, Input, Badge...), docs scaffold, Figma kit start |
+| **Phase 2** | 📋 Planned | 6-8 molecules (Card, Alert, Tabs...), UX guidelines, writing guidelines |
+| **Phase 3** | 📋 Planned | Headless primitives, 4-5 organisms (Dialog, Dropdown, Popover...), pattern recipes |
+| **Phase 4** | 📋 Planned | CLI tool, accessibility matrices, community contribution model, v1.0 release |
 
 ### Every component ships with:
 
