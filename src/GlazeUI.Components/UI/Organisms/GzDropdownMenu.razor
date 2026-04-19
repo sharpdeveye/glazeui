@@ -1,0 +1,78 @@
+@* GzDropdownMenu — Trigger + floating menu with items, separators, and keyboard navigation *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass"
+     @onfocusout="HandleFocusOut">
+    @* Trigger *@
+    <div @onclick="Toggle"
+         @onclick:stopPropagation="true"
+         @onkeydown="HandleKeyDown">
+        @Trigger
+    </div>
+
+    @* Menu *@
+    @if (_isOpen)
+    {
+        <div role="menu"
+             class="@MenuClass">
+            @ChildContent
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>The element that triggers the dropdown.</summary>
+    [Parameter] public RenderFragment? Trigger { get; set; }
+
+    /// <summary>Menu items — use GzDropdownMenuItem and GzSeparator inside.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Horizontal alignment of the menu relative to the trigger.</summary>
+    [Parameter] public string Align { get; set; } = "end";
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _isOpen;
+
+    private string ComputedClass => Tw.Merge(
+        "relative inline-block",
+        GetUserClass()
+    );
+
+    private string MenuClass => Tw.Merge(
+        "absolute z-50 mt-1 min-w-[8rem] overflow-hidden rounded-md",
+        "border border-border/50 bg-popover p-1 text-popover-foreground shadow-lg",
+        Align == "start" ? "left-0" : "right-0"
+    );
+
+    private void Toggle() => _isOpen = !_isOpen;
+
+    private void HandleFocusOut()
+    {
+        _ = Task.Delay(150).ContinueWith(_ =>
+        {
+            _isOpen = false;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape") _isOpen = false;
+        if (e.Key is "Enter" or " ") _isOpen = !_isOpen;
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

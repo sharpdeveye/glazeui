@@ -1,0 +1,66 @@
+@* GzDropdownMenuItem — Individual menu item inside GzDropdownMenu *@
+
+<div @attributes="GetFilteredAttributes()"
+     role="menuitem"
+     tabindex="-1"
+     class="@ComputedClass"
+     @onclick="HandleClick">
+    @if (Icon is not null)
+    {
+        <span class="shrink-0">@Icon</span>
+    }
+    <span class="flex-1">@ChildContent</span>
+    @if (!string.IsNullOrWhiteSpace(Shortcut))
+    {
+        <span class="ml-auto text-xs tracking-widest text-muted-foreground">@Shortcut</span>
+    }
+</div>
+
+@code {
+    /// <summary>Menu item label.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Optional leading icon.</summary>
+    [Parameter] public RenderFragment? Icon { get; set; }
+
+    /// <summary>Optional keyboard shortcut label (display only).</summary>
+    [Parameter] public string? Shortcut { get; set; }
+
+    /// <summary>Whether this item is disabled.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Click handler.</summary>
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "relative flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm cursor-pointer",
+        "transition-colors duration-150 ease-out",
+        "focus-visible:outline-none focus-visible:bg-accent focus-visible:text-accent-foreground",
+        Disabled
+            ? "pointer-events-none opacity-50"
+            : "hover:bg-accent hover:text-accent-foreground",
+        GetUserClass()
+    );
+
+    private async Task HandleClick()
+    {
+        if (!Disabled && OnClick.HasDelegate)
+            await OnClick.InvokeAsync();
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

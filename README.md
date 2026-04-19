@@ -48,7 +48,7 @@
 
 ## Components
 
-GlazeUI ships **17 components** — 13 atoms and 4 molecules — with full variant coverage, loading states, accessible focus rings, and dark mode support via semantic tokens.
+GlazeUI ships **23 components** — 13 atoms, 6 molecules, and 4 organisms — with full variant coverage, loading states, accessible focus rings, and dark mode support via semantic tokens.
 
 ### Atoms
 
@@ -76,6 +76,17 @@ GlazeUI ships **17 components** — 13 atoms and 4 molecules — with full varia
 | **GzAlert** | 5 semantic variants (Default, Info, Success, Warning, Destructive) with auto-icons |
 | **GzFormField** | Composes Label + Control + Description/Error. Required indicator |
 | **GzTabs** | ARIA tablist/tab/tabpanel pattern, two-way binding, lazy panel rendering |
+| **GzTooltip** | CSS-only, 4 positions (Top/Right/Bottom/Left), zero JS/SignalR |
+| **GzSelect** | ARIA combobox, keyboard nav (arrows/enter/escape), checkmark indicator |
+
+### Organisms
+
+| Component | Features |
+|---|---|
+| **GzDialog** | Modal with backdrop blur, click-outside-to-close, 4 sizes, Header/Footer slots |
+| **GzDropdownMenu** | Trigger + floating menu, Escape to close, start/end alignment |
+| **GzDropdownMenuItem** | Icon + label + shortcut layout, disabled state |
+| **GzPopover** | Click-triggered floating panel, 3 alignment modes, any content |
 
 ### Premium by Default
 
@@ -201,9 +212,9 @@ glazeui/
 | Phase | Status | Deliverables |
 |---|---|---|
 | **Phase 0** | ✅ Complete | Blazor + Tailwind v4 template, design tokens, dark mode, project infrastructure |
-| **Phase 1** | ✅ Complete | Semantic token system, 11 atom components, TailwindMerge, showcase page |
-| **Phase 2** | 🟡 In Progress | Molecules (Card, Alert, FormField, Tabs), UX guidelines, writing guidelines |
-| **Phase 3** | 📋 Planned | Headless primitives, organisms (Dialog, Dropdown, Popover...), pattern recipes |
+| **Phase 1** | ✅ Complete | Semantic token system, 13 atom components, TailwindMerge, showcase page |
+| **Phase 2** | ✅ Complete | 6 molecules (Card, Alert, FormField, Tabs, Tooltip, Select), Docs page, NuGet RCL |
+| **Phase 3** | ✅ Complete | 4 organisms (Dialog, DropdownMenu, DropdownMenuItem, Popover) |
 | **Phase 4** | 📋 Planned | CLI tool, accessibility matrices, community contribution model, v1.0 release |
 
 ### Every component ships with:

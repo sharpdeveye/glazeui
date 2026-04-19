@@ -1,0 +1,132 @@
+@* GzDialog — Modal dialog with backdrop overlay, header/footer slots, and close button *@
+
+@if (Open)
+{
+    @* Backdrop — click to close *@
+    <div class="fixed inset-0 z-50 flex items-center justify-center">
+        <div class="fixed inset-0 bg-foreground/60 backdrop-blur-sm"
+             @onclick="Close"
+             @onclick:stopPropagation="true">
+        </div>
+
+        @* Dialog panel *@
+        <div @attributes="GetFilteredAttributes()"
+             role="dialog"
+             aria-modal="true"
+             aria-labelledby="@(Id + "-title")"
+             class="@ComputedClass">
+
+            @* Close button *@
+            <button type="button"
+                    class="absolute right-4 top-4 rounded-sm p-1 text-muted-foreground opacity-70 transition-all duration-200 cursor-pointer hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
+                    aria-label="Close"
+                    @onclick="Close">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            @* Header *@
+            @if (Header is not null)
+            {
+                <div class="mb-4">
+                    @Header
+                </div>
+            }
+            else if (!string.IsNullOrWhiteSpace(Title))
+            {
+                <div class="mb-4">
+                    <h2 id="@(Id + "-title")" class="text-lg font-semibold leading-none tracking-tight text-foreground">@Title</h2>
+                    @if (!string.IsNullOrWhiteSpace(Description))
+                    {
+                        <p class="mt-1.5 text-sm text-muted-foreground">@Description</p>
+                    }
+                </div>
+            }
+
+            @* Content *@
+            @if (ChildContent is not null)
+            {
+                <div>@ChildContent</div>
+            }
+
+            @* Footer *@
+            @if (Footer is not null)
+            {
+                <div class="mt-6 flex justify-end gap-2">
+                    @Footer
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>Dialog body content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Custom header slot — overrides Title/Description.</summary>
+    [Parameter] public RenderFragment? Header { get; set; }
+
+    /// <summary>Footer slot — typically action buttons.</summary>
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    /// <summary>Dialog title text.</summary>
+    [Parameter] public string? Title { get; set; }
+
+    /// <summary>Dialog description text shown below title.</summary>
+    [Parameter] public string? Description { get; set; }
+
+    /// <summary>Whether the dialog is visible.</summary>
+    [Parameter] public bool Open { get; set; }
+
+    /// <summary>Callback when dialog requests to close — enables @bind-Open.</summary>
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    /// <summary>Size preset for the dialog panel.</summary>
+    [Parameter] public DialogSize Size { get; set; } = DialogSize.Md;
+
+    /// <summary>Unique HTML id for accessible labelling.</summary>
+    [Parameter] public string Id { get; set; } = "gz-dialog";
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetSizeClass(),
+        GetUserClass()
+    );
+
+    private const string BaseClasses =
+        "relative z-50 rounded-xl border border-border/50 bg-card p-6 shadow-xl " +
+        "animate-in fade-in-0 zoom-in-95";
+
+    private string GetSizeClass() => Size switch
+    {
+        DialogSize.Sm   => "w-full max-w-sm",
+        DialogSize.Md   => "w-full max-w-lg",
+        DialogSize.Lg   => "w-full max-w-2xl",
+        DialogSize.Full => "w-full max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]",
+        _ => "w-full max-w-lg"
+    };
+
+    private async Task Close()
+    {
+        Open = false;
+        await OpenChanged.InvokeAsync(false);
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

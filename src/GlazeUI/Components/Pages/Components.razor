@@ -480,6 +480,159 @@
             </div>
         </div>
 
+        @* ─── Tooltip ─────────────────────────────────── *@
+        <div id="tooltip">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Tooltip</h2>
+                <p class="mt-1 text-sm text-muted-foreground">CSS-only tooltip with 4 positions. Zero JS, zero SignalR roundtrips — instant on hover and focus.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap items-center gap-6">
+                    <GzTooltip Text="Appears on top" Position="TooltipPosition.Top">
+                        <GzButton Variant="ButtonVariant.Outline">Top</GzButton>
+                    </GzTooltip>
+                    <GzTooltip Text="Appears on the right" Position="TooltipPosition.Right">
+                        <GzButton Variant="ButtonVariant.Outline">Right</GzButton>
+                    </GzTooltip>
+                    <GzTooltip Text="Appears on the bottom" Position="TooltipPosition.Bottom">
+                        <GzButton Variant="ButtonVariant.Outline">Bottom</GzButton>
+                    </GzTooltip>
+                    <GzTooltip Text="Appears on the left" Position="TooltipPosition.Left">
+                        <GzButton Variant="ButtonVariant.Outline">Left</GzButton>
+                    </GzTooltip>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Select ──────────────────────────────────── *@
+        <div id="select">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Select</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Dropdown select with keyboard navigation (arrow keys, enter, escape), ARIA combobox, and checkmark indicator.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="max-w-sm">
+                    <GzFormField Label="Framework" Id="ff-framework" Description="Your preferred frontend framework.">
+                        <GzSelect Options="_frameworkOptions" @bind-Value="_selectedFramework" Placeholder="Select a framework" />
+                    </GzFormField>
+                </div>
+                <div class="max-w-sm">
+                    <GzFormField Label="Disabled" Id="ff-disabled-select">
+                        <GzSelect Options="_frameworkOptions" Placeholder="Cannot change" Disabled="true" />
+                    </GzFormField>
+                </div>
+            </div>
+        </div>
+
+        @* ═══════════════════════════════════════════════ *@
+        @* ═══       ORGANISMS                        ═══ *@
+        @* ═══════════════════════════════════════════════ *@
+
+        <div class="pt-8">
+            <GzSeparator />
+            <p class="mt-6 text-xs font-medium uppercase tracking-widest text-primary">Organisms</p>
+        </div>
+
+        @* ─── Dialog ──────────────────────────────────── *@
+        <div id="dialog">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Dialog</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Modal with backdrop blur, click-outside-to-close, X button, Header/Footer slots, 4 sizes, and accessible ARIA.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap gap-3">
+                    <GzButton @onclick="() => _dialogOpen = true">Open Dialog</GzButton>
+                    <GzButton Variant="ButtonVariant.Outline" @onclick="() => _dialogSmOpen = true">Small Dialog</GzButton>
+                </div>
+            </div>
+
+            <GzDialog @bind-Open="_dialogOpen" Title="Edit Profile" Description="Make changes to your profile here. Click save when you're done.">
+                <ChildContent>
+                    <div class="space-y-4">
+                        <GzFormField Label="Name" Id="dlg-name">
+                            <GzInput Id="dlg-name" Placeholder="John Doe" />
+                        </GzFormField>
+                        <GzFormField Label="Email" Id="dlg-email">
+                            <GzInput Id="dlg-email" Type="email" Placeholder="john@example.com" />
+                        </GzFormField>
+                    </div>
+                </ChildContent>
+                <Footer>
+                    <GzButton Variant="ButtonVariant.Ghost" @onclick="() => _dialogOpen = false">Cancel</GzButton>
+                    <GzButton @onclick="() => _dialogOpen = false">Save Changes</GzButton>
+                </Footer>
+            </GzDialog>
+
+            <GzDialog @bind-Open="_dialogSmOpen" Title="Confirm Action" Description="Are you sure you want to continue?" Size="DialogSize.Sm">
+                <Footer>
+                    <GzButton Variant="ButtonVariant.Ghost" @onclick="() => _dialogSmOpen = false">Cancel</GzButton>
+                    <GzButton Variant="ButtonVariant.Destructive" @onclick="() => _dialogSmOpen = false">Delete</GzButton>
+                </Footer>
+            </GzDialog>
+        </div>
+
+        @* ─── DropdownMenu ────────────────────────────── *@
+        <div id="dropdown">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">DropdownMenu</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Trigger + floating menu with items, separators, keyboard shortcut labels, and disabled state.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzDropdownMenu>
+                    <Trigger>
+                        <GzButton Variant="ButtonVariant.Outline">
+                            <ChildContent>Open Menu</ChildContent>
+                        </GzButton>
+                    </Trigger>
+                    <ChildContent>
+                        <GzDropdownMenuItem Shortcut="⌘N">New File</GzDropdownMenuItem>
+                        <GzDropdownMenuItem Shortcut="⌘O">Open</GzDropdownMenuItem>
+                        <GzSeparator class="my-1" />
+                        <GzDropdownMenuItem Shortcut="⌘S">Save</GzDropdownMenuItem>
+                        <GzDropdownMenuItem Shortcut="⇧⌘S">Save As</GzDropdownMenuItem>
+                        <GzSeparator class="my-1" />
+                        <GzDropdownMenuItem Disabled="true">Print</GzDropdownMenuItem>
+                    </ChildContent>
+                </GzDropdownMenu>
+            </div>
+        </div>
+
+        @* ─── Popover ─────────────────────────────────── *@
+        <div id="popover">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Popover</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Click-triggered floating panel. General-purpose — any content can go inside.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzPopover Align="start">
+                    <Trigger>
+                        <GzButton Variant="ButtonVariant.Outline">Open Popover</GzButton>
+                    </Trigger>
+                    <ChildContent>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="text-sm font-semibold text-foreground">Dimensions</h4>
+                                <p class="text-xs text-muted-foreground">Set the dimensions for the layer.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <GzFormField Label="Width" Id="pop-w">
+                                    <GzInput Id="pop-w" Placeholder="100%" />
+                                </GzFormField>
+                                <GzFormField Label="Height" Id="pop-h">
+                                    <GzInput Id="pop-h" Placeholder="auto" />
+                                </GzFormField>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </GzPopover>
+            </div>
+        </div>
+
     </div>
 </section>
 
@@ -490,8 +643,20 @@
     private bool _analytics;
     private string _selectedPlan = "pro";
     private string? _activeTab;
+    private bool _dialogOpen;
+    private bool _dialogSmOpen;
+    private string? _selectedFramework;
 
     private List<TabItem> _demoPanels = new();
+
+    private readonly List<SelectOption> _frameworkOptions = new()
+    {
+        new() { Value = "blazor", Label = "Blazor" },
+        new() { Value = "react", Label = "React" },
+        new() { Value = "vue", Label = "Vue" },
+        new() { Value = "angular", Label = "Angular" },
+        new() { Value = "svelte", Label = "Svelte", Disabled = true }
+    };
 
     protected override void OnInitialized()
     {

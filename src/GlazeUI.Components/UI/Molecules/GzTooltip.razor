@@ -1,0 +1,63 @@
+@* GzTooltip — CSS-only tooltip with configurable position. Zero JS, zero SignalR. *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass">
+    @ChildContent
+    <div role="tooltip" class="@TooltipClass">
+        <span>@Text</span>
+    </div>
+</div>
+
+@code {
+    /// <summary>The trigger element that the tooltip wraps.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Tooltip text content.</summary>
+    [Parameter] public string Text { get; set; } = string.Empty;
+
+    /// <summary>Placement side relative to the trigger.</summary>
+    [Parameter] public TooltipPosition Position { get; set; } = TooltipPosition.Top;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "group relative inline-flex",
+        GetUserClass()
+    );
+
+    private string TooltipClass => Tw.Merge(
+        // Base
+        "pointer-events-none absolute z-50 whitespace-nowrap rounded-md",
+        "bg-foreground px-3 py-1.5 text-xs text-background",
+        "shadow-md",
+        // Visibility transition — CSS only, no server roundtrip
+        "invisible opacity-0 transition-all duration-150 ease-out",
+        "group-hover:visible group-hover:opacity-100",
+        "group-focus-within:visible group-focus-within:opacity-100",
+        // Position
+        GetPositionClass()
+    );
+
+    private string GetPositionClass() => Position switch
+    {
+        TooltipPosition.Top    => "bottom-full left-1/2 mb-2 -translate-x-1/2",
+        TooltipPosition.Bottom => "top-full left-1/2 mt-2 -translate-x-1/2",
+        TooltipPosition.Left   => "right-full top-1/2 mr-2 -translate-y-1/2",
+        TooltipPosition.Right  => "left-full top-1/2 ml-2 -translate-y-1/2",
+        _ => "bottom-full left-1/2 mb-2 -translate-x-1/2"
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

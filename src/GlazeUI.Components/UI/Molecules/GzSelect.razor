@@ -1,0 +1,174 @@
+@* GzSelect — Dropdown select with keyboard navigation and ARIA combobox pattern *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass"
+     @onfocusout="HandleFocusOut">
+    @* Trigger *@
+    <button type="button"
+            role="combobox"
+            aria-expanded="@_isOpen.ToString().ToLower()"
+            aria-haspopup="listbox"
+            aria-label="@(string.IsNullOrWhiteSpace(Placeholder) ? "Select an option" : Placeholder)"
+            class="@TriggerClass"
+            disabled="@Disabled"
+            @onclick="Toggle"
+            @onkeydown="HandleKeyDown">
+        <span class="@(string.IsNullOrWhiteSpace(SelectedLabel) ? "text-muted-foreground" : "")">
+            @(string.IsNullOrWhiteSpace(SelectedLabel) ? Placeholder : SelectedLabel)
+        </span>
+        <svg class="@ChevronClass" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+    </button>
+
+    @* Dropdown *@
+    @if (_isOpen)
+    {
+        <div role="listbox"
+             class="@DropdownClass">
+            @foreach (var option in Options)
+            {
+                var isSelected = option.Value == Value;
+                <div role="option"
+                     aria-selected="@isSelected.ToString().ToLower()"
+                     aria-disabled="@option.Disabled.ToString().ToLower()"
+                     class="@GetOptionClass(isSelected, option.Disabled)"
+                     @onclick="() => SelectOption(option)"
+                     @onclick:stopPropagation="true">
+                    <span>@option.Label</span>
+                    @if (isSelected)
+                    {
+                        <svg class="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>List of selectable options.</summary>
+    [Parameter] public List<SelectOption> Options { get; set; } = new();
+
+    /// <summary>Currently selected value — supports two-way binding.</summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>Callback when selection changes.</summary>
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+
+    /// <summary>Placeholder text shown when no option is selected.</summary>
+    [Parameter] public string Placeholder { get; set; } = "Select an option";
+
+    /// <summary>Whether the select is disabled.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _isOpen;
+    private string? SelectedLabel => Options.FirstOrDefault(o => o.Value == Value)?.Label;
+
+    private string ComputedClass => Tw.Merge(
+        "relative w-full",
+        GetUserClass()
+    );
+
+    private const string TriggerClass =
+        "flex h-10 w-full items-center justify-between rounded-md px-3 py-2 text-sm cursor-pointer " +
+        "bg-background inset-ring inset-ring-border/50 " +
+        "transition-all duration-200 ease-out " +
+        "hover:bg-accent/50 " +
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background " +
+        "disabled:pointer-events-none disabled:opacity-50";
+
+    private string ChevronClass => Tw.Merge(
+        "size-4 shrink-0 text-muted-foreground transition-transform duration-200",
+        _isOpen ? "rotate-180" : ""
+    );
+
+    private const string DropdownClass =
+        "absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-border/50 bg-popover p-1 " +
+        "text-popover-foreground shadow-lg " +
+        "animate-in fade-in-0 zoom-in-95";
+
+    private string GetOptionClass(bool isSelected, bool isDisabled) => Tw.Merge(
+        "relative flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-sm cursor-pointer",
+        "transition-colors duration-150 ease-out",
+        isDisabled
+            ? "pointer-events-none opacity-50"
+            : "hover:bg-accent hover:text-accent-foreground",
+        isSelected ? "font-medium" : ""
+    );
+
+    private void Toggle()
+    {
+        if (!Disabled) _isOpen = !_isOpen;
+    }
+
+    private async Task SelectOption(SelectOption option)
+    {
+        if (option.Disabled) return;
+        Value = option.Value;
+        _isOpen = false;
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private void HandleFocusOut()
+    {
+        // Delay closing to allow click events on options to fire
+        _ = Task.Delay(150).ContinueWith(_ =>
+        {
+            _isOpen = false;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "Escape":
+                _isOpen = false;
+                break;
+            case "Enter" or " ":
+                _isOpen = !_isOpen;
+                break;
+            case "ArrowDown" when _isOpen:
+                SelectAdjacentOption(1);
+                break;
+            case "ArrowUp" when _isOpen:
+                SelectAdjacentOption(-1);
+                break;
+        }
+    }
+
+    private void SelectAdjacentOption(int direction)
+    {
+        var enabledOptions = Options.Where(o => !o.Disabled).ToList();
+        if (enabledOptions.Count == 0) return;
+
+        var currentIndex = enabledOptions.FindIndex(o => o.Value == Value);
+        var nextIndex = currentIndex + direction;
+
+        if (nextIndex < 0) nextIndex = enabledOptions.Count - 1;
+        if (nextIndex >= enabledOptions.Count) nextIndex = 0;
+
+        Value = enabledOptions[nextIndex].Value;
+        ValueChanged.InvokeAsync(Value);
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

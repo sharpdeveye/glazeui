@@ -99,3 +99,25 @@ public enum SkeletonVariant
     Line,
     Circle
 }
+
+// ─── Tooltip ────────────────────────────────────────────
+
+/// <summary>Placement side for GzTooltip.</summary>
+public enum TooltipPosition
+{
+    Top,
+    Right,
+    Bottom,
+    Left
+}
+
+// ─── Dialog ─────────────────────────────────────────────
+
+/// <summary>Size preset for GzDialog.</summary>
+public enum DialogSize
+{
+    Sm,
+    Md,
+    Lg,
+    Full
+}
