@@ -8,7 +8,7 @@
 
     <!-- NuGet Package Metadata -->
     <PackageId>GlazeUI</PackageId>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>SharpDevEye</Authors>
     <Company>GlazeUI Contributors</Company>
     <Description>A premium design system for Blazor + Tailwind CSS v4. Beautifully designed. Fully accessible. You own the code.</Description>

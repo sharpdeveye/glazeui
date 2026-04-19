@@ -2,25 +2,58 @@
 
 <PageTitle>Components — GlazeUI</PageTitle>
 <HeadContent>
-    <meta name="description" content="Browse all GlazeUI atoms — buttons, badges, inputs, form controls, avatars, and typography. Live interactive examples with all variants, sizes, and states." />
+    <meta name="description" content="Browse all 23 GlazeUI components — atoms, molecules, and organisms. Live interactive examples with all variants, sizes, and states." />
 </HeadContent>
 
 @* === Page Header === *@
 <section class="border-b border-border/50 py-12 sm:py-16">
-    <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p class="text-sm font-medium text-primary">Components</p>
         <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Atom Library
+            Component Library
         </h1>
         <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
-            Every component below ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition. Click, tab, and explore.
+            23 components across 3 tiers — atoms, molecules, and organisms. Every component ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition.
         </p>
     </div>
 </section>
 
-@* === Components Grid === *@
+@* === Components with Sidebar === *@
 <section class="py-12 sm:py-16">
-    <div class="mx-auto max-w-5xl space-y-16 px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto flex max-w-6xl gap-10 px-4 sm:px-6 lg:px-8">
+
+        @* ─── Sidebar Nav ─────────────────────── *@
+        <aside class="hidden w-48 shrink-0 lg:block">
+            <nav class="sticky top-24 space-y-1">
+                <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Atoms</p>
+                <a href="#button" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Button</a>
+                <a href="#badge" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Badge</a>
+                <a href="#input" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Input</a>
+                <a href="#textarea" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Textarea</a>
+                <a href="#checkbox-radio" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Checkbox & Radio</a>
+                <a href="#switch" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Switch</a>
+                <a href="#avatar" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Avatar</a>
+                <a href="#typography" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Typography</a>
+                <a href="#skeleton" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Skeleton</a>
+                <a href="#progress" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Progress</a>
+
+                <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Molecules</p>
+                <a href="#card" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Card</a>
+                <a href="#alert" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Alert</a>
+                <a href="#formfield" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">FormField</a>
+                <a href="#tabs" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Tabs</a>
+                <a href="#tooltip" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Tooltip</a>
+                <a href="#select" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Select</a>
+
+                <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Organisms</p>
+                <a href="#dialog" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Dialog</a>
+                <a href="#dropdown" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">DropdownMenu</a>
+                <a href="#popover" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Popover</a>
+            </nav>
+        </aside>
+
+        @* ─── Component Sections ──────────────── *@
+        <div class="min-w-0 flex-1 space-y-16">
 
         @* ─── Button ─────────────────────────────────── *@
         <div id="button">
@@ -633,6 +666,7 @@
             </div>
         </div>
 
+        </div> @* end flex-1 *@
     </div>
 </section>
 
