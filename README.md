@@ -213,8 +213,8 @@ glazeui/
 |---|---|---|
 | **Phase 0** | ✅ Complete | Blazor + Tailwind v4 template, design tokens, dark mode, project infrastructure |
 | **Phase 1** | ✅ Complete | Semantic token system, 13 atom components, TailwindMerge, showcase page |
-| **Phase 2** | ✅ Complete | 6 molecules (Card, Alert, FormField, Tabs, Tooltip, Select), Docs page, NuGet RCL |
-| **Phase 3** | ✅ Complete | 4 organisms (Dialog, DropdownMenu, DropdownMenuItem, Popover) |
+| **Phase 2** | ✅ Complete | 6 molecules, Docs page, NuGet RCL, UX guidelines, Writing guidelines, RTL support |
+| **Phase 3** | ✅ Complete | 4 organisms (Dialog, DropdownMenu, DropdownMenuItem, Popover), Pattern recipes |
 | **Phase 4** | 📋 Planned | CLI tool, accessibility matrices, community contribution model, v1.0 release |
 
 ### Every component ships with:
