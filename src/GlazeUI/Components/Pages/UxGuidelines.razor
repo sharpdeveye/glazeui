@@ -1,0 +1,243 @@
+@page "/docs/ux-guidelines"
+
+<PageTitle>UX Guidelines — GlazeUI</PageTitle>
+<HeadContent>
+    <meta name="description" content="Component usage guidelines — when to use, when not to use, and accessibility considerations for every GlazeUI component." />
+</HeadContent>
+
+<div class="mx-auto flex max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:px-8">
+
+    @* ─── Sidebar ──────────────────────────────── *@
+    <aside class="hidden w-56 shrink-0 lg:block">
+        <nav class="sticky top-24 space-y-1">
+            <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Guidelines</p>
+            <a href="/docs/ux-guidelines#principles" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Principles</a>
+            <a href="/docs/ux-guidelines#buttons" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Buttons</a>
+            <a href="/docs/ux-guidelines#inputs" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Inputs & Forms</a>
+            <a href="/docs/ux-guidelines#feedback" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Feedback</a>
+            <a href="/docs/ux-guidelines#navigation" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Navigation</a>
+            <a href="/docs/ux-guidelines#overlays" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Overlays</a>
+            <a href="/docs/ux-guidelines#accessibility" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Accessibility</a>
+        </nav>
+    </aside>
+
+    @* ─── Content ──────────────────────────────── *@
+    <div class="min-w-0 flex-1">
+        <p class="text-sm font-medium text-primary">Documentation</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            UX Guidelines
+        </h1>
+        <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
+            When to use each component, when not to, and how to compose them into accessible interfaces.
+        </p>
+
+        @* ─── Principles ─────────────────────── *@
+        <section id="principles" class="mt-12 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Design Principles</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="space-y-4">
+                <GzCard>
+                    <ChildContent>
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">1</GzBadge>
+                                <div>
+                                    <p class="font-medium text-foreground">Clarity over cleverness</p>
+                                    <p class="text-sm text-muted-foreground">Users should never guess what a control does. Labels, placeholders, and microcopy should be explicit and actionable.</p>
+                                </div>
+                            </div>
+                            <GzSeparator />
+                            <div class="flex items-start gap-3">
+                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">2</GzBadge>
+                                <div>
+                                    <p class="font-medium text-foreground">Reduce cognitive load</p>
+                                    <p class="text-sm text-muted-foreground">Show only what's needed at each step. Progressive disclosure beats information overload. Use tooltips, popovers, and collapsible sections.</p>
+                                </div>
+                            </div>
+                            <GzSeparator />
+                            <div class="flex items-start gap-3">
+                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">3</GzBadge>
+                                <div>
+                                    <p class="font-medium text-foreground">Predictable interaction patterns</p>
+                                    <p class="text-sm text-muted-foreground">Same component, same behavior everywhere. A Ghost button always behaves like a Ghost button — never change variant semantics contextually.</p>
+                                </div>
+                            </div>
+                            <GzSeparator />
+                            <div class="flex items-start gap-3">
+                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">4</GzBadge>
+                                <div>
+                                    <p class="font-medium text-foreground">Accessible by default</p>
+                                    <p class="text-sm text-muted-foreground">ARIA attributes, keyboard navigation, and focus management are built in — not bolted on. Every interactive element must be reachable via Tab.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </GzCard>
+            </div>
+        </section>
+
+        @* ─── Buttons ────────────────────────── *@
+        <section id="buttons" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Buttons</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="space-y-6">
+                <GzCard>
+                    <Header><h3 class="font-semibold text-foreground">When to use each variant</h3></Header>
+                    <ChildContent>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">Default</span><span class="text-muted-foreground">Primary action per screen. "Save", "Submit", "Create". Maximum one per visible area.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">Secondary</span><span class="text-muted-foreground">Supporting actions. "Cancel", "Back", "Reset". Pairs with Default.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">Destructive</span><span class="text-muted-foreground">Irreversible actions only. "Delete", "Remove", "Revoke". Always pair with a confirmation dialog.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">Outline</span><span class="text-muted-foreground">Low-emphasis actions. "Export", "Share". When you need a visible boundary but less visual weight.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">Ghost</span><span class="text-muted-foreground">Minimal actions. Icon buttons, toolbar items, inline actions within cards. No border, no background at rest.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">Link</span><span class="text-muted-foreground">Navigation actions. "Learn more", "View all". Looks like a link but has button semantics.</span></div>
+                        </div>
+                    </ChildContent>
+                </GzCard>
+
+                <GzAlert Variant="AlertVariant.Warning" Title="Anti-patterns">
+                    Never use more than one Default button in a single visible area. Never use Destructive for reversible actions. Never put a Link variant where a real <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">&lt;a&gt;</code> tag would be semantically correct.
+                </GzAlert>
+            </div>
+        </section>
+
+        @* ─── Inputs & Forms ─────────────────── *@
+        <section id="inputs" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Inputs & Forms</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="space-y-6">
+                <GzCard>
+                    <Header><h3 class="font-semibold text-foreground">Component selection guide</h3></Header>
+                    <ChildContent>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzInput</span><span class="text-muted-foreground">Single-line text: names, emails, URLs, search queries. Use <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">type</code> to enforce input mode.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzTextarea</span><span class="text-muted-foreground">Multi-line text: comments, descriptions, bio fields. Set meaningful <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">rows</code> — don't default to 3 for a bio.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzSelect</span><span class="text-muted-foreground">Choosing from 4–15 predefined options. For fewer, use radio buttons. For more, use a searchable combobox.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzCheckbox</span><span class="text-muted-foreground">Boolean choices or multi-select from a short list. "Accept terms", "Select features". Not for settings toggles.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzRadio</span><span class="text-muted-foreground">Mutually exclusive choice from 2–5 visible options. Not for long lists — use GzSelect instead.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzSwitch</span><span class="text-muted-foreground">Instant-apply settings. "Enable notifications", "Dark mode". Effect should feel immediate — not saved on submit.</span></div>
+                        </div>
+                    </ChildContent>
+                </GzCard>
+
+                <GzAlert Variant="AlertVariant.Info" Title="Always use GzFormField">
+                    Never render a bare GzInput. Always wrap it in GzFormField — it provides the label, description, error message, and required indicator as a unified, accessible group.
+                </GzAlert>
+            </div>
+        </section>
+
+        @* ─── Feedback ───────────────────────── *@
+        <section id="feedback" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Feedback Components</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <Header><h3 class="font-semibold text-foreground">Choosing the right feedback</h3></Header>
+                <ChildContent>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzAlert</span><span class="text-muted-foreground">Persistent, inline messages. Form validation summaries, feature announcements, system status. Stays visible until the user dismisses or the condition resolves.</span></div>
+                        <GzSeparator />
+                        <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzBadge</span><span class="text-muted-foreground">Status indicators. "New", "Beta", counts. Not for actions — never make a badge clickable.</span></div>
+                        <GzSeparator />
+                        <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzProgress</span><span class="text-muted-foreground">Measurable progress. File uploads, step indicators, profile completion. Always show the percentage when available.</span></div>
+                        <GzSeparator />
+                        <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzSkeleton</span><span class="text-muted-foreground">Loading placeholders. Use to prevent layout shift during data fetches. Match the shape of the content that will replace it.</span></div>
+                        <GzSeparator />
+                        <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzTooltip</span><span class="text-muted-foreground">Supplementary info on hover/focus. Icon button labels, truncated text previews. Never put critical info in a tooltip — mobile users can't hover.</span></div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Navigation ─────────────────────── *@
+        <section id="navigation" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Navigation</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzTabs</span><span class="text-muted-foreground">Switching between 2–5 related views within the same context. Account / Password / Notifications. Not for top-level navigation.</span></div>
+                        <GzSeparator />
+                        <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzDropdown</span><span class="text-muted-foreground">Actions menu triggered by a single button. File operations, profile menu, "more actions" overflow. Not for navigation links.</span></div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Overlays ───────────────────────── *@
+        <section id="overlays" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Overlays</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="space-y-6">
+                <GzCard>
+                    <Header><h3 class="font-semibold text-foreground">Dialog vs Popover vs Tooltip</h3></Header>
+                    <ChildContent>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzDialog</span><span class="text-muted-foreground">Requires user decision before continuing. Confirmation ("Delete this?"), multi-step forms, important alerts. Blocks background interaction.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzPopover</span><span class="text-muted-foreground">Rich content anchored to a trigger. Filter panels, date pickers, color pickers. Doesn't block the page — click outside to dismiss.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-3"><span class="w-28 shrink-0 font-medium text-foreground">GzTooltip</span><span class="text-muted-foreground">Text-only hints. No interactive content inside — if you need buttons or links, use a Popover instead.</span></div>
+                        </div>
+                    </ChildContent>
+                </GzCard>
+
+                <GzAlert Variant="AlertVariant.Warning" Title="Don't overuse dialogs">
+                    Dialogs interrupt the user's flow. Use them only for decisions that can't be undone. For informational messages, use GzAlert inline instead.
+                </GzAlert>
+            </div>
+        </section>
+
+        @* ─── Accessibility ────────────────────── *@
+        <section id="accessibility" class="mt-16 scroll-mt-24 mb-8">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Accessibility Checklist</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">Tab</GzBadge>
+                            <p class="text-muted-foreground">Every interactive element is reachable via Tab key. Focus rings use <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">focus-visible:ring-2</code> — visible only on keyboard nav.</p>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">Esc</GzBadge>
+                            <p class="text-muted-foreground">All overlays (Dialog, Dropdown, Popover, Select) dismiss on Escape. Dialog returns focus to the trigger element.</p>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">ARIA</GzBadge>
+                            <p class="text-muted-foreground">Roles are built in: <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">role=dialog</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">role=combobox</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">role=tablist</code>. Labels always link to controls via <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">for/id</code>.</p>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">RTL</GzBadge>
+                            <p class="text-muted-foreground">All components use CSS logical properties (<code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">ms-*</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">me-*</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">start-*</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">end-*</code>). Set <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">dir="rtl"</code> on <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">&lt;html&gt;</code> for full RTL support.</p>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">Color</GzBadge>
+                            <p class="text-muted-foreground">Semantic color variants (Info, Success, Warning, Destructive) use both color and icons. Information is never conveyed by color alone.</p>
+                        </div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+    </div>
+</div>

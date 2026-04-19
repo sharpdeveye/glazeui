@@ -44,7 +44,7 @@
     private string MenuClass => Tw.Merge(
         "absolute z-50 mt-1 min-w-[8rem] overflow-hidden rounded-md",
         "border border-border/50 bg-popover p-1 text-popover-foreground shadow-lg",
-        Align == "start" ? "left-0" : "right-0"
+        Align == "start" ? "start-0" : "end-0"
     );
 
     private void Toggle() => _isOpen = !_isOpen;

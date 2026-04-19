@@ -1,0 +1,236 @@
+@page "/docs/writing-guidelines"
+
+<PageTitle>Writing Guidelines — GlazeUI</PageTitle>
+<HeadContent>
+    <meta name="description" content="Microcopy standards for GlazeUI — button labels, error messages, placeholder text, and tone of voice guidelines." />
+</HeadContent>
+
+<div class="mx-auto flex max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:px-8">
+
+    @* ─── Sidebar ──────────────────────────────── *@
+    <aside class="hidden w-56 shrink-0 lg:block">
+        <nav class="sticky top-24 space-y-1">
+            <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Writing</p>
+            <a href="/docs/writing-guidelines#tone" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Tone & Voice</a>
+            <a href="/docs/writing-guidelines#buttons" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Button Labels</a>
+            <a href="/docs/writing-guidelines#errors" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Error Messages</a>
+            <a href="/docs/writing-guidelines#placeholders" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Placeholders</a>
+            <a href="/docs/writing-guidelines#labels" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Labels & Descriptions</a>
+            <a href="/docs/writing-guidelines#empty" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Empty States</a>
+            <a href="/docs/writing-guidelines#confirmations" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Confirmations</a>
+        </nav>
+    </aside>
+
+    @* ─── Content ──────────────────────────────── *@
+    <div class="min-w-0 flex-1">
+        <p class="text-sm font-medium text-primary">Documentation</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Writing Guidelines
+        </h1>
+        <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
+            Microcopy standards — button labels, error messages, placeholder text, and the voice behind every interaction.
+        </p>
+
+        @* ─── Tone & Voice ────────────────────── *@
+        <section id="tone" class="mt-12 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Tone & Voice</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">Do</GzBadge>
+                            <div>
+                                <p class="font-medium text-foreground">Clear, direct, confident</p>
+                                <p class="text-sm text-muted-foreground">Write like a knowledgeable colleague — helpful but not condescending. Use active voice. Be precise.</p>
+                            </div>
+                        </div>
+                        <GzSeparator />
+                        <div class="flex items-start gap-3">
+                            <GzBadge Variant="BadgeVariant.Outline" class="shrink-0 mt-0.5">Don't</GzBadge>
+                            <div>
+                                <p class="font-medium text-foreground">Cute, vague, apologetic</p>
+                                <p class="text-sm text-muted-foreground">Avoid "Oops!", "Uh oh!", "Something went wrong" without explanation. Never blame the user. Don't use exclamation marks in errors.</p>
+                            </div>
+                        </div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Button Labels ───────────────────── *@
+        <section id="buttons" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Button Labels</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="space-y-6">
+                <GzCard>
+                    <Header><h3 class="font-semibold text-foreground">Rules</h3></Header>
+                    <ChildContent>
+                        <div class="space-y-2 text-sm text-muted-foreground">
+                            <p>• Start with a <span class="font-medium text-foreground">verb</span>: "Save changes", "Create project", "Delete account"</p>
+                            <p>• Be specific: <span class="font-medium text-foreground">"Save changes"</span> not "Submit". <span class="font-medium text-foreground">"Delete project"</span> not "Yes"</p>
+                            <p>• Use sentence case: <span class="font-medium text-foreground">"Save changes"</span> not "Save Changes"</p>
+                            <p>• Keep it to 1–3 words for primary actions</p>
+                            <p>• Loading state should describe the action: <span class="font-medium text-foreground">"Saving..."</span> not "Loading..."</p>
+                        </div>
+                    </ChildContent>
+                </GzCard>
+
+                <GzCard>
+                    <Header><h3 class="font-semibold text-foreground">Examples</h3></Header>
+                    <ChildContent>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex gap-4"><span class="w-32 shrink-0 font-medium text-destructive">❌ Submit</span><span class="font-medium text-foreground">✅ Save changes</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-32 shrink-0 font-medium text-destructive">❌ Yes</span><span class="font-medium text-foreground">✅ Delete project</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-32 shrink-0 font-medium text-destructive">❌ OK</span><span class="font-medium text-foreground">✅ Got it</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-32 shrink-0 font-medium text-destructive">❌ Click Here</span><span class="font-medium text-foreground">✅ View documentation</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-32 shrink-0 font-medium text-destructive">❌ Loading...</span><span class="font-medium text-foreground">✅ Saving...</span></div>
+                        </div>
+                    </ChildContent>
+                </GzCard>
+            </div>
+        </section>
+
+        @* ─── Error Messages ──────────────────── *@
+        <section id="errors" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Error Messages</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="space-y-6">
+                <GzCard>
+                    <Header><h3 class="font-semibold text-foreground">Error message formula</h3></Header>
+                    <ChildContent>
+                        <div class="space-y-4">
+                            <div class="rounded-lg bg-muted p-4 text-sm">
+                                <p class="font-medium text-foreground">[What happened] + [How to fix it]</p>
+                                <p class="mt-2 text-muted-foreground">Every error must tell the user what went wrong and what they can do about it.</p>
+                            </div>
+
+                            <div class="space-y-3 text-sm">
+                                <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Invalid input</span><span class="font-medium text-foreground">✅ Enter a valid email address</span></div>
+                                <GzSeparator />
+                                <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Error</span><span class="font-medium text-foreground">✅ Password must be at least 8 characters</span></div>
+                                <GzSeparator />
+                                <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Something went wrong</span><span class="font-medium text-foreground">✅ Could not save. Check your connection and try again</span></div>
+                                <GzSeparator />
+                                <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Oops! Field required!</span><span class="font-medium text-foreground">✅ Name is required</span></div>
+                            </div>
+                        </div>
+                    </ChildContent>
+                </GzCard>
+
+                <GzAlert Variant="AlertVariant.Info" Title="Validation timing">
+                    Show inline errors on blur (when the user leaves a field), not on every keystroke. Show form-level summaries on submit.
+                </GzAlert>
+            </div>
+        </section>
+
+        @* ─── Placeholders ────────────────────── *@
+        <section id="placeholders" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Placeholder Text</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-4 text-sm">
+                        <p class="text-muted-foreground">Placeholders should show the <span class="font-medium text-foreground">format or example value</span>, not repeat the label.</p>
+                        <div class="space-y-3">
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Enter your email</span><span class="font-medium text-foreground">✅ you@example.com</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Enter phone number</span><span class="font-medium text-foreground">✅ +1 (555) 000-0000</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Type your name</span><span class="font-medium text-foreground">✅ Jane Doe</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Search</span><span class="font-medium text-foreground">✅ Search components...</span></div>
+                        </div>
+
+                        <GzAlert Variant="AlertVariant.Warning" Title="Placeholders are not labels">
+                            Never use a placeholder as the only label. Placeholders disappear on input — the user loses context. Always pair with a GzLabel via GzFormField.
+                        </GzAlert>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Labels & Descriptions ───────────── *@
+        <section id="labels" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Labels & Descriptions</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-4 text-sm">
+                        <div class="space-y-2 text-muted-foreground">
+                            <p>• Labels: <span class="font-medium text-foreground">short nouns</span> — "Email", "Password", "Full name"</p>
+                            <p>• Descriptions: <span class="font-medium text-foreground">helpful context</span> — "We'll never share your email with anyone"</p>
+                            <p>• Required fields: use the <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">Required</code> parameter, not "(required)" in the label</p>
+                            <p>• Don't end labels with colons</p>
+                        </div>
+
+                        <div class="mt-4 space-y-3">
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Your Email Address:</span><span class="font-medium text-foreground">✅ Email</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Enter password (required)</span><span class="font-medium text-foreground">✅ Password *</span></div>
+                        </div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Empty States ────────────────────── *@
+        <section id="empty" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Empty States</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-4 text-sm">
+                        <div class="rounded-lg bg-muted p-4">
+                            <p class="font-medium text-foreground">[What this area is for] + [What to do next]</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ No data</span><span class="font-medium text-foreground">✅ No projects yet. Create your first project to get started.</span></div>
+                            <GzSeparator />
+                            <div class="flex gap-4"><span class="w-48 shrink-0 font-medium text-destructive">❌ Empty</span><span class="font-medium text-foreground">✅ No notifications. You're all caught up.</span></div>
+                        </div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── Confirmations ───────────────────── *@
+        <section id="confirmations" class="mt-16 scroll-mt-24 mb-8">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Confirmation Dialogs</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <ChildContent>
+                    <div class="space-y-4 text-sm">
+                        <div class="rounded-lg bg-muted p-4">
+                            <p class="font-medium text-foreground">Title: [Action] + [Object]</p>
+                            <p class="mt-1 text-muted-foreground">Description: Specific consequence. Button: Repeat the action verb.</p>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <p class="font-medium text-destructive">❌ "Are you sure?" / "Yes" / "No"</p>
+                            </div>
+                            <GzSeparator />
+                            <div>
+                                <p class="font-medium text-foreground">✅ Title: "Delete project"</p>
+                                <p class="text-muted-foreground">Description: "This will permanently delete 'My Project' and all its data. This action cannot be undone."</p>
+                                <p class="mt-1 text-muted-foreground">Buttons: "Cancel" + "Delete project"</p>
+                            </div>
+                        </div>
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+    </div>
+</div>

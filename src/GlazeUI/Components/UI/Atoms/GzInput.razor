@@ -3,7 +3,7 @@
 <div class="@WrapperClass">
     @if (StartContent is not null)
     {
-        <span class="pointer-events-none absolute left-3 flex size-4 items-center text-muted-foreground">
+        <span class="pointer-events-none absolute start-3 flex size-4 items-center text-muted-foreground">
             @StartContent
         </span>
     }
@@ -22,7 +22,7 @@
 
     @if (EndContent is not null)
     {
-        <span class="pointer-events-none absolute right-3 flex size-4 items-center text-muted-foreground">
+        <span class="pointer-events-none absolute end-3 flex size-4 items-center text-muted-foreground">
             @EndContent
         </span>
     }
@@ -89,8 +89,8 @@
 
     private string ComputedClass => Tw.Merge(
         BaseClasses,
-        StartContent is not null ? "pl-9" : null,
-        EndContent is not null ? "pr-9" : null,
+        StartContent is not null ? "ps-9" : null,
+        EndContent is not null ? "pe-9" : null,
         GetUserClass()
     );
 

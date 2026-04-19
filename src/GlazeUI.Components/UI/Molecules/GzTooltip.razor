@@ -42,11 +42,11 @@
 
     private string GetPositionClass() => Position switch
     {
-        TooltipPosition.Top    => "bottom-full left-1/2 mb-2 -translate-x-1/2",
-        TooltipPosition.Bottom => "top-full left-1/2 mt-2 -translate-x-1/2",
-        TooltipPosition.Left   => "right-full top-1/2 mr-2 -translate-y-1/2",
-        TooltipPosition.Right  => "left-full top-1/2 ml-2 -translate-y-1/2",
-        _ => "bottom-full left-1/2 mb-2 -translate-x-1/2"
+        TooltipPosition.Top    => "bottom-full start-1/2 mb-2 -translate-x-1/2",
+        TooltipPosition.Bottom => "top-full start-1/2 mt-2 -translate-x-1/2",
+        TooltipPosition.Left   => "end-full top-1/2 me-2 -translate-y-1/2",
+        TooltipPosition.Right  => "start-full top-1/2 ms-2 -translate-y-1/2",
+        _ => "bottom-full start-1/2 mb-2 -translate-x-1/2"
     };
 
     private string? GetUserClass() =>
