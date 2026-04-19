@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>GlazeUI.CLI</RootNamespace>
+
+    <!-- Dotnet Global Tool -->
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>glaze</ToolCommandName>
+    <PackageId>GlazeUI.CLI</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>SharpDevEye</Authors>
+    <Company>GlazeUI Contributors</Company>
+    <Description>CLI tool for GlazeUI — add premium Blazor components to your project.</Description>
+    <PackageProjectUrl>https://github.com/sharpdeveye/glazeui</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/sharpdeveye/glazeui</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>blazor;tailwind;design-system;cli;components</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Atoms/*.razor" LinkBase="Templates/Atoms" />
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Molecules/*.razor" LinkBase="Templates/Molecules" />
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Organisms/*.razor" LinkBase="Templates/Organisms" />
+    <EmbeddedResource Include="../GlazeUI/Utilities/Tw.cs" LinkBase="Templates/Utilities" />
+    <EmbeddedResource Include="../GlazeUI/Models/Enums.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/SelectOption.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/TabItem.cs" LinkBase="Templates/Models" />
+  </ItemGroup>
+
+</Project>

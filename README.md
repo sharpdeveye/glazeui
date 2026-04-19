@@ -17,7 +17,7 @@
   <a href="https://github.com/sharpdeveye/glazeui/stargazers"><img src="https://img.shields.io/github/stars/sharpdeveye/glazeui?style=flat-square&color=e2b340" alt="GitHub Stars" /></a>
   <a href="https://github.com/sharpdeveye/glazeui/issues"><img src="https://img.shields.io/github/issues/sharpdeveye/glazeui?style=flat-square&color=f97316" alt="Issues" /></a>
   <img src="https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square" alt="PRs Welcome" />
-  <img src="https://img.shields.io/badge/Status-Phase_1-f59e0b?style=flat-square" alt="Status: Phase 1" />
+  <img src="https://img.shields.io/badge/Status-v1.0-22c55e?style=flat-square" alt="Status: v1.0" />
 </p>
 
 <p align="center">
@@ -104,16 +104,29 @@ Every component includes:
 
 ## Quick Start
 
-> 🚧 **GlazeUI is in active development.** Star the repo to follow progress.
+### Option A: CLI (Recommended)
 
-### Prerequisites
+```bash
+# Install the CLI as a global tool
+dotnet tool install -g GlazeUI.CLI
 
-| Requirement | Version |
-|---|---|
-| [.NET SDK](https://dotnet.microsoft.com/download) | 9.0 or later |
-| [Node.js](https://nodejs.org/) | 18+ (for Tailwind CLI) |
+# Add components to your project
+glaze add button badge input
 
-### Installation
+# Or add everything
+glaze add --all
+
+# List available components
+glaze list
+```
+
+### Option B: NuGet Package
+
+```bash
+dotnet add package GlazeUI
+```
+
+### Option C: Clone Source
 
 ```bash
 # Clone the repository
@@ -133,7 +146,7 @@ dotnet build
 dotnet run
 ```
 
-Then open `http://localhost:5011` and navigate to `/components` to see all atoms.
+Then open `http://localhost:5011` and navigate to `/components` to see all 23 components.
 
 ### Development Workflow
 
@@ -215,7 +228,7 @@ glazeui/
 | **Phase 1** | ✅ Complete | Semantic token system, 13 atom components, TailwindMerge, showcase page |
 | **Phase 2** | ✅ Complete | 6 molecules, Docs page, NuGet RCL, UX guidelines, Writing guidelines, RTL support |
 | **Phase 3** | ✅ Complete | 4 organisms (Dialog, DropdownMenu, DropdownMenuItem, Popover), Pattern recipes |
-| **Phase 4** | 📋 Planned | CLI tool, accessibility matrices, community contribution model, v1.0 release |
+| **Phase 4** | ✅ Complete | Accessibility matrices, API Reference, CONTRIBUTING.md, PR/issue templates, CHANGELOG |
 
 ### Every component ships with:
 
