@@ -1,0 +1,65 @@
+@* GzBreadcrumb — Navigation trail with semantic <nav> and separator chevrons *@
+
+<nav @attributes="GetFilteredAttributes()"
+     aria-label="Breadcrumb"
+     class="@ComputedClass">
+    <ol class="flex items-center gap-1.5 text-sm">
+        @for (var i = 0; i < Items.Count; i++)
+        {
+            var item = Items[i];
+            var isLast = i == Items.Count - 1;
+
+            @if (i > 0)
+            {
+                <li class="flex items-center" aria-hidden="true">
+                    <svg class="size-3.5 text-muted-foreground/60 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </li>
+            }
+
+            <li>
+                @if (isLast)
+                {
+                    <span class="font-medium text-foreground" aria-current="page">@item.Label</span>
+                }
+                else if (!string.IsNullOrEmpty(item.Href))
+                {
+                    <a href="@item.Href"
+                       class="text-muted-foreground transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ring-offset-background rounded-sm px-1 -mx-1">
+                        @item.Label
+                    </a>
+                }
+                else
+                {
+                    <span class="text-muted-foreground">@item.Label</span>
+                }
+            </li>
+        }
+    </ol>
+</nav>
+
+@code {
+    /// <summary>Ordered list of breadcrumb items.</summary>
+    [Parameter] public List<BreadcrumbItem> Items { get; set; } = new();
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

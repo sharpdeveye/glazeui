@@ -1,0 +1,227 @@
+@* GzDataTable — Sortable, filterable, paginated data grid *@
+@typeparam TItem
+
+<div @attributes="GetFilteredAttributes()" class="@ComputedClass">
+    @* ─── Toolbar ─────────────────────────── *@
+    @if (Filterable)
+    {
+        <div class="flex items-center gap-3 border-b border-border/30 p-3">
+            <GzInput Placeholder="@FilterPlaceholder"
+                     Value="@_filterText"
+                     ValueChanged="HandleFilter">
+                <StartContent>
+                    <svg fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
+                </StartContent>
+            </GzInput>
+            @if (!string.IsNullOrEmpty(_filterText))
+            {
+                <GzBadge Variant="BadgeVariant.Secondary">@_filteredItems.Count results</GzBadge>
+            }
+        </div>
+    }
+
+    @* ─── Table ───────────────────────────── *@
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm">
+            <thead>
+                <tr class="border-b border-border/50 bg-muted/50">
+                    @foreach (var col in Columns)
+                    {
+                        <th class="@HeaderCellClass(col)" @onclick="() => HandleSort(col)">
+                            <div class="flex items-center gap-1.5">
+                                <span>@col.Header</span>
+                                @if (col.Sortable && _sortColumn == col)
+                                {
+                                    <svg class="@SortIconClass" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="@(_sortDirection == SortDirection.Ascending ? "M4.5 15.75l7.5-7.5 7.5 7.5" : "M19.5 8.25l-7.5 7.5-7.5-7.5")" />
+                                    </svg>
+                                }
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (_pagedItems.Count == 0)
+                {
+                    <tr>
+                        <td colspan="@Columns.Count" class="px-4 py-12 text-center text-muted-foreground">
+                            @(string.IsNullOrEmpty(_filterText) ? "No data" : $"No results for \"{_filterText}\"")
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var item in _pagedItems)
+                    {
+                        <tr class="border-b border-border/30 transition-colors duration-150 hover:bg-muted/30 last:border-0">
+                            @foreach (var col in Columns)
+                            {
+                                <td class="@CellClass(col)">@(col.Field(item)?.ToString())</td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* ─── Pagination ──────────────────────── *@
+    @if (PageSize > 0 && _totalPages > 1)
+    {
+        <div class="flex items-center justify-between border-t border-border/30 px-4 py-3 text-sm text-muted-foreground">
+            <span>Page @_currentPage of @_totalPages (@_filteredItems.Count items)</span>
+            <div class="flex items-center gap-1">
+                <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm"
+                          Disabled="@(_currentPage <= 1)"
+                          OnClick="PrevPage">Previous</GzButton>
+                <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm"
+                          Disabled="@(_currentPage >= _totalPages)"
+                          OnClick="NextPage">Next</GzButton>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Data source.</summary>
+    [Parameter] public List<TItem> Items { get; set; } = new();
+
+    /// <summary>Column definitions.</summary>
+    [Parameter] public List<DataTableColumn<TItem>> Columns { get; set; } = new();
+
+    /// <summary>Rows per page. 0 = no pagination.</summary>
+    [Parameter] public int PageSize { get; set; } = 10;
+
+    /// <summary>Whether to show the filter input.</summary>
+    [Parameter] public bool Filterable { get; set; } = true;
+
+    /// <summary>Filter input placeholder text.</summary>
+    [Parameter] public string FilterPlaceholder { get; set; } = "Search...";
+
+    /// <summary>Custom filter function. Receives item + filter text, returns true to include.</summary>
+    [Parameter] public Func<TItem, string, bool>? FilterFunc { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string _filterText = string.Empty;
+    private DataTableColumn<TItem>? _sortColumn;
+    private SortDirection _sortDirection = SortDirection.None;
+    private int _currentPage = 1;
+
+    private List<TItem> _filteredItems = new();
+    private List<TItem> _pagedItems = new();
+    private int _totalPages = 1;
+
+    protected override void OnParametersSet() => Recalculate();
+
+    private void Recalculate()
+    {
+        // Filter
+        if (!string.IsNullOrWhiteSpace(_filterText))
+        {
+            if (FilterFunc is not null)
+            {
+                _filteredItems = Items.Where(i => FilterFunc(i, _filterText)).ToList();
+            }
+            else
+            {
+                var lower = _filterText.ToLowerInvariant();
+                _filteredItems = Items.Where(item =>
+                    Columns.Any(col =>
+                        col.Field(item)?.ToString()?.Contains(lower, StringComparison.OrdinalIgnoreCase) == true
+                    )
+                ).ToList();
+            }
+        }
+        else
+        {
+            _filteredItems = Items.ToList();
+        }
+
+        // Sort
+        if (_sortColumn is not null && _sortDirection != SortDirection.None)
+        {
+            _filteredItems = _sortDirection == SortDirection.Ascending
+                ? _filteredItems.OrderBy(i => _sortColumn.Field(i)?.ToString()).ToList()
+                : _filteredItems.OrderByDescending(i => _sortColumn.Field(i)?.ToString()).ToList();
+        }
+
+        // Paginate
+        if (PageSize > 0)
+        {
+            _totalPages = Math.Max(1, (int)Math.Ceiling(_filteredItems.Count / (double)PageSize));
+            _currentPage = Math.Clamp(_currentPage, 1, _totalPages);
+            _pagedItems = _filteredItems.Skip((_currentPage - 1) * PageSize).Take(PageSize).ToList();
+        }
+        else
+        {
+            _totalPages = 1;
+            _pagedItems = _filteredItems;
+        }
+    }
+
+    private void HandleFilter(string value)
+    {
+        _filterText = value;
+        _currentPage = 1;
+        Recalculate();
+    }
+
+    private void HandleSort(DataTableColumn<TItem> col)
+    {
+        if (!col.Sortable) return;
+
+        if (_sortColumn == col)
+        {
+            _sortDirection = _sortDirection switch
+            {
+                SortDirection.Ascending => SortDirection.Descending,
+                SortDirection.Descending => SortDirection.None,
+                _ => SortDirection.Ascending
+            };
+            if (_sortDirection == SortDirection.None) _sortColumn = null;
+        }
+        else
+        {
+            _sortColumn = col;
+            _sortDirection = SortDirection.Ascending;
+        }
+        Recalculate();
+    }
+
+    private void PrevPage() { _currentPage = Math.Max(1, _currentPage - 1); Recalculate(); }
+    private void NextPage() { _currentPage = Math.Min(_totalPages, _currentPage + 1); Recalculate(); }
+
+    private string ComputedClass => Tw.Merge(
+        "rounded-lg border border-border/50 bg-card",
+        GetUserClass()
+    );
+
+    private string HeaderCellClass(DataTableColumn<TItem> col) => Tw.Merge(
+        "px-4 py-2.5 text-start font-medium text-foreground",
+        col.Sortable ? "cursor-pointer select-none transition-colors duration-150 hover:bg-muted/50" : null,
+        col.Class
+    );
+
+    private string CellClass(DataTableColumn<TItem> col) => Tw.Merge(
+        "px-4 py-2.5 text-muted-foreground",
+        col.Class
+    );
+
+    private string SortIconClass => "size-3.5 text-muted-foreground";
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

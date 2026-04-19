@@ -1,0 +1,189 @@
+@page "/docs/figma"
+
+<PageTitle>Figma Integration — GlazeUI</PageTitle>
+<HeadContent>
+    <meta name="description" content="Import GlazeUI design tokens into Figma using Tokens Studio. Pixel-perfect alignment between code and design." />
+</HeadContent>
+
+<div class="mx-auto flex max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:px-8">
+
+    @* ─── Sidebar ──────────────────────────────── *@
+    <aside class="hidden w-56 shrink-0 lg:block">
+        <nav class="sticky top-24 space-y-1">
+            <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Figma</p>
+            <GzSidebarLink Href="/docs/figma#overview" Label="Overview" />
+            <GzSidebarLink Href="/docs/figma#setup" Label="Setup Guide" />
+            <GzSidebarLink Href="/docs/figma#tokens" Label="Token Reference" />
+            <GzSidebarLink Href="/docs/figma#mapping" Label="CSS → Figma Mapping" />
+        </nav>
+    </aside>
+
+    @* ─── Content ──────────────────────────────── *@
+    <div class="min-w-0 flex-1">
+        <p class="text-sm font-medium text-primary">Documentation</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Figma Integration
+        </h1>
+        <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
+            Import GlazeUI's design tokens into Figma via <strong>Tokens Studio</strong> to maintain design–code parity across your team.
+        </p>
+
+        @* ─── Overview ────────────────────────── *@
+        <section id="overview" class="mt-12 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Overview</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="grid gap-4 sm:grid-cols-3">
+                <GzCard>
+                    <ChildContent>
+                        <p class="text-2xl font-bold text-foreground">20+</p>
+                        <p class="text-sm text-muted-foreground">Semantic color tokens</p>
+                    </ChildContent>
+                </GzCard>
+                <GzCard>
+                    <ChildContent>
+                        <p class="text-2xl font-bold text-foreground">2</p>
+                        <p class="text-sm text-muted-foreground">Theme sets (light + dark)</p>
+                    </ChildContent>
+                </GzCard>
+                <GzCard>
+                    <ChildContent>
+                        <p class="text-2xl font-bold text-foreground">6</p>
+                        <p class="text-sm text-muted-foreground">Radius tokens</p>
+                    </ChildContent>
+                </GzCard>
+            </div>
+        </section>
+
+        @* ─── Setup Guide ────────────────────── *@
+        <section id="setup" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Setup Guide</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzAccordion>
+                <GzAccordionItem Title="Step 1: Install Tokens Studio" DefaultOpen="true">
+                    <div class="space-y-2">
+                        <p>Install the <strong>Tokens Studio for Figma</strong> plugin from the Figma Community.</p>
+                        <p>This plugin reads the <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">tokens.json</code> file and converts it into Figma local variables and styles.</p>
+                    </div>
+                </GzAccordionItem>
+                <GzAccordionItem Title="Step 2: Import Token File">
+                    <div class="space-y-3">
+                        <p>In Tokens Studio, click <strong>Import</strong> → <strong>File</strong> and select:</p>
+                        <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                            <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>figma/tokens.json</code></pre>
+                        </div>
+                        <p>The plugin will create two token sets: <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">glazeui</code> (light) and <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">color-dark</code> (dark mode overrides).</p>
+                    </div>
+                </GzAccordionItem>
+                <GzAccordionItem Title="Step 3: Apply Tokens">
+                    <div class="space-y-2">
+                        <p>Activate the <strong>glazeui</strong> set for light mode designs. Stack <strong>color-dark</strong> on top for dark mode.</p>
+                        <p>Tokens are now available as Figma variables and can be bound to fills, borders, and text colors.</p>
+                    </div>
+                </GzAccordionItem>
+                <GzAccordionItem Title="Step 4: Sync &amp; Update">
+                    <div class="space-y-2">
+                        <p>Point Tokens Studio at the GitHub repository to stay synced:</p>
+                        <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                            <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>https://github.com/sharpdeveye/glazeui/blob/main/figma/tokens.json</code></pre>
+                        </div>
+                        <p>Pull updates from the repo whenever tokens change.</p>
+                    </div>
+                </GzAccordionItem>
+            </GzAccordion>
+        </section>
+
+        @* ─── Token Reference ────────────────── *@
+        <section id="tokens" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Token Reference</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <GzCard>
+                <Header><h3 class="font-semibold text-foreground">Color Tokens (Light)</h3></Header>
+                <ChildContent>
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        @foreach (var token in _lightTokens)
+                        {
+                            <div class="flex items-center gap-3 rounded-md border border-border/30 p-3">
+                                <div class="size-8 shrink-0 rounded-md shadow-xs" style="background: @token.Value"></div>
+                                <div>
+                                    <p class="font-mono text-xs font-medium text-foreground">@token.Name</p>
+                                    <p class="text-xs text-muted-foreground">@token.Value</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </ChildContent>
+            </GzCard>
+        </section>
+
+        @* ─── CSS → Figma Mapping ─────────────── *@
+        <section id="mapping" class="mt-16 scroll-mt-24 mb-8">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">CSS → Figma Mapping</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <div class="overflow-x-auto rounded-lg border border-border/50">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-border/50 bg-muted/50">
+                            <th class="px-4 py-2.5 text-start font-medium text-foreground">CSS Token</th>
+                            <th class="px-4 py-2.5 text-start font-medium text-foreground">Tailwind Class</th>
+                            <th class="px-4 py-2.5 text-start font-medium text-foreground">Figma Variable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var row in _mappings)
+                        {
+                            <tr class="border-b border-border/30 last:border-0">
+                                <td class="px-4 py-2 font-mono text-xs text-foreground">@row.Css</td>
+                                <td class="px-4 py-2 font-mono text-xs text-muted-foreground">@row.Tailwind</td>
+                                <td class="px-4 py-2 font-mono text-xs text-muted-foreground">@row.Figma</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
+
+@code {
+    private record TokenSwatch(string Name, string Value);
+    private record MappingRow(string Css, string Tailwind, string Figma);
+
+    private readonly TokenSwatch[] _lightTokens = new[]
+    {
+        new TokenSwatch("primary", "oklch(0.55 0.18 250)"),
+        new TokenSwatch("primary-foreground", "oklch(0.99 0.005 250)"),
+        new TokenSwatch("secondary", "oklch(0.96 0 0)"),
+        new TokenSwatch("destructive", "oklch(0.58 0.22 25)"),
+        new TokenSwatch("success", "oklch(0.62 0.17 145)"),
+        new TokenSwatch("warning", "oklch(0.75 0.15 85)"),
+        new TokenSwatch("info", "oklch(0.60 0.16 240)"),
+        new TokenSwatch("background", "oklch(0.99 0 0)"),
+        new TokenSwatch("foreground", "oklch(0.14 0 0)"),
+        new TokenSwatch("muted", "oklch(0.96 0 0)"),
+        new TokenSwatch("muted-foreground", "oklch(0.45 0 0)"),
+        new TokenSwatch("card", "oklch(1 0 0)"),
+        new TokenSwatch("border", "oklch(0.90 0 0)"),
+        new TokenSwatch("ring", "oklch(0.55 0.18 250)"),
+    };
+
+    private readonly MappingRow[] _mappings = new[]
+    {
+        new MappingRow("--color-primary", "bg-primary / text-primary", "glazeui/color/primary"),
+        new MappingRow("--color-secondary", "bg-secondary / text-secondary", "glazeui/color/secondary"),
+        new MappingRow("--color-accent", "bg-accent / text-accent", "glazeui/color/accent"),
+        new MappingRow("--color-destructive", "bg-destructive", "glazeui/color/destructive"),
+        new MappingRow("--color-background", "bg-background", "glazeui/color/background"),
+        new MappingRow("--color-foreground", "text-foreground", "glazeui/color/foreground"),
+        new MappingRow("--color-muted", "bg-muted", "glazeui/color/muted"),
+        new MappingRow("--color-card", "bg-card", "glazeui/color/card"),
+        new MappingRow("--color-border", "border-border", "glazeui/color/border"),
+        new MappingRow("--color-ring", "ring-ring", "glazeui/color/ring"),
+        new MappingRow("--radius-md", "rounded-md", "glazeui/borderRadius/md"),
+        new MappingRow("--font-sans", "font-sans", "glazeui/fontFamily/sans"),
+        new MappingRow("--shadow-sm", "shadow-sm", "glazeui/shadow/sm"),
+    };
+}

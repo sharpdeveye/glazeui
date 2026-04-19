@@ -1,0 +1,238 @@
+@* GzCombobox — Searchable select with keyboard navigation and filtering *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@WrapperClass"
+     @onfocusout="HandleFocusOut">
+
+    @* ─── Trigger Input ──────────────────── *@
+    <div class="relative">
+        <input type="text"
+               role="combobox"
+               aria-expanded="@(_isOpen ? "true" : "false")"
+               aria-haspopup="listbox"
+               aria-autocomplete="list"
+               placeholder="@Placeholder"
+               disabled="@Disabled"
+               class="@InputClass"
+               value="@_searchText"
+               @oninput="HandleSearch"
+               @onclick="Open"
+               @onkeydown="HandleKeyDown" />
+        <button type="button"
+                class="absolute end-2 top-1/2 -translate-y-1/2 p-1 text-muted-foreground cursor-pointer hover:text-foreground transition-colors duration-150"
+                tabindex="-1"
+                aria-label="Toggle dropdown"
+                disabled="@Disabled"
+                @onclick="Toggle">
+            <svg class="@ChevronClass" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+            </svg>
+        </button>
+    </div>
+
+    @* ─── Dropdown List ──────────────────── *@
+    @if (_isOpen)
+    {
+        <ul role="listbox"
+            class="@ListClass">
+            @if (_filteredOptions.Count == 0)
+            {
+                <li class="px-3 py-6 text-center text-sm text-muted-foreground">
+                    No results found
+                </li>
+            }
+            else
+            {
+                @for (var i = 0; i < _filteredOptions.Count; i++)
+                {
+                    var option = _filteredOptions[i];
+                    var index = i;
+                    <li role="option"
+                        aria-selected="@(option.Value == Value ? "true" : "false")"
+                        class="@OptionClass(option, index)"
+                        @onclick="() => Select(option)"
+                        @onmouseenter="() => _highlightIndex = index">
+                        <span class="flex-1 truncate">@option.Label</span>
+                        @if (option.Value == Value)
+                        {
+                            <svg class="size-4 shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                            </svg>
+                        }
+                    </li>
+                }
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    /// <summary>Available options.</summary>
+    [Parameter] public List<SelectOption> Options { get; set; } = new();
+
+    /// <summary>Currently selected value.</summary>
+    [Parameter] public string? Value { get; set; }
+
+    /// <summary>Callback when selection changes.</summary>
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+
+    /// <summary>Placeholder text when nothing is selected.</summary>
+    [Parameter] public string Placeholder { get; set; } = "Search...";
+
+    /// <summary>Whether the combobox is disabled.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Whether to allow custom (free-text) values.</summary>
+    [Parameter] public bool AllowCustom { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _isOpen;
+    private string _searchText = string.Empty;
+    private int _highlightIndex;
+    private List<SelectOption> _filteredOptions = new();
+
+    protected override void OnParametersSet()
+    {
+        // Display selected option label
+        if (!_isOpen && !string.IsNullOrEmpty(Value))
+        {
+            var selected = Options.FirstOrDefault(o => o.Value == Value);
+            _searchText = selected?.Label ?? Value;
+        }
+        FilterOptions();
+    }
+
+    private void FilterOptions()
+    {
+        if (string.IsNullOrWhiteSpace(_searchText) || (!_isOpen && !string.IsNullOrEmpty(Value)))
+        {
+            _filteredOptions = Options.Where(o => !o.Disabled).ToList();
+        }
+        else
+        {
+            var lower = _searchText.ToLowerInvariant();
+            _filteredOptions = Options
+                .Where(o => !o.Disabled && o.Label.Contains(lower, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+        _highlightIndex = Math.Clamp(_highlightIndex, 0, Math.Max(0, _filteredOptions.Count - 1));
+    }
+
+    private void HandleSearch(ChangeEventArgs e)
+    {
+        _searchText = e.Value?.ToString() ?? string.Empty;
+        _isOpen = true;
+        _highlightIndex = 0;
+        FilterOptions();
+    }
+
+    private void Open()
+    {
+        if (Disabled) return;
+        _isOpen = true;
+        _searchText = string.Empty;
+        FilterOptions();
+    }
+
+    private void Toggle()
+    {
+        if (Disabled) return;
+        if (_isOpen) Close();
+        else Open();
+    }
+
+    private async Task Select(SelectOption option)
+    {
+        Value = option.Value;
+        _searchText = option.Label;
+        _isOpen = false;
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private void Close()
+    {
+        _isOpen = false;
+        // Restore display text
+        if (!string.IsNullOrEmpty(Value))
+        {
+            var selected = Options.FirstOrDefault(o => o.Value == Value);
+            _searchText = selected?.Label ?? Value;
+        }
+        else if (!AllowCustom)
+        {
+            _searchText = string.Empty;
+        }
+    }
+
+    private async Task HandleFocusOut()
+    {
+        // Small delay to allow @onclick on list items to fire before closing
+        await Task.Delay(150);
+        Close();
+    }
+
+    private void HandleKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowDown":
+                if (!_isOpen) { Open(); return; }
+                _highlightIndex = Math.Min(_filteredOptions.Count - 1, _highlightIndex + 1);
+                break;
+            case "ArrowUp":
+                _highlightIndex = Math.Max(0, _highlightIndex - 1);
+                break;
+            case "Enter":
+                if (_isOpen && _highlightIndex >= 0 && _highlightIndex < _filteredOptions.Count)
+                    _ = Select(_filteredOptions[_highlightIndex]);
+                break;
+            case "Escape":
+                Close();
+                break;
+        }
+    }
+
+    private string WrapperClass => Tw.Merge("relative", GetUserClass());
+
+    private string InputClass => Tw.Merge(
+        "flex w-full rounded-md bg-transparent px-3 py-2 pe-9 text-sm",
+        "inset-ring inset-ring-border/50 placeholder:text-muted-foreground",
+        "transition-all duration-200 ease-out",
+        "selection:bg-primary selection:text-primary-foreground",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        "disabled:cursor-not-allowed disabled:opacity-50"
+    );
+
+    private string ListClass => Tw.Merge(
+        "absolute z-50 mt-1 w-full overflow-auto rounded-md",
+        "border border-border/50 bg-popover p-1 text-popover-foreground shadow-lg",
+        "max-h-60"
+    );
+
+    private string OptionClass(SelectOption option, int index) => Tw.Merge(
+        "relative flex cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-sm",
+        "transition-colors duration-100",
+        index == _highlightIndex ? "bg-accent text-accent-foreground" : "hover:bg-accent/50",
+        option.Value == Value ? "font-medium" : null
+    );
+
+    private string ChevronClass => Tw.Merge(
+        "size-4 transition-transform duration-200",
+        _isOpen ? "rotate-180" : ""
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

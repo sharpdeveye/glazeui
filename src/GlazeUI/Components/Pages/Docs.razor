@@ -12,19 +12,20 @@
     <aside class="hidden w-56 shrink-0 lg:block">
         <nav class="sticky top-24 space-y-1">
             <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">On this page</p>
-            <a href="/docs#installation" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Installation</a>
-            <a href="/docs#tokens" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Design Tokens</a>
-            <a href="/docs#first-component" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">First Component</a>
-            <a href="/docs#dark-mode" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Dark Mode</a>
-            <a href="/docs#customization" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Customization</a>
-            <a href="/docs#architecture" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Architecture</a>
+            <GzSidebarLink Href="/docs#installation" Label="Installation" />
+            <GzSidebarLink Href="/docs#tokens" Label="Design Tokens" />
+            <GzSidebarLink Href="/docs#first-component" Label="First Component" />
+            <GzSidebarLink Href="/docs#dark-mode" Label="Dark Mode" />
+            <GzSidebarLink Href="/docs#customization" Label="Customization" />
+            <GzSidebarLink Href="/docs#architecture" Label="Architecture" />
 
             <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Guidelines</p>
-            <a href="/docs/ux-guidelines" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">UX Guidelines</a>
-            <a href="/docs/writing-guidelines" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Writing Guidelines</a>
-            <a href="/docs/patterns" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Pattern Recipes</a>
-            <a href="/docs/api" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">API Reference</a>
-            <a href="/docs/accessibility" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Accessibility</a>
+            <GzSidebarLink Href="/docs/ux-guidelines" Label="UX Guidelines" ActivePath="/docs/ux-guidelines" />
+            <GzSidebarLink Href="/docs/writing-guidelines" Label="Writing Guidelines" ActivePath="/docs/writing-guidelines" />
+            <GzSidebarLink Href="/docs/patterns" Label="Pattern Recipes" ActivePath="/docs/patterns" />
+            <GzSidebarLink Href="/docs/api" Label="API Reference" ActivePath="/docs/api" />
+            <GzSidebarLink Href="/docs/accessibility" Label="Accessibility" ActivePath="/docs/accessibility" />
+            <GzSidebarLink Href="/docs/figma" Label="Figma Integration" ActivePath="/docs/figma" />
         </nav>
     </aside>
 
@@ -316,7 +317,7 @@ dotnet run</code></pre>
                     <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <p class="font-semibold text-foreground">Ready to explore?</p>
-                            <p class="mt-1 text-sm text-muted-foreground">Browse all 23 components with live interactive examples.</p>
+                            <p class="mt-1 text-sm text-muted-foreground">Browse all 28 components with live interactive examples.</p>
                         </div>
                         <GzButton OnClick="@(() => Navigation.NavigateTo("/components"))">
                             View Components →

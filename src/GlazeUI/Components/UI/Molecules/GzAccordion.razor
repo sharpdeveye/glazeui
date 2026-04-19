@@ -1,0 +1,35 @@
+@* GzAccordion — Collapsible content sections with CSS-only animation *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass">
+    @ChildContent
+</div>
+
+@code {
+    /// <summary>GzAccordionItem children.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Whether multiple items can be open simultaneously.</summary>
+    [Parameter] public bool Multiple { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "divide-y divide-border/50 rounded-lg border border-border/50",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

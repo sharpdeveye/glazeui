@@ -13,8 +13,14 @@
             Component Library
         </h1>
         <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
-            23 components across 3 tiers — atoms, molecules, and organisms. Every component ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition.
+            28 components across 3 tiers — atoms, molecules, and organisms. Every component ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition.
         </p>
+        <div class="mt-4 flex items-center gap-3">
+            <GzButton Variant="@(_isRtl ? ButtonVariant.Default : ButtonVariant.Outline)" Size="ButtonSize.Sm" OnClick="@(() => _isRtl = !_isRtl)">
+                @(_isRtl ? "RTL Mode" : "LTR Mode")
+            </GzButton>
+            <span class="text-xs text-muted-foreground">Toggle to preview all components in RTL layout</span>
+        </div>
     </div>
 </section>
 
@@ -26,36 +32,41 @@
         <aside class="hidden w-48 shrink-0 lg:block">
             <nav class="sticky top-24 space-y-1">
                 <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Atoms</p>
-                <a href="/components#button" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Button</a>
-                <a href="/components#badge" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Badge</a>
-                <a href="/components#separator" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Separator</a>
-                <a href="/components#input" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Input</a>
-                <a href="/components#textarea" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Textarea</a>
-                <a href="/components#checkbox" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Checkbox</a>
-                <a href="/components#radio" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Radio</a>
-                <a href="/components#switch" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Switch</a>
-                <a href="/components#avatar" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Avatar</a>
-                <a href="/components#typography" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Typography</a>
-                <a href="/components#skeleton" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Skeleton</a>
-                <a href="/components#progress" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Progress</a>
+                <GzSidebarLink Href="/components#button" Label="Button" />
+                <GzSidebarLink Href="/components#badge" Label="Badge" />
+                <GzSidebarLink Href="/components#separator" Label="Separator" />
+                <GzSidebarLink Href="/components#input" Label="Input" />
+                <GzSidebarLink Href="/components#textarea" Label="Textarea" />
+                <GzSidebarLink Href="/components#checkbox" Label="Checkbox" />
+                <GzSidebarLink Href="/components#radio" Label="Radio" />
+                <GzSidebarLink Href="/components#switch" Label="Switch" />
+                <GzSidebarLink Href="/components#avatar" Label="Avatar" />
+                <GzSidebarLink Href="/components#typography" Label="Typography" />
+                <GzSidebarLink Href="/components#skeleton" Label="Skeleton" />
+                <GzSidebarLink Href="/components#progress" Label="Progress" />
 
                 <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Molecules</p>
-                <a href="/components#card" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Card</a>
-                <a href="/components#alert" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Alert</a>
-                <a href="/components#formfield" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">FormField</a>
-                <a href="/components#tabs" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Tabs</a>
-                <a href="/components#tooltip" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Tooltip</a>
-                <a href="/components#select" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Select</a>
+                <GzSidebarLink Href="/components#card" Label="Card" />
+                <GzSidebarLink Href="/components#alert" Label="Alert" />
+                <GzSidebarLink Href="/components#formfield" Label="FormField" />
+                <GzSidebarLink Href="/components#tabs" Label="Tabs" />
+                <GzSidebarLink Href="/components#tooltip" Label="Tooltip" />
+                <GzSidebarLink Href="/components#select" Label="Select" />
+                <GzSidebarLink Href="/components#accordion" Label="Accordion" />
+                <GzSidebarLink Href="/components#breadcrumb" Label="Breadcrumb" />
 
                 <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Organisms</p>
-                <a href="/components#dialog" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Dialog</a>
-                <a href="/components#dropdown" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">DropdownMenu</a>
-                <a href="/components#popover" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Popover</a>
+                <GzSidebarLink Href="/components#dialog" Label="Dialog" />
+                <GzSidebarLink Href="/components#dropdown" Label="DropdownMenu" />
+                <GzSidebarLink Href="/components#popover" Label="Popover" />
+                <GzSidebarLink Href="/components#toast" Label="Toast" />
+                <GzSidebarLink Href="/components#combobox" Label="Combobox" />
+                <GzSidebarLink Href="/components#datatable" Label="DataTable" />
             </nav>
         </aside>
 
         @* ─── Component Sections ──────────────── *@
-        <div class="min-w-0 flex-1 space-y-16">
+        <div class="min-w-0 flex-1 space-y-16" dir="@(_isRtl ? "rtl" : "ltr")">
 
         @* ─── Button ─────────────────────────────────── *@
         <div id="button" class="scroll-mt-24">
@@ -69,12 +80,12 @@
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Variants</p>
                     <div class="flex flex-wrap items-center gap-3">
-                        <GzButton>Default</GzButton>
-                        <GzButton Variant="ButtonVariant.Secondary">Secondary</GzButton>
-                        <GzButton Variant="ButtonVariant.Destructive">Destructive</GzButton>
-                        <GzButton Variant="ButtonVariant.Outline">Outline</GzButton>
-                        <GzButton Variant="ButtonVariant.Ghost">Ghost</GzButton>
-                        <GzButton Variant="ButtonVariant.Link">Link</GzButton>
+                        <GzButton>@L("Default", "افتراضي")</GzButton>
+                        <GzButton Variant="ButtonVariant.Secondary">@L("Secondary", "ثانوي")</GzButton>
+                        <GzButton Variant="ButtonVariant.Destructive">@L("Destructive", "تدميري")</GzButton>
+                        <GzButton Variant="ButtonVariant.Outline">@L("Outline", "محيط")</GzButton>
+                        <GzButton Variant="ButtonVariant.Ghost">@L("Ghost", "شبحي")</GzButton>
+                        <GzButton Variant="ButtonVariant.Link">@L("Link", "رابط")</GzButton>
                     </div>
                 </div>
 
@@ -84,9 +95,9 @@
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Sizes</p>
                     <div class="flex flex-wrap items-center gap-3">
-                        <GzButton Size="ButtonSize.Sm">Small</GzButton>
-                        <GzButton Size="ButtonSize.Md">Medium</GzButton>
-                        <GzButton Size="ButtonSize.Lg">Large</GzButton>
+                        <GzButton Size="ButtonSize.Sm">@L("Small", "صغير")</GzButton>
+                        <GzButton Size="ButtonSize.Md">@L("Medium", "متوسط")</GzButton>
+                        <GzButton Size="ButtonSize.Lg">@L("Large", "كبير")</GzButton>
                         <GzButton Size="ButtonSize.Icon" aria-label="Settings">
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" />
@@ -102,11 +113,11 @@
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">States</p>
                     <div class="flex flex-wrap items-center gap-3">
-                        <GzButton Disabled="true">Disabled</GzButton>
-                        <GzButton Variant="ButtonVariant.Outline" Disabled="true">Disabled Outline</GzButton>
-                        <GzButton Loading="true">Loading...</GzButton>
-                        <GzButton Variant="ButtonVariant.Secondary" Loading="true">Saving</GzButton>
-                        <GzButton Variant="ButtonVariant.Destructive" Loading="true">Deleting</GzButton>
+                        <GzButton Disabled="true">@L("Disabled", "معطل")</GzButton>
+                        <GzButton Variant="ButtonVariant.Outline" Disabled="true">@L("Disabled Outline", "محيط معطل")</GzButton>
+                        <GzButton Loading="true">@L("Loading...", "جاري التحميل...")</GzButton>
+                        <GzButton Variant="ButtonVariant.Secondary" Loading="true">@L("Saving", "حفظ")</GzButton>
+                        <GzButton Variant="ButtonVariant.Destructive" Loading="true">@L("Deleting", "حذف")</GzButton>
                     </div>
                 </div>
 
@@ -173,11 +184,11 @@
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Vertical</p>
                     <div class="flex h-8 items-center gap-3 rounded-lg bg-surface px-4">
-                        <span class="text-sm text-foreground">Left</span>
+                        <span class="text-sm text-foreground">@L("Left", "يسار")</span>
                         <GzSeparator Orientation="SeparatorOrientation.Vertical" />
-                        <span class="text-sm text-foreground">Center</span>
+                        <span class="text-sm text-foreground">@L("Center", "وسط")</span>
                         <GzSeparator Orientation="SeparatorOrientation.Vertical" />
-                        <span class="text-sm text-foreground">Right</span>
+                        <span class="text-sm text-foreground">@L("Right", "يمين")</span>
                     </div>
                 </div>
             </div>
@@ -192,27 +203,27 @@
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="grid max-w-sm gap-2">
-                    <GzLabel For="demo-email" Required="true">Email</GzLabel>
-                    <GzInput Id="demo-email" Type="email" Placeholder="you@example.com" />
+                    <GzLabel For="demo-email" Required="true">@L("Email", "البريد الإلكتروني")</GzLabel>
+                    <GzInput Id="demo-email" Type="email" Placeholder="@L("you@example.com", "البريد@مثال.كوم")" />
                 </div>
 
                 <div class="grid max-w-sm gap-2">
-                    <GzLabel For="demo-password">Password</GzLabel>
-                    <GzInput Id="demo-password" Type="password" Placeholder="Enter password" />
+                    <GzLabel For="demo-password">@L("Password", "كلمة المرور")</GzLabel>
+                    <GzInput Id="demo-password" Type="password" Placeholder="@L("Enter password", "أدخل كلمة المرور")" />
                 </div>
 
                 <div class="grid max-w-sm gap-2">
-                    <GzLabel For="demo-error">With validation error</GzLabel>
-                    <GzInput Id="demo-error" Type="email" Value="not-an-email" Error="Please enter a valid email address" />
+                    <GzLabel For="demo-error">@L("With validation error", "مع خطأ التحقق")</GzLabel>
+                    <GzInput Id="demo-error" Type="email" Value="@L("not-an-email", "ليس-بريداً")" Error="@L("Please enter a valid email address", "يرجى إدخال عنوان بريد إلكتروني صالح")" />
                 </div>
 
                 <div class="grid max-w-sm gap-2">
-                    <GzLabel For="demo-disabled">Disabled</GzLabel>
-                    <GzInput Id="demo-disabled" Placeholder="Cannot type here" Disabled="true" />
+                    <GzLabel For="demo-disabled">@L("Disabled", "معطل")</GzLabel>
+                    <GzInput Id="demo-disabled" Placeholder="@L("Cannot type here", "لا يمكن الكتابة هنا")" Disabled="true" />
                 </div>
 
                 <div class="grid max-w-sm gap-2">
-                    <GzLabel For="demo-file">Upload file</GzLabel>
+                    <GzLabel For="demo-file">@L("Upload file", "رفع ملف")</GzLabel>
                     <GzInput Id="demo-file" Type="file" />
                 </div>
             </div>
@@ -251,10 +262,10 @@
             </div>
 
             <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <GzCheckbox @bind-Checked="_acceptTerms">Accept terms and conditions</GzCheckbox>
-                <GzCheckbox @bind-Checked="_newsletter">Subscribe to newsletter</GzCheckbox>
-                <GzCheckbox Checked="true" Disabled="true">Disabled (checked)</GzCheckbox>
-                <GzCheckbox Checked="false" Disabled="true">Disabled (unchecked)</GzCheckbox>
+                <GzCheckbox @bind-Checked="_acceptTerms">@L("Accept terms and conditions", "قبول الشروط والأحكام")</GzCheckbox>
+                <GzCheckbox @bind-Checked="_newsletter">@L("Subscribe to newsletter", "الاشتراك في النشرة البريدية")</GzCheckbox>
+                <GzCheckbox Checked="true" Disabled="true">@L("Disabled (checked)", "معطل (محدد)")</GzCheckbox>
+                <GzCheckbox Checked="false" Disabled="true">@L("Disabled (unchecked)", "معطل (غير محدد)")</GzCheckbox>
             </div>
         </div>
 
@@ -266,10 +277,10 @@
             </div>
 
             <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <GzRadio Name="plan" Value="free" Checked="@(_selectedPlan == "free")" CheckedChanged="@(_ => SelectPlan("free"))">Free plan</GzRadio>
-                <GzRadio Name="plan" Value="pro" Checked="@(_selectedPlan == "pro")" CheckedChanged="@(_ => SelectPlan("pro"))">Pro plan — $9/mo</GzRadio>
-                <GzRadio Name="plan" Value="enterprise" Checked="@(_selectedPlan == "enterprise")" CheckedChanged="@(_ => SelectPlan("enterprise"))">Enterprise — Contact us</GzRadio>
-                <GzRadio Name="disabled-group" Value="x" Checked="true" Disabled="true">Disabled (selected)</GzRadio>
+                <GzRadio Name="plan" Value="free" Checked="@(_selectedPlan == "free")" CheckedChanged="@(_ => SelectPlan("free"))">@L("Free plan", "الخطة المجانية")</GzRadio>
+                <GzRadio Name="plan" Value="pro" Checked="@(_selectedPlan == "pro")" CheckedChanged="@(_ => SelectPlan("pro"))">@L("Pro plan — $9/mo", "الخطة الاحترافية — $9/شهر")</GzRadio>
+                <GzRadio Name="plan" Value="enterprise" Checked="@(_selectedPlan == "enterprise")" CheckedChanged="@(_ => SelectPlan("enterprise"))">@L("Enterprise — Contact us", "المؤسسات — تواصل معنا")</GzRadio>
+                <GzRadio Name="disabled-group" Value="x" Checked="true" Disabled="true">@L("Disabled (selected)", "معطل (محدد)")</GzRadio>
             </div>
         </div>
 
@@ -281,10 +292,10 @@
             </div>
 
             <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <GzSwitch @bind-Checked="_notifications">Enable notifications</GzSwitch>
-                <GzSwitch @bind-Checked="_analytics">Share analytics</GzSwitch>
-                <GzSwitch Checked="true" Disabled="true">Always on (disabled)</GzSwitch>
-                <GzSwitch Checked="false" Disabled="true">Always off (disabled)</GzSwitch>
+                <GzSwitch @bind-Checked="_notifications">@L("Enable notifications", "تفعيل الإشعارات")</GzSwitch>
+                <GzSwitch @bind-Checked="_analytics">@L("Share analytics", "مشاركة التحليلات")</GzSwitch>
+                <GzSwitch Checked="true" Disabled="true">@L("Always on (disabled)", "دائماً مفعل (معطل)")</GzSwitch>
+                <GzSwitch Checked="false" Disabled="true">@L("Always off (disabled)", "دائماً موقف (معطل)")</GzSwitch>
             </div>
         </div>
 
@@ -667,6 +678,102 @@
                 </GzPopover>
             </div>
         </div>
+        @* ─── Accordion ───────────────────────────────── *@
+        <div id="accordion" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Accordion</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Collapsible content sections with chevron rotation and hover state.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzAccordion>
+                    <GzAccordionItem Title="@L("Is GlazeUI free?", "هل GlazeUI مجاني؟")" DefaultOpen="true">
+                        @L("Yes. GlazeUI is open-source under the Apache 2.0 license. Copy components into your project and modify everything.",
+                           "نعم. GlazeUI مفتوح المصدر تحت رخصة Apache 2.0. انسخ المكونات إلى مشروعك وعدّل كل شيء.")
+                    </GzAccordionItem>
+                    <GzAccordionItem Title="@L("Can I use it with Blazor WASM?", "هل يمكنني استخدامه مع Blazor WASM؟")">
+                        @L("GlazeUI is built for Blazor Server but the Razor components work in any Blazor hosting model — Server, WASM, or Hybrid.",
+                           "تم بناء GlazeUI لـ Blazor Server لكن مكونات Razor تعمل في أي نموذج استضافة — Server أو WASM أو Hybrid.")
+                    </GzAccordionItem>
+                    <GzAccordionItem Title="@L("Does it support dark mode?", "هل يدعم الوضع الداكن؟")">
+                        @L("Yes. All tokens have light and dark values.",
+                           "نعم. جميع الرموز لها قيم فاتحة وداكنة.")
+                    </GzAccordionItem>
+                </GzAccordion>
+            </div>
+        </div>
+
+        @* ─── Breadcrumb ──────────────────────────────── *@
+        <div id="breadcrumb" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Breadcrumb</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Navigation trail with separator chevrons and RTL-safe rotation.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzBreadcrumb Items="@ActiveBreadcrumbItems" />
+            </div>
+        </div>
+
+        @* ─── Toast ───────────────────────────────────── *@
+        <div id="toast" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Toast</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Temporary notifications with auto-dismiss, close button, and 3 variants.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap gap-3">
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _toastDefault = true)">Show Default</GzButton>
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _toastSuccess = true)">Show Success</GzButton>
+                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Destructive" OnClick="@(() => _toastError = true)">Show Error</GzButton>
+                </div>
+                <div class="space-y-3">
+                    <GzToast Title="Event created" @bind-Visible="_toastDefault" Duration="0">
+                        Your event has been scheduled for tomorrow at 3pm.
+                    </GzToast>
+                    <GzToast Title="Changes saved" Variant="ToastVariant.Success" @bind-Visible="_toastSuccess" Duration="0">
+                        Your profile has been updated successfully.
+                    </GzToast>
+                    <GzToast Title="Delete failed" Variant="ToastVariant.Error" @bind-Visible="_toastError" Duration="0">
+                        Something went wrong. Please try again.
+                    </GzToast>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Combobox ────────────────────────────────── *@
+        <div id="combobox" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Combobox</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Searchable select with type-to-filter, keyboard navigation, and checkmark indicator.</p>
+            </div>
+
+            <div class="max-w-sm rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzCombobox Options="@ActiveComboboxOptions"
+                            @bind-Value="_selectedCountry"
+                            Placeholder="@L("Search countries...", "ابحث عن الدول...")" />
+                @if (!string.IsNullOrEmpty(_selectedCountry))
+                {
+                    <p class="mt-3 text-sm text-muted-foreground">Selected: <strong class="text-foreground">@_selectedCountry</strong></p>
+                }
+            </div>
+        </div>
+
+        @* ─── DataTable ───────────────────────────────── *@
+        <div id="datatable" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">DataTable</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Sortable, filterable, paginated data grid with keyboard-sortable columns.</p>
+            </div>
+
+            <GzDataTable TItem="UserRecord"
+                         Items="@_tableData"
+                         Columns="@ActiveTableColumns"
+                         PageSize="5"
+                         Filterable="true"
+                         FilterPlaceholder="@L("Search users...", "ابحث عن المستخدمين...")" />
+        </div>
 
         </div> @* end flex-1 *@
     </div>
@@ -679,6 +786,7 @@
     private bool _analytics;
     private string _selectedPlan = "pro";
     private string? _activeTab;
+    private bool _isRtl;
     private bool _dialogOpen;
     private bool _dialogSmOpen;
     private string? _selectedFramework;
@@ -743,4 +851,101 @@
     {
         _selectedPlan = plan;
     }
+
+    // ─── Breadcrumb ──────────────────────────────────
+    private readonly List<BreadcrumbItem> _breadcrumbItems = new()
+    {
+        new() { Label = "Home", Href = "/" },
+        new() { Label = "Docs", Href = "/docs" },
+        new() { Label = "Components", Href = "/components" },
+        new() { Label = "Breadcrumb" }
+    };
+
+    // ─── Toast ───────────────────────────────────────
+    private bool _toastDefault;
+    private bool _toastSuccess;
+    private bool _toastError;
+
+    // ─── Combobox ────────────────────────────────────
+    private string? _selectedCountry;
+    private readonly List<SelectOption> _comboboxOptions = new()
+    {
+        new() { Value = "us", Label = "United States" },
+        new() { Value = "gb", Label = "United Kingdom" },
+        new() { Value = "de", Label = "Germany" },
+        new() { Value = "fr", Label = "France" },
+        new() { Value = "jp", Label = "Japan" },
+        new() { Value = "au", Label = "Australia" },
+        new() { Value = "ca", Label = "Canada" },
+        new() { Value = "br", Label = "Brazil" },
+        new() { Value = "in", Label = "India" },
+        new() { Value = "kr", Label = "South Korea" },
+    };
+
+    // ─── DataTable ───────────────────────────────────
+    private record UserRecord(string Name, string Email, string Role, string Status);
+
+    private readonly List<DataTableColumn<UserRecord>> _tableColumns = new()
+    {
+        new() { Header = "Name", Field = x => x.Name },
+        new() { Header = "Email", Field = x => x.Email },
+        new() { Header = "Role", Field = x => x.Role },
+        new() { Header = "Status", Field = x => x.Status },
+    };
+
+    private readonly List<UserRecord> _tableData = new()
+    {
+        new("Alice Smith", "alice@acme.com", "Admin", "Active"),
+        new("Bob Wilson", "bob@acme.com", "Editor", "Active"),
+        new("Carol Lee", "carol@acme.com", "Viewer", "Inactive"),
+        new("Dave Brown", "dave@acme.com", "Editor", "Active"),
+        new("Eve Johnson", "eve@acme.com", "Admin", "Active"),
+        new("Frank Garcia", "frank@acme.com", "Viewer", "Invited"),
+        new("Grace Kim", "grace@acme.com", "Editor", "Active"),
+        new("Henry Liu", "henry@acme.com", "Viewer", "Inactive"),
+        new("Iris Chen", "iris@acme.com", "Admin", "Active"),
+        new("Jack Davis", "jack@acme.com", "Editor", "Active"),
+        new("Karen Wang", "karen@acme.com", "Viewer", "Active"),
+        new("Leo Martinez", "leo@acme.com", "Editor", "Invited"),
+    };
+
+    // ─── RTL Arabic Localization Helper ──────────────
+    /// <summary>Returns Arabic text when in RTL mode, otherwise the English default.</summary>
+    private string L(string en, string ar) => _isRtl ? ar : en;
+
+    private List<BreadcrumbItem> ActiveBreadcrumbItems => _isRtl
+        ? new()
+        {
+            new() { Label = "الرئيسية", Href = "/" },
+            new() { Label = "التوثيق", Href = "/docs" },
+            new() { Label = "المكونات", Href = "/components" },
+            new() { Label = "مسار التنقل" }
+        }
+        : _breadcrumbItems;
+
+    private List<SelectOption> ActiveComboboxOptions => _isRtl
+        ? new()
+        {
+            new() { Value = "sa", Label = "المملكة العربية السعودية" },
+            new() { Value = "ae", Label = "الإمارات العربية المتحدة" },
+            new() { Value = "eg", Label = "مصر" },
+            new() { Value = "ma", Label = "المغرب" },
+            new() { Value = "jo", Label = "الأردن" },
+            new() { Value = "kw", Label = "الكويت" },
+            new() { Value = "qa", Label = "قطر" },
+            new() { Value = "lb", Label = "لبنان" },
+            new() { Value = "iq", Label = "العراق" },
+            new() { Value = "tn", Label = "تونس" },
+        }
+        : _comboboxOptions;
+
+    private List<DataTableColumn<UserRecord>> ActiveTableColumns => _isRtl
+        ? new()
+        {
+            new() { Header = "الاسم", Field = x => x.Name },
+            new() { Header = "البريد الإلكتروني", Field = x => x.Email },
+            new() { Header = "الدور", Field = x => x.Role },
+            new() { Header = "الحالة", Field = x => x.Status },
+        }
+        : _tableColumns;
 }

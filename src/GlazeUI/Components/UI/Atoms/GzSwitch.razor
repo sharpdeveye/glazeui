@@ -38,7 +38,7 @@
     );
 
     private string TrackClass => Tw.Merge(
-        "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full",
+        "relative inline-flex h-5 w-9 shrink-0 items-center rounded-full rtl:justify-end",
         "border-2 border-transparent shadow-xs cursor-pointer",
         "transition-all duration-200 ease-out",
         "active:scale-[0.98]",
@@ -50,7 +50,7 @@
     private string ThumbClass => Tw.Merge(
         "pointer-events-none block size-4 rounded-full bg-background shadow-lg ring-0",
         "transition-transform duration-200 ease-out",
-        Checked ? "translate-x-4" : "translate-x-0"
+        Checked ? "ltr:translate-x-4 rtl:-translate-x-4" : "translate-x-0"
     );
 
     private string LabelClass => Tw.Merge(
