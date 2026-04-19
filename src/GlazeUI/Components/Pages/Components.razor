@@ -28,9 +28,11 @@
                 <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Atoms</p>
                 <a href="/components#button" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Button</a>
                 <a href="/components#badge" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Badge</a>
+                <a href="/components#separator" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Separator</a>
                 <a href="/components#input" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Input</a>
                 <a href="/components#textarea" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Textarea</a>
-                <a href="/components#checkbox-radio" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Checkbox & Radio</a>
+                <a href="/components#checkbox" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Checkbox</a>
+                <a href="/components#radio" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Radio</a>
                 <a href="/components#switch" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Switch</a>
                 <a href="/components#avatar" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Avatar</a>
                 <a href="/components#typography" data-enhance-nav="false" class="block rounded-md px-3 py-1 text-sm text-muted-foreground transition-colors hover:text-foreground">Typography</a>
@@ -56,7 +58,7 @@
         <div class="min-w-0 flex-1 space-y-16">
 
         @* ─── Button ─────────────────────────────────── *@
-        <div id="button">
+        <div id="button" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Button</h2>
                 <p class="mt-1 text-sm text-muted-foreground">6 variants × 4 sizes. Loading state, icon slots, tactile press, and premium inset-shadow depth.</p>
@@ -136,7 +138,7 @@
         </div>
 
         @* ─── Badge ──────────────────────────────────── *@
-        <div id="badge">
+        <div id="badge" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Badge</h2>
                 <p class="mt-1 text-sm text-muted-foreground">4 semantic variants for status indicators, labels, and counts. Solid variants feature inset-shadow depth.</p>
@@ -153,7 +155,7 @@
         </div>
 
         @* ─── Separator ──────────────────────────────── *@
-        <div id="separator">
+        <div id="separator" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Separator</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Subtle dividers with proper ARIA semantics. Decorative by default.</p>
@@ -182,7 +184,7 @@
         </div>
 
         @* ─── Input + Label ──────────────────────────── *@
-        <div id="input">
+        <div id="input" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Input + Label</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Text input with inset-ring border, validation states, icon slots, and two-way binding.</p>
@@ -217,7 +219,7 @@
         </div>
 
         @* ─── Textarea ───────────────────────────────── *@
-        <div id="textarea">
+        <div id="textarea" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Textarea</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Multi-line input with inset-ring border, validation, and configurable rows.</p>
@@ -242,7 +244,7 @@
         </div>
 
         @* ─── Checkbox ───────────────────────────────── *@
-        <div id="checkbox">
+        <div id="checkbox" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Checkbox</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Custom checkbox with SVG checkmark, tactile press, and accessible focus ring.</p>
@@ -257,7 +259,7 @@
         </div>
 
         @* ─── Radio ──────────────────────────────────── *@
-        <div id="radio">
+        <div id="radio" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Radio</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Radio buttons with inner dot, group naming, and label support.</p>
@@ -272,7 +274,7 @@
         </div>
 
         @* ─── Switch ─────────────────────────────────── *@
-        <div id="switch">
+        <div id="switch" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Switch</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Toggle with sliding thumb, role="switch", and ARIA checked state.</p>
@@ -287,7 +289,7 @@
         </div>
 
         @* ─── Avatar ─────────────────────────────────── *@
-        <div id="avatar">
+        <div id="avatar" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Avatar</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Circular avatar with image, fallback initials, and default icon. Handles broken images gracefully.</p>
@@ -322,7 +324,7 @@
         </div>
 
         @* ─── Typography ─────────────────────────────── *@
-        <div id="typography">
+        <div id="typography" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Typography</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Semantic HTML elements with predefined typographic scales. Renders correct heading levels, paragraphs, and inline code.</p>
@@ -355,7 +357,7 @@
         </div>
 
         @* ─── Card ────────────────────────────────────── *@
-        <div id="card">
+        <div id="card" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Card</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Container with optional header, content, and footer slots. Clean border and shadow.</p>
@@ -395,7 +397,7 @@
         </div>
 
         @* ─── Alert ───────────────────────────────────── *@
-        <div id="alert">
+        <div id="alert" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Alert</h2>
                 <p class="mt-1 text-sm text-muted-foreground">5 semantic variants with auto-icons, title, and description. Uses subtle tinted backgrounds.</p>
@@ -421,7 +423,7 @@
         </div>
 
         @* ─── FormField ──────────────────────────────── *@
-        <div id="formfield">
+        <div id="formfield" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">FormField</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Composes label + control + description/error into a single wrapper. Error replaces description when set.</p>
@@ -449,7 +451,7 @@
         </div>
 
         @* ─── Skeleton ───────────────────────────────── *@
-        <div id="skeleton">
+        <div id="skeleton" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Skeleton</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Animated loading placeholders. Line and circle variants. Override dimensions via class.</p>
@@ -477,7 +479,7 @@
         </div>
 
         @* ─── Progress ───────────────────────────────── *@
-        <div id="progress">
+        <div id="progress" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Progress</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Horizontal progress bar with smooth transition. 3 sizes, proper ARIA progressbar role.</p>
@@ -502,7 +504,7 @@
         </div>
 
         @* ─── Tabs ────────────────────────────────────── *@
-        <div id="tabs">
+        <div id="tabs" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Tabs</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Tab navigation with ARIA tablist/tab/tabpanel pattern. Active tab has elevated background.</p>
@@ -514,7 +516,7 @@
         </div>
 
         @* ─── Tooltip ─────────────────────────────────── *@
-        <div id="tooltip">
+        <div id="tooltip" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Tooltip</h2>
                 <p class="mt-1 text-sm text-muted-foreground">CSS-only tooltip with 4 positions. Zero JS, zero SignalR roundtrips — instant on hover and focus.</p>
@@ -539,7 +541,7 @@
         </div>
 
         @* ─── Select ──────────────────────────────────── *@
-        <div id="select">
+        <div id="select" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Select</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Dropdown select with keyboard navigation (arrow keys, enter, escape), ARIA combobox, and checkmark indicator.</p>
@@ -569,7 +571,7 @@
         </div>
 
         @* ─── Dialog ──────────────────────────────────── *@
-        <div id="dialog">
+        <div id="dialog" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Dialog</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Modal with backdrop blur, click-outside-to-close, X button, Header/Footer slots, 4 sizes, and accessible ARIA.</p>
@@ -608,7 +610,7 @@
         </div>
 
         @* ─── DropdownMenu ────────────────────────────── *@
-        <div id="dropdown">
+        <div id="dropdown" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">DropdownMenu</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Trigger + floating menu with items, separators, keyboard shortcut labels, and disabled state.</p>
@@ -635,7 +637,7 @@
         </div>
 
         @* ─── Popover ─────────────────────────────────── *@
-        <div id="popover">
+        <div id="popover" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Popover</h2>
                 <p class="mt-1 text-sm text-muted-foreground">Click-triggered floating panel. General-purpose — any content can go inside.</p>

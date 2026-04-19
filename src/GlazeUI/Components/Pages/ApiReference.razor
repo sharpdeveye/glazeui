@@ -1,0 +1,236 @@
+@page "/docs/api"
+
+<PageTitle>API Reference — GlazeUI</PageTitle>
+<HeadContent>
+    <meta name="description" content="Complete API reference for all 23 GlazeUI components — parameters, types, defaults, and usage notes." />
+</HeadContent>
+
+<div class="mx-auto flex max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:px-8">
+
+    @* ─── Sidebar ──────────────────────────────── *@
+    <aside class="hidden w-56 shrink-0 lg:block">
+        <nav class="sticky top-24 space-y-1">
+            <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Atoms</p>
+            <a href="/docs/api#button" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Button</a>
+            <a href="/docs/api#badge" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Badge</a>
+            <a href="/docs/api#input" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Input</a>
+            <a href="/docs/api#textarea" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Textarea</a>
+            <a href="/docs/api#label" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Label</a>
+            <a href="/docs/api#checkbox" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Checkbox</a>
+            <a href="/docs/api#switch" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Switch</a>
+            <a href="/docs/api#avatar" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Avatar</a>
+            <a href="/docs/api#progress" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Progress</a>
+
+            <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Molecules</p>
+            <a href="/docs/api#card" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Card</a>
+            <a href="/docs/api#alert" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Alert</a>
+            <a href="/docs/api#formfield" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">FormField</a>
+            <a href="/docs/api#tabs" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Tabs</a>
+            <a href="/docs/api#tooltip" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Tooltip</a>
+            <a href="/docs/api#select" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Select</a>
+
+            <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Organisms</p>
+            <a href="/docs/api#dialog" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Dialog</a>
+            <a href="/docs/api#dropdown" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">DropdownMenu</a>
+            <a href="/docs/api#popover" data-enhance-nav="false" class="block rounded-md px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">Popover</a>
+        </nav>
+    </aside>
+
+    @* ─── Content ──────────────────────────────── *@
+    <div class="min-w-0 flex-1">
+        <p class="text-sm font-medium text-primary">Documentation</p>
+        <h1 class="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            API Reference
+        </h1>
+        <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
+            Complete parameter reference for all 23 GlazeUI components. Every component also accepts <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">class</code> and arbitrary HTML attributes via splatting.
+        </p>
+
+        @* ─── Shared note ────────────────────── *@
+        <GzAlert Variant="AlertVariant.Info" Title="Universal parameters" class="mt-6">
+            All components support <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">class</code> (merged via TwMerge) and <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">[Parameter(CaptureUnmatchedValues = true)]</code>. These are omitted from individual tables below.
+        </GzAlert>
+
+        @foreach (var comp in _components)
+        {
+            <section id="@comp.Anchor" class="mt-12 scroll-mt-24">
+                <div class="flex items-center gap-3">
+                    <h2 class="text-xl font-semibold tracking-tight text-foreground">@comp.Name</h2>
+                    <GzBadge Variant="BadgeVariant.Outline">@comp.Tier</GzBadge>
+                </div>
+                <p class="mt-1 text-sm text-muted-foreground">@comp.Description</p>
+                <GzSeparator class="mt-3 mb-4" />
+
+                <div class="overflow-x-auto rounded-lg border border-border/50">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="border-b border-border/50 bg-muted/50">
+                                <th class="px-4 py-2 text-start font-medium text-foreground">Parameter</th>
+                                <th class="px-4 py-2 text-start font-medium text-foreground">Type</th>
+                                <th class="px-4 py-2 text-start font-medium text-foreground">Default</th>
+                                <th class="px-4 py-2 text-start font-medium text-foreground">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var prop in comp.Props)
+                            {
+                                <tr class="border-b border-border/30 last:border-0">
+                                    <td class="px-4 py-2 font-mono text-xs text-foreground">@prop.Name</td>
+                                    <td class="px-4 py-2 font-mono text-xs text-muted-foreground">@prop.Type</td>
+                                    <td class="px-4 py-2 font-mono text-xs text-muted-foreground">@prop.Default</td>
+                                    <td class="px-4 py-2 text-muted-foreground">@prop.Description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        }
+    </div>
+</div>
+
+@code {
+    private record PropInfo(string Name, string Type, string Default, string Description);
+    private record ComponentInfo(string Anchor, string Name, string Tier, string Description, PropInfo[] Props);
+
+    private readonly ComponentInfo[] _components = new[]
+    {
+        new ComponentInfo("button", "GzButton", "Atom", "Interactive button with loading, icon, and 6 variants.", new[]
+        {
+            new PropInfo("Variant", "ButtonVariant", "Default", "Visual style: Default, Secondary, Destructive, Outline, Ghost, Link"),
+            new PropInfo("Size", "ButtonSize", "Md", "Dimensions: Xs, Sm, Md, Lg"),
+            new PropInfo("Disabled", "bool", "false", "Disables the button"),
+            new PropInfo("Loading", "bool", "false", "Shows spinner and disables interaction"),
+            new PropInfo("Type", "string", "button", "HTML button type: button, submit, reset"),
+            new PropInfo("OnClick", "EventCallback", "—", "Click handler"),
+            new PropInfo("Icon", "RenderFragment?", "null", "Icon slot rendered before label"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Button label content"),
+        }),
+        new ComponentInfo("badge", "GzBadge", "Atom", "Status indicator with 4 semantic variants.", new[]
+        {
+            new PropInfo("Variant", "BadgeVariant", "Default", "Visual style: Default, Secondary, Destructive, Outline"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Badge text content"),
+        }),
+        new ComponentInfo("input", "GzInput", "Atom", "Text input with icon slots and validation.", new[]
+        {
+            new PropInfo("Value", "string?", "null", "Current input value"),
+            new PropInfo("ValueChanged", "EventCallback<string>", "—", "Two-way binding callback"),
+            new PropInfo("Type", "string", "text", "HTML input type"),
+            new PropInfo("Placeholder", "string?", "null", "Placeholder text"),
+            new PropInfo("Disabled", "bool", "false", "Disables the input"),
+            new PropInfo("ReadOnly", "bool", "false", "Makes input read-only"),
+            new PropInfo("Error", "string?", "null", "Validation error message"),
+            new PropInfo("Id", "string?", "null", "Element ID for label association"),
+            new PropInfo("StartContent", "RenderFragment?", "null", "Leading icon slot"),
+            new PropInfo("EndContent", "RenderFragment?", "null", "Trailing icon slot"),
+        }),
+        new ComponentInfo("textarea", "GzTextarea", "Atom", "Multi-line text input with validation.", new[]
+        {
+            new PropInfo("Value", "string?", "null", "Current textarea value"),
+            new PropInfo("ValueChanged", "EventCallback<string>", "—", "Two-way binding callback"),
+            new PropInfo("Placeholder", "string?", "null", "Placeholder text"),
+            new PropInfo("Rows", "int", "3", "Visible row count"),
+            new PropInfo("Disabled", "bool", "false", "Disables the textarea"),
+            new PropInfo("Error", "string?", "null", "Validation error message"),
+        }),
+        new ComponentInfo("label", "GzLabel", "Atom", "Form label with required indicator.", new[]
+        {
+            new PropInfo("For", "string?", "null", "ID of the associated form control"),
+            new PropInfo("Required", "bool", "false", "Shows red asterisk"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Label text"),
+        }),
+        new ComponentInfo("checkbox", "GzCheckbox", "Atom", "Checkbox with SVG checkmark and tactile press.", new[]
+        {
+            new PropInfo("Checked", "bool", "false", "Current checked state"),
+            new PropInfo("CheckedChanged", "EventCallback<bool>", "—", "Two-way binding callback"),
+            new PropInfo("Disabled", "bool", "false", "Disables the checkbox"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Checkbox label"),
+        }),
+        new ComponentInfo("switch", "GzSwitch", "Atom", "Toggle switch with sliding thumb.", new[]
+        {
+            new PropInfo("Checked", "bool", "false", "Current toggle state"),
+            new PropInfo("CheckedChanged", "EventCallback<bool>", "—", "Two-way binding callback"),
+            new PropInfo("Disabled", "bool", "false", "Disables the switch"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Switch label"),
+        }),
+        new ComponentInfo("avatar", "GzAvatar", "Atom", "User avatar with image, initials, or default icon.", new[]
+        {
+            new PropInfo("Src", "string?", "null", "Image URL"),
+            new PropInfo("Alt", "string?", "null", "Alt text for image"),
+            new PropInfo("Initials", "string?", "null", "1–2 character fallback"),
+            new PropInfo("Size", "AvatarSize", "Md", "Dimensions: Sm, Md, Lg"),
+        }),
+        new ComponentInfo("progress", "GzProgress", "Atom", "Progress bar with 3 sizes.", new[]
+        {
+            new PropInfo("Value", "int", "0", "Progress percentage (0–100)"),
+            new PropInfo("Size", "ComponentSize", "Md", "Bar height: Sm, Md, Lg"),
+            new PropInfo("Max", "int", "100", "Maximum value"),
+        }),
+        // Molecules
+        new ComponentInfo("card", "GzCard", "Molecule", "Container with Header, Content, Footer slots.", new[]
+        {
+            new PropInfo("Header", "RenderFragment?", "null", "Card header slot"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Card body content"),
+            new PropInfo("Footer", "RenderFragment?", "null", "Card footer slot"),
+        }),
+        new ComponentInfo("alert", "GzAlert", "Molecule", "Semantic alert with auto-icon and 5 variants.", new[]
+        {
+            new PropInfo("Variant", "AlertVariant", "Default", "Default, Info, Success, Warning, Destructive"),
+            new PropInfo("Title", "string?", "null", "Alert heading"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Alert body text"),
+        }),
+        new ComponentInfo("formfield", "GzFormField", "Molecule", "Composes Label + Control + Description/Error.", new[]
+        {
+            new PropInfo("Label", "string", "—", "Field label text"),
+            new PropInfo("Id", "string", "—", "ID for label-control association"),
+            new PropInfo("Description", "string?", "null", "Help text below the control"),
+            new PropInfo("Error", "string?", "null", "Validation error message"),
+            new PropInfo("Required", "bool", "false", "Shows required asterisk on label"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "The form control"),
+        }),
+        new ComponentInfo("tabs", "GzTabs", "Molecule", "ARIA tablist with lazy panel rendering.", new[]
+        {
+            new PropInfo("Tabs", "List<TabItem>", "—", "Tab definitions (Key, Label, Content)"),
+            new PropInfo("ActiveTab", "string?", "null", "Currently active tab key"),
+            new PropInfo("ActiveTabChanged", "EventCallback<string>", "—", "Two-way binding callback"),
+        }),
+        new ComponentInfo("tooltip", "GzTooltip", "Molecule", "CSS-only tooltip with 4 positions. Zero JS.", new[]
+        {
+            new PropInfo("Text", "string", "\"\"", "Tooltip text content"),
+            new PropInfo("Position", "TooltipPosition", "Top", "Top, Right, Bottom, Left"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Trigger element"),
+        }),
+        new ComponentInfo("select", "GzSelect", "Molecule", "Custom dropdown with ARIA combobox and keyboard nav.", new[]
+        {
+            new PropInfo("Options", "List<SelectOption>", "—", "Available options (Value, Label, Disabled)"),
+            new PropInfo("Value", "string?", "null", "Selected option value"),
+            new PropInfo("ValueChanged", "EventCallback<string>", "—", "Two-way binding callback"),
+            new PropInfo("Placeholder", "string?", "null", "Text when nothing is selected"),
+            new PropInfo("Disabled", "bool", "false", "Disables the select"),
+        }),
+        // Organisms
+        new ComponentInfo("dialog", "GzDialog", "Organism", "Modal dialog with backdrop blur and Header/Footer slots.", new[]
+        {
+            new PropInfo("Open", "bool", "false", "Controls visibility"),
+            new PropInfo("OpenChanged", "EventCallback<bool>", "—", "Two-way binding callback"),
+            new PropInfo("Title", "string?", "null", "Dialog title text"),
+            new PropInfo("Description", "string?", "null", "Optional subtitle"),
+            new PropInfo("Size", "DialogSize", "Md", "Sm, Md, Lg, Full"),
+            new PropInfo("Header", "RenderFragment?", "null", "Custom header (overrides Title)"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Dialog body"),
+            new PropInfo("Footer", "RenderFragment?", "null", "Footer actions"),
+        }),
+        new ComponentInfo("dropdown", "GzDropdownMenu", "Organism", "Trigger + floating menu with keyboard nav.", new[]
+        {
+            new PropInfo("Trigger", "RenderFragment?", "null", "Button that opens the menu"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Menu items (GzDropdownMenuItem)"),
+            new PropInfo("Align", "string", "start", "Alignment: start, end"),
+        }),
+        new ComponentInfo("popover", "GzPopover", "Organism", "Click-triggered floating panel for rich content.", new[]
+        {
+            new PropInfo("Trigger", "RenderFragment?", "null", "Element that toggles the panel"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Panel content"),
+            new PropInfo("Align", "string", "center", "Alignment: start, center, end"),
+        }),
+    };
+}
