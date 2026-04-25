@@ -111,7 +111,8 @@
 
     private const string DropdownClass =
         "absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-border/50 bg-popover p-1 " +
-        "text-popover-foreground shadow-lg max-h-60 overflow-y-auto";
+        "text-popover-foreground shadow-lg max-h-60 overflow-y-auto " +
+        "animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150";
 
     private string GetOptionClass(bool isSelected, bool isHighlighted) => Tw.Merge(
         "relative flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-sm cursor-pointer",
