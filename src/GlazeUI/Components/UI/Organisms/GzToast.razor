@@ -4,8 +4,8 @@
 {
     <div @attributes="GetFilteredAttributes()"
          class="@ComputedClass"
-         role="alert"
-         aria-live="assertive">
+         role="@(Variant == ToastVariant.Error ? "alert" : "status")"
+         aria-live="@(Variant == ToastVariant.Error ? "assertive" : "polite")">
         <div class="flex items-start gap-3">
             @* Icon *@
             <div class="shrink-0 mt-0.5">

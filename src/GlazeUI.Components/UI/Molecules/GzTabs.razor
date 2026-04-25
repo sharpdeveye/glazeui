@@ -14,7 +14,8 @@
                     aria-controls="@($"panel-{tab.Key}")"
                     id="@($"tab-{tab.Key}")"
                     class="@GetTabClass(isActive)"
-                    @onclick="@(() => SetActiveTab(tab.Key))">
+                    @onclick="@(() => SetActiveTab(tab.Key))"
+                    @onkeydown="HandleTabKeyDown">
                 @tab.Label
             </button>
         }
@@ -79,6 +80,27 @@
     {
         ActiveTab = key;
         await ActiveTabChanged.InvokeAsync(key);
+    }
+
+    private async Task HandleTabKeyDown(KeyboardEventArgs e)
+    {
+        if (Tabs.Count == 0) return;
+        var currentIndex = Tabs.FindIndex(t => t.Key == ActiveTab);
+
+        var newIndex = e.Key switch
+        {
+            "ArrowRight" => (currentIndex + 1) % Tabs.Count,
+            "ArrowLeft" => (currentIndex - 1 + Tabs.Count) % Tabs.Count,
+            "Home" => 0,
+            "End" => Tabs.Count - 1,
+            _ => -1
+        };
+
+        if (newIndex >= 0)
+        {
+            ActiveTab = Tabs[newIndex].Key;
+            await ActiveTabChanged.InvokeAsync(ActiveTab);
+        }
     }
 
     private string? GetUserClass() =>

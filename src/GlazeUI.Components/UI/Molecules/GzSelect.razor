@@ -7,6 +7,7 @@
             role="combobox"
             aria-expanded="@_isOpen.ToString().ToLower()"
             aria-haspopup="listbox"
+            aria-activedescendant="@(_isOpen && _highlightIndex >= 0 ? $"gz-select-opt-{_highlightIndex}" : null)"
             aria-label="@(string.IsNullOrWhiteSpace(Placeholder) ? "Select an option" : Placeholder)"
             class="@TriggerClass"
             disabled="@Disabled"
@@ -26,15 +27,19 @@
         <div class="fixed inset-0 z-40" @onclick="Close"></div>
         <div role="listbox"
              class="@DropdownClass">
-            @foreach (var option in Options)
+            @for (var i = 0; i < _enabledOptions.Count; i++)
             {
+                var option = _enabledOptions[i];
+                var index = i;
                 var isSelected = option.Value == Value;
+                var isHighlighted = index == _highlightIndex;
                 <div role="option"
+                     id="@($"gz-select-opt-{index}")"
                      aria-selected="@isSelected.ToString().ToLower()"
-                     aria-disabled="@option.Disabled.ToString().ToLower()"
-                     class="@GetOptionClass(isSelected, option.Disabled)"
+                     class="@GetOptionClass(isSelected, isHighlighted)"
                      @onclick="() => SelectOption(option)"
-                     @onclick:stopPropagation="true">
+                     @onclick:stopPropagation="true"
+                     @onmouseenter="() => _highlightIndex = index">
                     <span>@option.Label</span>
                     @if (isSelected)
                     {
@@ -42,6 +47,14 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                         </svg>
                     }
+                </div>
+            }
+            @foreach (var option in Options.Where(o => o.Disabled))
+            {
+                <div role="option"
+                     aria-disabled="true"
+                     class="@GetOptionClass(false, false) pointer-events-none opacity-50">
+                    <span>@option.Label</span>
                 </div>
             }
         </div>
@@ -69,7 +82,14 @@
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
     private bool _isOpen;
+    private int _highlightIndex;
+    private List<SelectOption> _enabledOptions = new();
     private string? SelectedLabel => Options.FirstOrDefault(o => o.Value == Value)?.Label;
+
+    protected override void OnParametersSet()
+    {
+        _enabledOptions = Options.Where(o => !o.Disabled).ToList();
+    }
 
     private string ComputedClass => Tw.Merge(
         "relative w-full",
@@ -91,21 +111,26 @@
 
     private const string DropdownClass =
         "absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-border/50 bg-popover p-1 " +
-        "text-popover-foreground shadow-lg " +
-        "animate-in fade-in-0 zoom-in-95";
+        "text-popover-foreground shadow-lg max-h-60 overflow-y-auto";
 
-    private string GetOptionClass(bool isSelected, bool isDisabled) => Tw.Merge(
+    private string GetOptionClass(bool isSelected, bool isHighlighted) => Tw.Merge(
         "relative flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-sm cursor-pointer",
-        "transition-colors duration-150 ease-out",
-        isDisabled
-            ? "pointer-events-none opacity-50"
-            : "hover:bg-accent hover:text-accent-foreground",
+        "transition-colors duration-100 ease-out",
+        isHighlighted ? "bg-accent text-accent-foreground" : "hover:bg-accent/50",
         isSelected ? "font-medium" : ""
     );
 
     private void Toggle()
     {
-        if (!Disabled) _isOpen = !_isOpen;
+        if (Disabled) return;
+        _isOpen = !_isOpen;
+        if (_isOpen) InitHighlight();
+    }
+
+    private void InitHighlight()
+    {
+        var selectedIndex = _enabledOptions.FindIndex(o => o.Value == Value);
+        _highlightIndex = selectedIndex >= 0 ? selectedIndex : 0;
     }
 
     private async Task SelectOption(SelectOption option)
@@ -126,30 +151,38 @@
                 _isOpen = false;
                 break;
             case "Enter" or " ":
-                _isOpen = !_isOpen;
+                if (_isOpen && _highlightIndex >= 0 && _highlightIndex < _enabledOptions.Count)
+                {
+                    _ = SelectOption(_enabledOptions[_highlightIndex]);
+                }
+                else
+                {
+                    _isOpen = true;
+                    InitHighlight();
+                }
                 break;
-            case "ArrowDown" when _isOpen:
-                SelectAdjacentOption(1);
+            case "ArrowDown":
+                if (!_isOpen)
+                {
+                    _isOpen = true;
+                    InitHighlight();
+                }
+                else
+                {
+                    _highlightIndex = Math.Min(_enabledOptions.Count - 1, _highlightIndex + 1);
+                }
                 break;
-            case "ArrowUp" when _isOpen:
-                SelectAdjacentOption(-1);
+            case "ArrowUp":
+                if (_isOpen)
+                    _highlightIndex = Math.Max(0, _highlightIndex - 1);
+                break;
+            case "Home":
+                if (_isOpen) _highlightIndex = 0;
+                break;
+            case "End":
+                if (_isOpen) _highlightIndex = _enabledOptions.Count - 1;
                 break;
         }
-    }
-
-    private void SelectAdjacentOption(int direction)
-    {
-        var enabledOptions = Options.Where(o => !o.Disabled).ToList();
-        if (enabledOptions.Count == 0) return;
-
-        var currentIndex = enabledOptions.FindIndex(o => o.Value == Value);
-        var nextIndex = currentIndex + direction;
-
-        if (nextIndex < 0) nextIndex = enabledOptions.Count - 1;
-        if (nextIndex >= enabledOptions.Count) nextIndex = 0;
-
-        Value = enabledOptions[nextIndex].Value;
-        ValueChanged.InvokeAsync(Value);
     }
 
     private string? GetUserClass() =>

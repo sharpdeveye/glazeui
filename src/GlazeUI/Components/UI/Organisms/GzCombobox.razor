@@ -10,6 +10,7 @@
                aria-expanded="@(_isOpen ? "true" : "false")"
                aria-haspopup="listbox"
                aria-autocomplete="list"
+               aria-activedescendant="@(_isOpen && _highlightIndex >= 0 ? $"gz-combo-opt-{_highlightIndex}" : null)"
                placeholder="@Placeholder"
                disabled="@Disabled"
                class="@InputClass"
@@ -48,6 +49,7 @@
                     var option = _filteredOptions[i];
                     var index = i;
                     <li role="option"
+                        id="@($"gz-combo-opt-{index}")"
                         aria-selected="@(option.Value == Value ? "true" : "false")"
                         class="@OptionClass(option, index)"
                         @onclick="() => Select(option)"
@@ -189,6 +191,12 @@
                 break;
             case "Escape":
                 Close();
+                break;
+            case "Home":
+                if (_isOpen) _highlightIndex = 0;
+                break;
+            case "End":
+                if (_isOpen) _highlightIndex = Math.Max(0, _filteredOptions.Count - 1);
                 break;
         }
     }
