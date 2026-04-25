@@ -20,6 +20,16 @@
     transition: opacity 0.2s;
 }
 
+/* RTL: flip the fill gradient direction */
+[dir="rtl"] ::deep .gz-slider,
+::deep .gz-slider:dir(rtl) {
+    background: linear-gradient(
+        to left,
+        var(--color-primary) var(--fill),
+        var(--color-muted) var(--fill)
+    );
+}
+
 ::deep .gz-slider:disabled {
     opacity: 0.5;
     cursor: not-allowed;

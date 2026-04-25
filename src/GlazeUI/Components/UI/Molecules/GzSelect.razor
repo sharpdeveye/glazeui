@@ -1,8 +1,7 @@
 @* GzSelect — Dropdown select with keyboard navigation and ARIA combobox pattern *@
 
 <div @attributes="GetFilteredAttributes()"
-     class="@ComputedClass"
-     @onfocusout="HandleFocusOut">
+     class="@ComputedClass">
     @* Trigger *@
     <button type="button"
             role="combobox"
@@ -24,6 +23,7 @@
     @* Dropdown *@
     @if (_isOpen)
     {
+        <div class="fixed inset-0 z-40" @onclick="Close"></div>
         <div role="listbox"
              class="@DropdownClass">
             @foreach (var option in Options)
@@ -116,15 +116,7 @@
         await ValueChanged.InvokeAsync(Value);
     }
 
-    private void HandleFocusOut()
-    {
-        // Delay closing to allow click events on options to fire
-        _ = Task.Delay(150).ContinueWith(_ =>
-        {
-            _isOpen = false;
-            InvokeAsync(StateHasChanged);
-        });
-    }
+    private void Close() => _isOpen = false;
 
     private void HandleKeyDown(KeyboardEventArgs e)
     {

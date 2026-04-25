@@ -1,8 +1,7 @@
 @* GzDropdownMenu — Trigger + floating menu with items, separators, and keyboard navigation *@
 
 <div @attributes="GetFilteredAttributes()"
-     class="@ComputedClass"
-     @onfocusout="HandleFocusOut">
+     class="@ComputedClass">
     @* Trigger *@
     <div @onclick="Toggle"
          @onclick:stopPropagation="true"
@@ -13,6 +12,7 @@
     @* Menu *@
     @if (_isOpen)
     {
+        <div class="fixed inset-0 z-40" @onclick="Close"></div>
         <div role="menu"
              class="@MenuClass">
             @ChildContent
@@ -49,14 +49,7 @@
 
     private void Toggle() => _isOpen = !_isOpen;
 
-    private void HandleFocusOut()
-    {
-        _ = Task.Delay(150).ContinueWith(_ =>
-        {
-            _isOpen = false;
-            InvokeAsync(StateHasChanged);
-        });
-    }
+    private void Close() => _isOpen = false;
 
     private void HandleKeyDown(KeyboardEventArgs e)
     {

@@ -1,8 +1,7 @@
 @* GzDatePicker — Calendar dropdown with month/year nav, keyboard support, min/max constraints *@
 
 <div @attributes="GetFilteredAttributes()"
-     class="@WrapperClass"
-     @onfocusout="HandleFocusOut">
+     class="@WrapperClass">
 
     @* ─── Trigger Input ──────────────────── *@
     <div class="relative">
@@ -36,6 +35,7 @@
     @* ─── Calendar Dropdown ──────────────── *@
     @if (_isOpen)
     {
+        <div class="fixed inset-0 z-40" @onclick="Close"></div>
         <div class="absolute z-50 mt-1 rounded-lg border border-border/50 bg-popover p-3 shadow-lg"
              @onkeydown="HandleCalendarKeyDown">
             @* Month/Year Navigation *@
@@ -224,11 +224,7 @@
         BuildCalendar();
     }
 
-    private async Task HandleFocusOut()
-    {
-        await Task.Delay(150);
-        _isOpen = false;
-    }
+    private void Close() => _isOpen = false;
 
     private void HandleTriggerKeyDown(KeyboardEventArgs e)
     {

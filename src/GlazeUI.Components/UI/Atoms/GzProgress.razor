@@ -32,7 +32,7 @@
     private double Percentage => Max > 0 ? Math.Clamp(Value / Max * 100, 0, 100) : 0;
 
     private string TrackClass => Tw.Merge(
-        "w-full overflow-hidden rounded-full bg-muted",
+        "flex w-full overflow-hidden rounded-full bg-muted",
         GetSizeClass(),
         GetUserClass()
     );

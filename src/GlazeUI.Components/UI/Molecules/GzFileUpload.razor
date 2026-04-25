@@ -9,19 +9,17 @@
                    disabled="@Disabled"
                    class="sr-only" />
 
-        <div class="flex flex-col items-center gap-3 py-6">
-            <div class="@IconWrapperClass">
+        <span class="flex flex-col items-center gap-3 py-2">
+            <span class="@IconWrapperClass">
                 <svg class="size-6 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
                 </svg>
-            </div>
-            <div class="text-center">
-                <p class="text-sm font-medium text-foreground">
-                    <span>Click to upload or drag &amp; drop</span>
-                </p>
-                <p class="mt-1 text-xs text-muted-foreground">@HintText</p>
-            </div>
-        </div>
+            </span>
+            <span class="block text-center">
+                <span class="block text-sm font-medium text-foreground">Click to upload or drag &amp; drop</span>
+                <span class="mt-1 block text-xs text-muted-foreground">@HintText</span>
+            </span>
+        </span>
     </label>
 
     @* ─── File List ──────────────────────── *@
@@ -152,7 +150,7 @@
     private string ComputedClass => Tw.Merge(GetUserClass());
 
     private string DropZoneClass => Tw.Merge(
-        "flex cursor-pointer flex-col items-center rounded-lg border-2 border-dashed px-6 py-4 transition-all duration-200",
+        "block cursor-pointer rounded-lg border-2 border-dashed px-6 py-6 transition-all duration-200",
         "border-border/50 bg-muted/20 hover:border-primary/50 hover:bg-muted/40",
         Disabled ? "cursor-not-allowed opacity-50 pointer-events-none" : null
     );
