@@ -1,0 +1,91 @@
+@* GzToggle — Pressable button that toggles between on/off states *@
+
+<button
+    @attributes="GetFilteredAttributes()"
+    type="button"
+    aria-pressed="@Pressed.ToString().ToLower()"
+    disabled="@Disabled"
+    class="@ComputedClass"
+    @onclick="HandleToggle">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+</button>
+
+@code {
+    /// <summary>Content (icon or text).</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Whether the toggle is pressed/active.</summary>
+    [Parameter] public bool Pressed { get; set; }
+
+    /// <summary>Two-way binding callback.</summary>
+    [Parameter] public EventCallback<bool> PressedChanged { get; set; }
+
+    /// <summary>Visual variant.</summary>
+    [Parameter] public ToggleVariant Variant { get; set; } = ToggleVariant.Default;
+
+    /// <summary>Size preset.</summary>
+    [Parameter] public ToggleSize Size { get; set; } = ToggleSize.Md;
+
+    /// <summary>Whether the toggle is disabled.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private const string BaseClasses =
+        "inline-flex items-center justify-center gap-2 rounded-md " +
+        "text-sm font-medium cursor-pointer " +
+        "ring-offset-background transition-all duration-200 ease-out " +
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 " +
+        "active:scale-[0.98] " +
+        "disabled:pointer-events-none disabled:opacity-50 " +
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4";
+
+    private string ComputedClass => Tw.Merge(
+        BaseClasses,
+        GetVariantClass(),
+        GetSizeClass(),
+        GetUserClass()
+    );
+
+    private string GetVariantClass() => Variant switch
+    {
+        ToggleVariant.Outline => Pressed
+            ? "bg-accent text-accent-foreground border border-border/50 shadow-sm"
+            : "border border-border/50 bg-transparent hover:bg-accent hover:text-accent-foreground",
+        _ => Pressed
+            ? "bg-accent text-accent-foreground shadow-sm"
+            : "bg-transparent hover:bg-accent hover:text-accent-foreground"
+    };
+
+    private string GetSizeClass() => Size switch
+    {
+        ToggleSize.Sm => "h-8 px-2",
+        ToggleSize.Md => "h-9 px-3",
+        ToggleSize.Lg => "h-10 px-4",
+        _ => "h-9 px-3"
+    };
+
+    private async Task HandleToggle()
+    {
+        if (Disabled) return;
+        Pressed = !Pressed;
+        await PressedChanged.InvokeAsync(Pressed);
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

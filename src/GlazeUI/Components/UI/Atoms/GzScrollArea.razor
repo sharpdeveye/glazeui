@@ -1,0 +1,45 @@
+@* GzScrollArea — Styled scroll container with subtle scrollbar *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass">
+    @ChildContent
+</div>
+
+@code {
+    /// <summary>Scrollable content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Scroll direction.</summary>
+    [Parameter] public ScrollOrientation Orientation { get; set; } = ScrollOrientation.Vertical;
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "relative",
+        GetOrientationClass(),
+        "scrollbar-thin scrollbar-track-transparent scrollbar-thumb-border/40 hover:scrollbar-thumb-border/60",
+        GetUserClass()
+    );
+
+    private string GetOrientationClass() => Orientation switch
+    {
+        ScrollOrientation.Vertical   => "overflow-y-auto overflow-x-hidden",
+        ScrollOrientation.Horizontal => "overflow-x-auto overflow-y-hidden",
+        ScrollOrientation.Both       => "overflow-auto",
+        _ => "overflow-y-auto overflow-x-hidden"
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

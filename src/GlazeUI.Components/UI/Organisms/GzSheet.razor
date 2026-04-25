@@ -1,0 +1,120 @@
+@* GzSheet — Slide-out panel from edge of screen *@
+
+@if (Open)
+{
+    <div class="fixed inset-0 z-50" @onkeydown="HandleKeyDown">
+        @* Backdrop *@
+        <div class="fixed inset-0 bg-foreground/60 backdrop-blur-sm animate-in fade-in-0 duration-200"
+             @onclick="Close"></div>
+
+        @* Sheet panel *@
+        <div @attributes="GetFilteredAttributes()"
+             role="dialog"
+             aria-modal="true"
+             class="@ComputedClass">
+
+            @* Close button *@
+            <button type="button"
+                    class="absolute end-4 top-4 rounded-sm p-1 text-muted-foreground opacity-70 transition-all duration-200 cursor-pointer hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    aria-label="Close"
+                    @onclick="Close">
+                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+
+            @if (Header is not null)
+            {
+                <div class="space-y-1.5 pe-8">
+                    @Header
+                </div>
+                <GzSeparator class="my-4" />
+            }
+
+            <div class="flex-1 overflow-y-auto">
+                @ChildContent
+            </div>
+
+            @if (Footer is not null)
+            {
+                <GzSeparator class="my-4" />
+                <div>
+                    @Footer
+                </div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    /// <summary>Sheet body content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Optional header slot.</summary>
+    [Parameter] public RenderFragment? Header { get; set; }
+
+    /// <summary>Optional footer slot.</summary>
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    /// <summary>Which edge the sheet slides from.</summary>
+    [Parameter] public SheetSide Side { get; set; } = SheetSide.End;
+
+    /// <summary>Whether the sheet is open.</summary>
+    [Parameter] public bool Open { get; set; }
+
+    /// <summary>Two-way binding callback.</summary>
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "fixed z-50 flex flex-col bg-background p-6 shadow-xl",
+        "border-border/50",
+        GetSideClass(),
+        GetAnimationClass(),
+        GetUserClass()
+    );
+
+    private string GetSideClass() => Side switch
+    {
+        SheetSide.Start  => "inset-y-0 start-0 h-full w-3/4 max-w-sm border-e",
+        SheetSide.End    => "inset-y-0 end-0 h-full w-3/4 max-w-sm border-s",
+        SheetSide.Top    => "inset-x-0 top-0 w-full border-b",
+        SheetSide.Bottom => "inset-x-0 bottom-0 w-full border-t",
+        _ => "inset-y-0 end-0 h-full w-3/4 max-w-sm border-s"
+    };
+
+    private string GetAnimationClass() => Side switch
+    {
+        SheetSide.Start  => "animate-in slide-in-from-left-2 fade-in-0 duration-200",
+        SheetSide.End    => "animate-in slide-in-from-right-2 fade-in-0 duration-200",
+        SheetSide.Top    => "animate-in slide-in-from-top-2 fade-in-0 duration-200",
+        SheetSide.Bottom => "animate-in slide-in-from-bottom-2 fade-in-0 duration-200",
+        _ => "animate-in slide-in-from-right-2 fade-in-0 duration-200"
+    };
+
+    private async Task Close()
+    {
+        Open = false;
+        await OpenChanged.InvokeAsync(false);
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Escape") await Close();
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

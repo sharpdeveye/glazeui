@@ -1,0 +1,130 @@
+@* GzPagination — Page navigation with prev/next and numbered pages *@
+
+<nav @attributes="GetFilteredAttributes()"
+     aria-label="Pagination"
+     class="@ComputedClass">
+    <ul class="flex items-center gap-1">
+        @* Previous *@
+        <li>
+            <button type="button"
+                    class="@GetNavBtnClass(CurrentPage <= 1)"
+                    disabled="@(CurrentPage <= 1)"
+                    aria-label="Previous page"
+                    @onclick="() => GoToPage(CurrentPage - 1)">
+                <svg class="size-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </button>
+        </li>
+
+        @* Page numbers *@
+        @foreach (var page in GetVisiblePages())
+        {
+            @if (page == -1)
+            {
+                <li>
+                    <span class="flex items-center justify-center size-9 text-sm text-muted-foreground">…</span>
+                </li>
+            }
+            else
+            {
+                var p = page;
+                var isCurrent = p == CurrentPage;
+                <li>
+                    <button type="button"
+                            class="@GetPageBtnClass(isCurrent)"
+                            aria-current="@(isCurrent ? "page" : null)"
+                            @onclick="() => GoToPage(p)">
+                        @p
+                    </button>
+                </li>
+            }
+        }
+
+        @* Next *@
+        <li>
+            <button type="button"
+                    class="@GetNavBtnClass(CurrentPage >= TotalPages)"
+                    disabled="@(CurrentPage >= TotalPages)"
+                    aria-label="Next page"
+                    @onclick="() => GoToPage(CurrentPage + 1)">
+                <svg class="size-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                </svg>
+            </button>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    /// <summary>Current page number (1-based).</summary>
+    [Parameter] public int CurrentPage { get; set; } = 1;
+
+    /// <summary>Total number of pages.</summary>
+    [Parameter] public int TotalPages { get; set; } = 1;
+
+    /// <summary>Number of sibling pages to show on each side of current.</summary>
+    [Parameter] public int SiblingCount { get; set; } = 1;
+
+    /// <summary>Two-way binding callback.</summary>
+    [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(GetUserClass());
+
+    private string GetNavBtnClass(bool isDisabled) => Tw.Merge(
+        "inline-flex items-center justify-center size-9 rounded-md",
+        "text-muted-foreground transition-colors duration-150 cursor-pointer",
+        "hover:bg-accent hover:text-foreground",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        isDisabled ? "pointer-events-none opacity-50" : null
+    );
+
+    private string GetPageBtnClass(bool isCurrent) => Tw.Merge(
+        "inline-flex items-center justify-center size-9 rounded-md text-sm font-medium cursor-pointer",
+        "transition-all duration-150",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        isCurrent
+            ? "bg-primary text-primary-foreground shadow-sm inset-shadow-sm inset-shadow-white/20"
+            : "hover:bg-accent hover:text-accent-foreground"
+    );
+
+    private async Task GoToPage(int page)
+    {
+        if (page >= 1 && page <= TotalPages && page != CurrentPage)
+        {
+            CurrentPage = page;
+            await CurrentPageChanged.InvokeAsync(CurrentPage);
+        }
+    }
+
+    private List<int> GetVisiblePages()
+    {
+        var pages = new List<int>();
+        var start = Math.Max(2, CurrentPage - SiblingCount);
+        var end = Math.Min(TotalPages - 1, CurrentPage + SiblingCount);
+
+        pages.Add(1);
+        if (start > 2) pages.Add(-1); // ellipsis
+        for (var i = start; i <= end; i++) pages.Add(i);
+        if (end < TotalPages - 1) pages.Add(-1); // ellipsis
+        if (TotalPages > 1) pages.Add(TotalPages);
+
+        return pages;
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

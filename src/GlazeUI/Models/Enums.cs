@@ -141,3 +141,41 @@ public enum SortDirection
     Ascending,
     Descending
 }
+
+// ─── Toggle ─────────────────────────────────────────────
+
+/// <summary>Visual variant for GzToggle.</summary>
+public enum ToggleVariant
+{
+    Default,
+    Outline
+}
+
+/// <summary>Size preset for GzToggle.</summary>
+public enum ToggleSize
+{
+    Sm,
+    Md,
+    Lg
+}
+
+// ─── Sheet ──────────────────────────────────────────────
+
+/// <summary>Which edge a GzSheet slides from.</summary>
+public enum SheetSide
+{
+    Start,
+    End,
+    Top,
+    Bottom
+}
+
+// ─── ScrollArea ─────────────────────────────────────────
+
+/// <summary>Scroll direction for GzScrollArea.</summary>
+public enum ScrollOrientation
+{
+    Vertical,
+    Horizontal,
+    Both
+}
