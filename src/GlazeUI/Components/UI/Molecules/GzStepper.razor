@@ -1,0 +1,204 @@
+@* GzStepper — Multi-step wizard with horizontal progress indicators *@
+
+<div @attributes="GetFilteredAttributes()" class="@ComputedClass">
+    @* ─── Step Indicators ────────────────── *@
+    <div class="flex items-center" role="list">
+        @for (var i = 0; i < Steps.Count; i++)
+        {
+            var step = Steps[i];
+            var index = i;
+            var state = GetStepState(i);
+
+            @* Step Circle + Label *@
+            <div class="flex flex-col items-center gap-1.5" role="listitem">
+                <button type="button"
+                        class="@StepCircleClass(state)"
+                        disabled="@(Linear && state == StepState.Upcoming)"
+                        aria-label="@step.Label"
+                        aria-current="@(state == StepState.Active ? "step" : null)"
+                        @onclick="() => GoToStep(index)">
+                    @if (state == StepState.Completed)
+                    {
+                        <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                        </svg>
+                    }
+                    else
+                    {
+                        <span class="text-xs font-semibold">@(i + 1)</span>
+                    }
+                </button>
+                <div class="text-center min-w-16 max-w-24">
+                    <p class="@StepLabelClass(state)">@step.Label</p>
+                    @if (!string.IsNullOrEmpty(step.Description))
+                    {
+                        <p class="text-[10px] text-muted-foreground/70 leading-tight mt-0.5">@step.Description</p>
+                    }
+                </div>
+            </div>
+
+            @* Connector Line *@
+            @if (i < Steps.Count - 1)
+            {
+                <div class="flex-1 mx-2 mb-8">
+                    <div class="relative h-0.5 w-full rounded-full bg-border/50">
+                        <div class="@ConnectorFillClass(i)"></div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+    @* ─── Step Content ───────────────────── *@
+    @if (Steps.Count > 0 && ActiveStep >= 0 && ActiveStep < Steps.Count && Steps[ActiveStep].Content is not null)
+    {
+        <div class="mt-8">
+            @Steps[ActiveStep].Content
+        </div>
+    }
+
+    @* ─── Navigation Buttons ─────────────── *@
+    @if (ShowNavigation)
+    {
+        <div class="mt-6 flex items-center justify-between">
+            <GzButton Variant="ButtonVariant.Outline"
+                      Disabled="@(ActiveStep <= 0)"
+                      OnClick="Previous">
+                <ChildContent>
+                    <svg class="size-4 rtl:rotate-180 me-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                    Previous
+                </ChildContent>
+            </GzButton>
+
+            @if (ActiveStep < Steps.Count - 1)
+            {
+                <GzButton OnClick="Next">
+                    <ChildContent>
+                        Next
+                        <svg class="size-4 rtl:rotate-180 ms-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                        </svg>
+                    </ChildContent>
+                </GzButton>
+            }
+            else
+            {
+                <GzButton OnClick="Complete">
+                    @CompleteLabel
+                </GzButton>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Step definitions.</summary>
+    [Parameter] public List<StepItem> Steps { get; set; } = new();
+
+    /// <summary>Current active step index (0-based).</summary>
+    [Parameter] public int ActiveStep { get; set; }
+
+    /// <summary>Two-way binding for active step.</summary>
+    [Parameter] public EventCallback<int> ActiveStepChanged { get; set; }
+
+    /// <summary>If true, steps must be completed in order.</summary>
+    [Parameter] public bool Linear { get; set; } = true;
+
+    /// <summary>Whether to show Previous/Next buttons.</summary>
+    [Parameter] public bool ShowNavigation { get; set; } = true;
+
+    /// <summary>Label for the final step's button.</summary>
+    [Parameter] public string CompleteLabel { get; set; } = "Complete";
+
+    /// <summary>Callback when complete (last step Next) is clicked.</summary>
+    [Parameter] public EventCallback OnComplete { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private enum StepState { Completed, Active, Upcoming }
+
+    private StepState GetStepState(int index)
+    {
+        if (index < ActiveStep) return StepState.Completed;
+        if (index == ActiveStep) return StepState.Active;
+        return StepState.Upcoming;
+    }
+
+    private async Task GoToStep(int index)
+    {
+        if (Linear && index > ActiveStep) return;
+        ActiveStep = index;
+        await ActiveStepChanged.InvokeAsync(ActiveStep);
+    }
+
+    private async Task Previous()
+    {
+        if (ActiveStep > 0)
+        {
+            ActiveStep--;
+            await ActiveStepChanged.InvokeAsync(ActiveStep);
+        }
+    }
+
+    private async Task Next()
+    {
+        if (ActiveStep < Steps.Count - 1)
+        {
+            ActiveStep++;
+            await ActiveStepChanged.InvokeAsync(ActiveStep);
+        }
+    }
+
+    private async Task Complete()
+    {
+        if (OnComplete.HasDelegate)
+            await OnComplete.InvokeAsync();
+    }
+
+    // ─── Styling ────────────────────────────────────
+    private string ComputedClass => Tw.Merge(GetUserClass());
+
+    private string StepCircleClass(StepState state) => Tw.Merge(
+        "flex items-center justify-center size-9 rounded-full transition-all duration-200 ease-out cursor-pointer",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        state switch
+        {
+            StepState.Completed => "bg-primary text-primary-foreground shadow-sm inset-shadow-sm inset-shadow-white/20",
+            StepState.Active => "bg-primary text-primary-foreground shadow-sm inset-shadow-sm inset-shadow-white/20 ring-2 ring-primary/30 ring-offset-2 ring-offset-background",
+            _ => "border-2 border-border/50 text-muted-foreground hover:border-primary/50 hover:text-foreground"
+        },
+        state == StepState.Completed ? "active:scale-[0.95]" : null,
+        state == StepState.Upcoming ? "disabled:pointer-events-none disabled:opacity-50" : null
+    );
+
+    private string StepLabelClass(StepState state) => Tw.Merge(
+        "text-xs font-medium leading-tight",
+        state switch
+        {
+            StepState.Active => "text-foreground",
+            StepState.Completed => "text-foreground",
+            _ => "text-muted-foreground"
+        }
+    );
+
+    private string ConnectorFillClass(int index) => Tw.Merge(
+        "absolute inset-y-0 start-0 rounded-full bg-primary transition-all duration-500 ease-out",
+        index < ActiveStep ? "w-full" : "w-0"
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

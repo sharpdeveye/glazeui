@@ -121,3 +121,23 @@ public enum DialogSize
     Lg,
     Full
 }
+
+// ─── Toast ──────────────────────────────────────────────
+
+/// <summary>Visual variant for GzToast.</summary>
+public enum ToastVariant
+{
+    Default,
+    Success,
+    Error
+}
+
+// ─── DataTable ──────────────────────────────────────────
+
+/// <summary>Sort direction for GzDataTable columns.</summary>
+public enum SortDirection
+{
+    None,
+    Ascending,
+    Descending
+}

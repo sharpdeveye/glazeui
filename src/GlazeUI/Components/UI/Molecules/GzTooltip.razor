@@ -35,7 +35,7 @@
         // Visibility transition — CSS only, no server roundtrip
         "invisible opacity-0 transition-all duration-150 ease-out",
         "group-hover:visible group-hover:opacity-100",
-        "group-focus-within:visible group-focus-within:opacity-100",
+        "group-has-[:focus-visible]:visible group-has-[:focus-visible]:opacity-100",
         // Position
         GetPositionClass()
     );

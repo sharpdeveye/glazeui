@@ -2,7 +2,7 @@
 
 <PageTitle>API Reference — GlazeUI</PageTitle>
 <HeadContent>
-    <meta name="description" content="Complete API reference for all 28 GlazeUI components — parameters, types, defaults, and usage notes." />
+    <meta name="description" content="Complete API reference for all 34 GlazeUI components — parameters, types, defaults, and usage notes." />
 </HeadContent>
 
 <div class="mx-auto flex max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:px-8">
@@ -20,6 +20,7 @@
             <GzSidebarLink Href="/docs/api#switch" Label="Switch" />
             <GzSidebarLink Href="/docs/api#avatar" Label="Avatar" />
             <GzSidebarLink Href="/docs/api#progress" Label="Progress" />
+            <GzSidebarLink Href="/docs/api#slider" Label="Slider" />
 
             <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Molecules</p>
             <GzSidebarLink Href="/docs/api#card" Label="Card" />
@@ -28,11 +29,19 @@
             <GzSidebarLink Href="/docs/api#tabs" Label="Tabs" />
             <GzSidebarLink Href="/docs/api#tooltip" Label="Tooltip" />
             <GzSidebarLink Href="/docs/api#select" Label="Select" />
+            <GzSidebarLink Href="/docs/api#accordion" Label="Accordion" />
+            <GzSidebarLink Href="/docs/api#breadcrumb" Label="Breadcrumb" />
+            <GzSidebarLink Href="/docs/api#fileupload" Label="FileUpload" />
+            <GzSidebarLink Href="/docs/api#stepper" Label="Stepper" />
 
             <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Organisms</p>
             <GzSidebarLink Href="/docs/api#dialog" Label="Dialog" />
             <GzSidebarLink Href="/docs/api#dropdown" Label="DropdownMenu" />
             <GzSidebarLink Href="/docs/api#popover" Label="Popover" />
+            <GzSidebarLink Href="/docs/api#toast" Label="Toast" />
+            <GzSidebarLink Href="/docs/api#combobox" Label="Combobox" />
+            <GzSidebarLink Href="/docs/api#datatable" Label="DataTable" />
+            <GzSidebarLink Href="/docs/api#datepicker" Label="DatePicker" />
         </nav>
     </aside>
 
@@ -43,7 +52,7 @@
             API Reference
         </h1>
         <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
-            Complete parameter reference for all 28 GlazeUI components. Every component also accepts <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">class</code> and arbitrary HTML attributes via splatting.
+            Complete parameter reference for all 34 GlazeUI components. Every component also accepts <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">class</code> and arbitrary HTML attributes via splatting.
         </p>
 
         @* ─── Shared note ────────────────────── *@
@@ -231,6 +240,102 @@
             new PropInfo("Trigger", "RenderFragment?", "null", "Element that toggles the panel"),
             new PropInfo("ChildContent", "RenderFragment?", "null", "Panel content"),
             new PropInfo("Align", "string", "center", "Alignment: start, center, end"),
+        }),
+        // New Molecules
+        new ComponentInfo("accordion", "GzAccordion", "Molecule", "Collapsible content sections container.", new[]
+        {
+            new PropInfo("ChildContent", "RenderFragment?", "null", "GzAccordionItem children"),
+        }),
+        new ComponentInfo("accordion-item", "GzAccordionItem", "Molecule", "Single collapsible section within an accordion.", new[]
+        {
+            new PropInfo("Title", "string", "—", "Displayed header text"),
+            new PropInfo("DefaultOpen", "bool", "false", "Whether the section is open on first render"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Collapsible body content"),
+        }),
+        new ComponentInfo("breadcrumb", "GzBreadcrumb", "Molecule", "Navigation trail with RTL-safe chevron separators.", new[]
+        {
+            new PropInfo("Items", "List<BreadcrumbItem>", "—", "Breadcrumb entries (Label, Href)"),
+        }),
+        // New Organisms
+        new ComponentInfo("toast", "GzToast", "Organism", "Temporary notification with auto-dismiss and 3 variants.", new[]
+        {
+            new PropInfo("Title", "string", "—", "Toast heading text"),
+            new PropInfo("Variant", "ToastVariant", "Default", "Default, Success, Error"),
+            new PropInfo("Visible", "bool", "false", "Controls visibility"),
+            new PropInfo("VisibleChanged", "EventCallback<bool>", "—", "Two-way binding callback"),
+            new PropInfo("Duration", "int", "5000", "Auto-dismiss ms (0 = manual)"),
+            new PropInfo("ChildContent", "RenderFragment?", "null", "Toast body text"),
+        }),
+        new ComponentInfo("combobox", "GzCombobox", "Organism", "Searchable select with type-to-filter and keyboard nav.", new[]
+        {
+            new PropInfo("Options", "List<SelectOption>", "—", "Available options (Value, Label, Disabled)"),
+            new PropInfo("Value", "string?", "null", "Selected option value"),
+            new PropInfo("ValueChanged", "EventCallback<string?>", "—", "Two-way binding callback"),
+            new PropInfo("Placeholder", "string", "Search...", "Input placeholder text"),
+            new PropInfo("Disabled", "bool", "false", "Disables the combobox"),
+            new PropInfo("AllowCustom", "bool", "false", "Allow free-text values"),
+        }),
+        new ComponentInfo("datatable", "GzDataTable<TItem>", "Organism", "Enterprise data grid with sorting, filtering, pagination, column visibility, row selection, density toggle, and CSV export.", new[]
+        {
+            new PropInfo("Items", "List<TItem>", "—", "Data source collection"),
+            new PropInfo("Columns", "List<DataTableColumn<TItem>>", "—", "Column definitions (Header, Field, Sortable, Visible)"),
+            new PropInfo("PageSize", "int", "10", "Default rows per page"),
+            new PropInfo("Filterable", "bool", "true", "Shows search input"),
+            new PropInfo("FilterPlaceholder", "string", "Search...", "Search input placeholder"),
+            new PropInfo("FilterFunc", "Func<TItem, string, bool>?", "null", "Custom filter predicate"),
+            new PropInfo("Selectable", "bool", "false", "Shows row selection checkboxes"),
+            new PropInfo("Exportable", "bool", "false", "Shows CSV export button"),
+            new PropInfo("Loading", "bool", "false", "Shows skeleton loading state"),
+            new PropInfo("StickyHeader", "bool", "false", "Sticky table header on scroll"),
+            new PropInfo("KeySelector", "Func<TItem, object>?", "null", "Custom row identity selector"),
+            new PropInfo("OnRowClick", "EventCallback<TItem>", "—", "Row click callback"),
+            new PropInfo("OnSelectionChanged", "EventCallback<List<TItem>>", "—", "Selection change callback"),
+        }),
+        new ComponentInfo("datepicker", "GzDatePicker", "Organism", "Calendar dropdown with month/year nav, min/max constraints, keyboard navigation, and customizable day names.", new[]
+        {
+            new PropInfo("Value", "DateOnly?", "null", "Selected date"),
+            new PropInfo("ValueChanged", "EventCallback<DateOnly?>", "—", "Two-way binding callback"),
+            new PropInfo("Placeholder", "string", "Pick a date", "Input placeholder text"),
+            new PropInfo("Format", "string", "yyyy-MM-dd", "Date display format"),
+            new PropInfo("MinDate", "DateOnly?", "null", "Minimum selectable date"),
+            new PropInfo("MaxDate", "DateOnly?", "null", "Maximum selectable date"),
+            new PropInfo("Clearable", "bool", "true", "Shows clear button"),
+            new PropInfo("Disabled", "bool", "false", "Disables the picker"),
+            new PropInfo("DayNames", "string[]?", "null", "Custom abbreviated day names (7 items, Su-Sa)"),
+        }),
+        // New Atoms
+        new ComponentInfo("slider", "GzSlider", "Atom", "Range input with fill track, thumb, tick marks, and value display.", new[]
+        {
+            new PropInfo("Value", "double", "0", "Current slider value"),
+            new PropInfo("ValueChanged", "EventCallback<double>", "—", "Two-way binding callback"),
+            new PropInfo("Min", "double", "0", "Minimum value"),
+            new PropInfo("Max", "double", "100", "Maximum value"),
+            new PropInfo("Step", "double", "1", "Step increment"),
+            new PropInfo("Label", "string?", "null", "Optional label text"),
+            new PropInfo("ShowValue", "bool", "true", "Shows current value readout"),
+            new PropInfo("ShowTicks", "bool", "false", "Shows tick mark labels"),
+            new PropInfo("TickInterval", "double", "Step", "Interval between tick labels"),
+            new PropInfo("Disabled", "bool", "false", "Disables the slider"),
+            new PropInfo("ValueFormat", "string?", "null", "Value display format (e.g. N0, 0.0)"),
+        }),
+        // New Molecules
+        new ComponentInfo("fileupload", "GzFileUpload", "Molecule", "File upload zone with file list, size validation, and remove controls.", new[]
+        {
+            new PropInfo("Accept", "string?", "null", "Accepted file types (e.g. .pdf,.png)"),
+            new PropInfo("MaxSizeBytes", "long", "0", "Max file size in bytes (0 = no limit)"),
+            new PropInfo("Multiple", "bool", "false", "Allow multiple files"),
+            new PropInfo("Disabled", "bool", "false", "Disables the upload zone"),
+            new PropInfo("OnFilesChanged", "EventCallback<List<IBrowserFile>>", "—", "Files changed callback"),
+        }),
+        new ComponentInfo("stepper", "GzStepper", "Molecule", "Multi-step wizard with numbered indicators, progress connectors, and navigation buttons.", new[]
+        {
+            new PropInfo("Steps", "List<StepItem>", "—", "Step definitions (Label, Description, Content)"),
+            new PropInfo("ActiveStep", "int", "0", "Current step index (0-based)"),
+            new PropInfo("ActiveStepChanged", "EventCallback<int>", "—", "Two-way binding callback"),
+            new PropInfo("Linear", "bool", "true", "Steps must be completed in order"),
+            new PropInfo("ShowNavigation", "bool", "true", "Shows Previous/Next buttons"),
+            new PropInfo("CompleteLabel", "string", "Complete", "Final step button label"),
+            new PropInfo("OnComplete", "EventCallback", "—", "Complete button callback"),
         }),
     };
 }

@@ -31,19 +31,35 @@ class Program
         ["tooltip"]    = ("Molecules", "GzTooltip.razor"),
         ["select"]     = ("Molecules", "GzSelect.razor"),
         // Organisms
-        ["dialog"]         = ("Organisms", "GzDialog.razor"),
-        ["dropdownmenu"]   = ("Organisms", "GzDropdownMenu.razor"),
-        ["dropdownmenuitem"] = ("Organisms", "GzDropdownMenuItem.razor"),
-        ["popover"]        = ("Organisms", "GzPopover.razor"),
+        ["dialog"]            = ("Organisms", "GzDialog.razor"),
+        ["dropdownmenu"]      = ("Organisms", "GzDropdownMenu.razor"),
+        ["dropdownmenuitem"]  = ("Organisms", "GzDropdownMenuItem.razor"),
+        ["popover"]           = ("Organisms", "GzPopover.razor"),
+        ["toast"]             = ("Organisms", "GzToast.razor"),
+        ["combobox"]          = ("Organisms", "GzCombobox.razor"),
+        ["datatable"]         = ("Organisms", "GzDataTable.razor"),
+        ["datepicker"]        = ("Organisms", "GzDatePicker.razor"),
+        // Molecules (new)
+        ["accordion"]         = ("Molecules", "GzAccordion.razor"),
+        ["accordionitem"]     = ("Molecules", "GzAccordionItem.razor"),
+        ["breadcrumb"]        = ("Molecules", "GzBreadcrumb.razor"),
+        ["fileupload"]        = ("Molecules", "GzFileUpload.razor"),
+        ["stepper"]           = ("Molecules", "GzStepper.razor"),
+        // Atoms (new)
+        ["sidebarlink"]       = ("Atoms",     "GzSidebarLink.razor"),
+        ["slider"]            = ("Atoms",     "GzSlider.razor"),
     };
 
     // Shared dependencies
     private static readonly Dictionary<string, (string Dir, string FileName)> SharedFiles = new()
     {
-        ["tw"]           = ("Utilities", "Tw.cs"),
-        ["enums"]        = ("Models",    "Enums.cs"),
-        ["selectoption"] = ("Models",    "SelectOption.cs"),
-        ["tabitem"]      = ("Models",    "TabItem.cs"),
+        ["tw"]              = ("Utilities", "Tw.cs"),
+        ["enums"]           = ("Models",    "Enums.cs"),
+        ["selectoption"]    = ("Models",    "SelectOption.cs"),
+        ["tabitem"]         = ("Models",    "TabItem.cs"),
+        ["breadcrumbitem"]  = ("Models",    "BreadcrumbItem.cs"),
+        ["datatablecolumn"] = ("Models",    "DataTableColumn.cs"),
+        ["stepitem"]        = ("Models",    "StepItem.cs"),
     };
 
     static int Main(string[] args)
@@ -165,6 +181,28 @@ class Program
         Console.ResetColor();
         Console.WriteLine($"{tier}/{fileName}");
 
+        // Also copy companion .razor.css if it exists (Blazor CSS isolation)
+        var cssFileName = fileName + ".css";
+        var cssResourceName = GetResourceName($"Templates.{tier}.{cssFileName}");
+        if (cssResourceName != null)
+        {
+            var cssTargetPath = Path.Combine(targetDir, cssFileName);
+            if (!File.Exists(cssTargetPath))
+            {
+                using var cssStream = assembly.GetManifestResourceStream(cssResourceName);
+                if (cssStream != null)
+                {
+                    using var cssReader = new StreamReader(cssStream);
+                    File.WriteAllText(cssTargetPath, cssReader.ReadToEnd());
+
+                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.Write($"  + ");
+                    Console.ResetColor();
+                    Console.WriteLine($"{tier}/{cssFileName}");
+                }
+            }
+        }
+
         return true;
     }
 
@@ -200,13 +238,25 @@ class Program
         ExtractSharedFile("Utilities", "Tw.cs", outputDir);
         ExtractSharedFile("Models", "Enums.cs", outputDir);
 
-        // Select needs SelectOption
-        if (addedFiles.Any(f => f.Contains("Select")))
+        // Select/Combobox needs SelectOption
+        if (addedFiles.Any(f => f.Contains("Select") || f.Contains("Combobox")))
             ExtractSharedFile("Models", "SelectOption.cs", outputDir);
 
         // Tabs needs TabItem
         if (addedFiles.Any(f => f.Contains("Tabs")))
             ExtractSharedFile("Models", "TabItem.cs", outputDir);
+
+        // Breadcrumb needs BreadcrumbItem
+        if (addedFiles.Any(f => f.Contains("Breadcrumb")))
+            ExtractSharedFile("Models", "BreadcrumbItem.cs", outputDir);
+
+        // DataTable needs DataTableColumn
+        if (addedFiles.Any(f => f.Contains("DataTable")))
+            ExtractSharedFile("Models", "DataTableColumn.cs", outputDir);
+
+        // Stepper needs StepItem
+        if (addedFiles.Any(f => f.Contains("Stepper")))
+            ExtractSharedFile("Models", "StepItem.cs", outputDir);
     }
 
     static string? GetResourceName(string suffix)
@@ -310,7 +360,7 @@ class Program
         Console.WriteLine();
         Console.WriteLine("  Usage:");
         Console.WriteLine("    glaze add <component...>   Add component(s) to your project");
-        Console.WriteLine("    glaze add --all            Add all 23 components");
+        Console.WriteLine("    glaze add --all            Add all 34 components");
         Console.WriteLine("    glaze list                 List all available components");
         Console.WriteLine("    glaze init                 Initialize shared utilities (Tw.cs, Enums.cs)");
         Console.WriteLine("    glaze --version            Show version");

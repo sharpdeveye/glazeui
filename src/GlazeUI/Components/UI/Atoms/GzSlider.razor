@@ -1,0 +1,163 @@
+@* GzSlider — Range input with CSS-only fill track, custom thumb, tick marks *@
+
+<div @attributes="GetFilteredAttributes()" class="@WrapperClass">
+    @if (ShowLabel)
+    {
+        <div class="flex items-center justify-between mb-2">
+            @if (Label is not null)
+            {
+                <span class="text-sm font-medium text-foreground">@Label</span>
+            }
+            @if (ShowValue)
+            {
+                <span class="text-sm tabular-nums text-muted-foreground">@DisplayValue</span>
+            }
+        </div>
+    }
+
+    <input type="range"
+           min="@Min"
+           max="@Max"
+           step="@Step"
+           value="@_internalValue"
+           disabled="@Disabled"
+           class="gz-slider"
+           style="--fill: @FillPercent%"
+           @oninput="HandleInput"
+           @onchange="HandleChange" />
+
+    @if (ShowTicks && Step > 0)
+    {
+        <div class="relative mt-2" style="height: 16px; padding: 0 10px;">
+            @{
+                var ticks = GetTickValues();
+                var range = Max - Min;
+            }
+            @foreach (var tick in ticks)
+            {
+                var pct = range > 0 ? ((tick - Min) / range) * 100 : 0;
+                <span class="absolute text-[10px] tabular-nums text-muted-foreground/70 -translate-x-1/2 select-none"
+                      style="left: @FormatPct(pct)">@FormatTick(tick)</span>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Current slider value.</summary>
+    [Parameter] public double Value { get; set; }
+
+    /// <summary>Two-way binding callback.</summary>
+    [Parameter] public EventCallback<double> ValueChanged { get; set; }
+
+    /// <summary>Minimum value.</summary>
+    [Parameter] public double Min { get; set; }
+
+    /// <summary>Maximum value.</summary>
+    [Parameter] public double Max { get; set; } = 100;
+
+    /// <summary>Step increment.</summary>
+    [Parameter] public double Step { get; set; } = 1;
+
+    /// <summary>Optional label text.</summary>
+    [Parameter] public string? Label { get; set; }
+
+    /// <summary>Whether to show the current value readout.</summary>
+    [Parameter] public bool ShowValue { get; set; } = true;
+
+    /// <summary>Whether to show tick marks.</summary>
+    [Parameter] public bool ShowTicks { get; set; }
+
+    /// <summary>Interval between displayed tick labels. Defaults to Step.</summary>
+    [Parameter] public double TickInterval { get; set; }
+
+    /// <summary>Disabled state.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Format string for value display, e.g. "0.0" or "N0".</summary>
+    [Parameter] public string? ValueFormat { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    // Internal value prevents SignalR race conditions during fast dragging.
+    // The native input uses _internalValue (always up-to-date), not the
+    // parameter Value (which lags behind on Blazor Server).
+    private double _internalValue;
+    private bool _isDragging;
+
+    protected override void OnParametersSet()
+    {
+        if (TickInterval <= 0) TickInterval = Step > 0 ? Step : 1;
+        // Only sync from parameter when NOT actively dragging
+        if (!_isDragging)
+            _internalValue = Value;
+    }
+
+    private bool ShowLabel => Label is not null || ShowValue;
+
+    private double FillPercent => Max > Min ? ((_internalValue - Min) / (Max - Min)) * 100 : 0;
+
+    private string DisplayValue => ValueFormat is not null
+        ? _internalValue.ToString(ValueFormat)
+        : _internalValue.ToString("G");
+
+    private async Task HandleInput(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out var val))
+        {
+            _isDragging = true;
+            _internalValue = Math.Clamp(val, Min, Max);
+            await ValueChanged.InvokeAsync(_internalValue);
+        }
+    }
+
+    private async Task HandleChange(ChangeEventArgs e)
+    {
+        if (double.TryParse(e.Value?.ToString(),
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture, out var val))
+        {
+            _internalValue = Math.Clamp(val, Min, Max);
+            _isDragging = false;
+            await ValueChanged.InvokeAsync(_internalValue);
+        }
+    }
+
+    private List<double> GetTickValues()
+    {
+        var values = new List<double>();
+        for (var tick = Min; tick <= Max; tick += TickInterval)
+            values.Add(tick);
+        if (values.Count == 0 || Math.Abs(values[values.Count - 1] - Max) > 0.001)
+            values.Add(Max);
+        return values;
+    }
+
+    private static string FormatPct(double pct) =>
+        pct.ToString("F4", System.Globalization.CultureInfo.InvariantCulture) + "%";
+
+    private string FormatTick(double tick) =>
+        tick == Math.Floor(tick) ? tick.ToString("F0") : tick.ToString("G");
+
+    // ─── Styling ────────────────────────────────────
+    private string WrapperClass => Tw.Merge(
+        Disabled ? "opacity-50 pointer-events-none" : null,
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

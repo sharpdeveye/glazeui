@@ -1,8 +1,7 @@
 @* GzPopover — Click-triggered floating panel anchored to a trigger element *@
 
 <div @attributes="GetFilteredAttributes()"
-     class="@ComputedClass"
-     @onfocusout="HandleFocusOut">
+     class="@ComputedClass">
     @* Trigger *@
     <div @onclick="Toggle"
          @onclick:stopPropagation="true">
@@ -12,7 +11,8 @@
     @* Popover panel *@
     @if (_isOpen)
     {
-        <div class="@PanelClass">
+        <div class="fixed inset-0 z-40" @onclick="Close"></div>
+        <div class="@PanelClass" @onclick:stopPropagation="true">
             @ChildContent
         </div>
     }
@@ -42,6 +42,7 @@
     private string PanelClass => Tw.Merge(
         "absolute z-50 mt-2 w-72 rounded-lg border border-border/50 bg-popover p-4",
         "text-popover-foreground shadow-lg",
+        "animate-in fade-in-0 zoom-in-95 duration-150",
         GetAlignClass()
     );
 
@@ -54,14 +55,7 @@
 
     private void Toggle() => _isOpen = !_isOpen;
 
-    private void HandleFocusOut()
-    {
-        _ = Task.Delay(150).ContinueWith(_ =>
-        {
-            _isOpen = false;
-            InvokeAsync(StateHasChanged);
-        });
-    }
+    private void Close() => _isOpen = false;
 
     private string? GetUserClass() =>
         AdditionalAttributes?.TryGetValue("class", out var cls) == true

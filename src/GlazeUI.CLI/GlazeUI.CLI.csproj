@@ -23,8 +23,11 @@
 
   <ItemGroup>
     <EmbeddedResource Include="../GlazeUI/Components/UI/Atoms/*.razor" LinkBase="Templates/Atoms" />
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Atoms/*.razor.css" LinkBase="Templates/Atoms" />
     <EmbeddedResource Include="../GlazeUI/Components/UI/Molecules/*.razor" LinkBase="Templates/Molecules" />
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Molecules/*.razor.css" LinkBase="Templates/Molecules" />
     <EmbeddedResource Include="../GlazeUI/Components/UI/Organisms/*.razor" LinkBase="Templates/Organisms" />
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Organisms/*.razor.css" LinkBase="Templates/Organisms" />
     <EmbeddedResource Include="../GlazeUI/Utilities/Tw.cs" LinkBase="Templates/Utilities" />
     <EmbeddedResource Include="../GlazeUI/Models/Enums.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Models/SelectOption.cs" LinkBase="Templates/Models" />

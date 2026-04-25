@@ -2,7 +2,7 @@
 
 <PageTitle>Components — GlazeUI</PageTitle>
 <HeadContent>
-    <meta name="description" content="Browse all 23 GlazeUI components — atoms, molecules, and organisms. Live interactive examples with all variants, sizes, and states." />
+    <meta name="description" content="Browse all 34 GlazeUI components — atoms, molecules, and organisms. Live interactive examples with all variants, sizes, and states." />
 </HeadContent>
 
 @* === Page Header === *@
@@ -13,7 +13,7 @@
             Component Library
         </h1>
         <p class="mt-3 max-w-2xl text-lg text-muted-foreground">
-            28 components across 3 tiers — atoms, molecules, and organisms. Every component ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition.
+            34 components across 3 tiers — atoms, molecules, and organisms. Every component ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition.
         </p>
         <div class="mt-4 flex items-center gap-3">
             <GzButton Variant="@(_isRtl ? ButtonVariant.Default : ButtonVariant.Outline)" Size="ButtonSize.Sm" OnClick="@(() => _isRtl = !_isRtl)">
@@ -30,7 +30,7 @@
 
         @* ─── Sidebar Nav ─────────────────────── *@
         <aside class="hidden w-48 shrink-0 lg:block">
-            <nav class="sticky top-24 space-y-1">
+            <nav class="sticky top-24 max-h-[calc(100vh-7rem)] space-y-1 overflow-y-auto pb-8">
                 <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Atoms</p>
                 <GzSidebarLink Href="/components#button" Label="Button" />
                 <GzSidebarLink Href="/components#badge" Label="Badge" />
@@ -44,6 +44,7 @@
                 <GzSidebarLink Href="/components#typography" Label="Typography" />
                 <GzSidebarLink Href="/components#skeleton" Label="Skeleton" />
                 <GzSidebarLink Href="/components#progress" Label="Progress" />
+                <GzSidebarLink Href="/components#slider" Label="Slider" />
 
                 <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Molecules</p>
                 <GzSidebarLink Href="/components#card" Label="Card" />
@@ -54,6 +55,8 @@
                 <GzSidebarLink Href="/components#select" Label="Select" />
                 <GzSidebarLink Href="/components#accordion" Label="Accordion" />
                 <GzSidebarLink Href="/components#breadcrumb" Label="Breadcrumb" />
+                <GzSidebarLink Href="/components#fileupload" Label="FileUpload" />
+                <GzSidebarLink Href="/components#stepper" Label="Stepper" />
 
                 <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Organisms</p>
                 <GzSidebarLink Href="/components#dialog" Label="Dialog" />
@@ -62,6 +65,7 @@
                 <GzSidebarLink Href="/components#toast" Label="Toast" />
                 <GzSidebarLink Href="/components#combobox" Label="Combobox" />
                 <GzSidebarLink Href="/components#datatable" Label="DataTable" />
+                <GzSidebarLink Href="/components#datepicker" Label="DatePicker" />
             </nav>
         </aside>
 
@@ -358,6 +362,88 @@
             </div>
         </div>
 
+        @* ─── Skeleton ───────────────────────────────── *@
+        <div id="skeleton" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Skeleton</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Animated loading placeholders. Line and circle variants. Override dimensions via class.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Card skeleton</p>
+                    <div class="max-w-sm space-y-4 rounded-xl border border-border/50 p-6">
+                        <div class="flex items-center gap-3">
+                            <GzSkeleton Variant="SkeletonVariant.Circle" />
+                            <div class="flex-1 space-y-2">
+                                <GzSkeleton class="h-4 w-3/4" />
+                                <GzSkeleton class="h-3 w-1/2" />
+                            </div>
+                        </div>
+                        <GzSkeleton class="h-32 w-full" />
+                        <div class="space-y-2">
+                            <GzSkeleton />
+                            <GzSkeleton class="w-4/5" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Progress ───────────────────────────────── *@
+        <div id="progress" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Progress</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Horizontal progress bar with smooth transition. 3 sizes, proper ARIA progressbar role.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="max-w-lg space-y-4">
+                    <div>
+                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Small (25%)</p>
+                        <GzProgress Value="25" Size="ProgressSize.Sm" />
+                    </div>
+                    <div>
+                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Medium (60%)</p>
+                        <GzProgress Value="60" Size="ProgressSize.Md" />
+                    </div>
+                    <div>
+                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Large (85%)</p>
+                        <GzProgress Value="85" Size="ProgressSize.Lg" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* ─── Slider ──────────────────────────────────── *@
+        <div id="slider" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Slider</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Range input with fill track, custom thumb, tick marks, and value display.</p>
+            </div>
+
+            <div class="space-y-8 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="max-w-md">
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Basic</p>
+                    <GzSlider @bind-Value="_sliderValue" Label="@L("Volume", "مستوى الصوت")" />
+                </div>
+
+                <GzSeparator />
+
+                <div class="max-w-md">
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">With Ticks</p>
+                    <GzSlider @bind-Value="_sliderTicks" Min="0" Max="100" Step="25" ShowTicks="true" Label="@L("Quality", "الجودة")" />
+                </div>
+
+                <GzSeparator />
+
+                <div class="max-w-md">
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Disabled</p>
+                    <GzSlider Value="40" Disabled="true" Label="@L("Brightness", "السطوع")" />
+                </div>
+            </div>
+        </div>
+
         @* ═══════════════════════════════════════════════ *@
         @* ═══       MOLECULES                        ═══ *@
         @* ═══════════════════════════════════════════════ *@
@@ -449,7 +535,7 @@
 
                 <div class="max-w-sm">
                     <GzFormField Label="Email" Id="ff-email" Error="Please enter a valid email address." Required="true">
-                        <GzInput Id="ff-email" Type="email" Value="invalid-email" Error="Please enter a valid email address." />
+                        <GzInput Id="ff-email" Type="email" Value="invalid-email" />
                     </GzFormField>
                 </div>
 
@@ -457,59 +543,6 @@
                     <GzFormField Label="Bio" Id="ff-bio" Description="Write a short introduction about yourself.">
                         <GzTextarea Id="ff-bio" Placeholder="Tell us about yourself..." Rows="3" />
                     </GzFormField>
-                </div>
-            </div>
-        </div>
-
-        @* ─── Skeleton ───────────────────────────────── *@
-        <div id="skeleton" class="scroll-mt-24">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold tracking-tight text-foreground">Skeleton</h2>
-                <p class="mt-1 text-sm text-muted-foreground">Animated loading placeholders. Line and circle variants. Override dimensions via class.</p>
-            </div>
-
-            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <div>
-                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Card skeleton</p>
-                    <div class="max-w-sm space-y-4 rounded-xl border border-border/50 p-6">
-                        <div class="flex items-center gap-3">
-                            <GzSkeleton Variant="SkeletonVariant.Circle" />
-                            <div class="flex-1 space-y-2">
-                                <GzSkeleton class="h-4 w-3/4" />
-                                <GzSkeleton class="h-3 w-1/2" />
-                            </div>
-                        </div>
-                        <GzSkeleton class="h-32 w-full" />
-                        <div class="space-y-2">
-                            <GzSkeleton />
-                            <GzSkeleton class="w-4/5" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        @* ─── Progress ───────────────────────────────── *@
-        <div id="progress" class="scroll-mt-24">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold tracking-tight text-foreground">Progress</h2>
-                <p class="mt-1 text-sm text-muted-foreground">Horizontal progress bar with smooth transition. 3 sizes, proper ARIA progressbar role.</p>
-            </div>
-
-            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <div class="max-w-lg space-y-4">
-                    <div>
-                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Small (25%)</p>
-                        <GzProgress Value="25" Size="ProgressSize.Sm" />
-                    </div>
-                    <div>
-                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Medium (60%)</p>
-                        <GzProgress Value="60" Size="ProgressSize.Md" />
-                    </div>
-                    <div>
-                        <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Large (85%)</p>
-                        <GzProgress Value="85" Size="ProgressSize.Lg" />
-                    </div>
                 </div>
             </div>
         </div>
@@ -569,6 +602,77 @@
                         <GzSelect Options="_frameworkOptions" Placeholder="Cannot change" Disabled="true" />
                     </GzFormField>
                 </div>
+            </div>
+        </div>
+
+        @* ─── Accordion ───────────────────────────────── *@
+        <div id="accordion" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Accordion</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Collapsible content sections with chevron rotation and hover state.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzAccordion>
+                    <GzAccordionItem Title="@L("Is GlazeUI free?", "هل GlazeUI مجاني؟")" DefaultOpen="true">
+                        @L("Yes. GlazeUI is open-source under the Apache 2.0 license. Copy components into your project and modify everything.",
+                           "نعم. GlazeUI مفتوح المصدر تحت رخصة Apache 2.0. انسخ المكونات إلى مشروعك وعدّل كل شيء.")
+                    </GzAccordionItem>
+                    <GzAccordionItem Title="@L("Can I use it with Blazor WASM?", "هل يمكنني استخدامه مع Blazor WASM؟")">
+                        @L("GlazeUI is built for Blazor Server but the Razor components work in any Blazor hosting model — Server, WASM, or Hybrid.",
+                           "تم بناء GlazeUI لـ Blazor Server لكن مكونات Razor تعمل في أي نموذج استضافة — Server أو WASM أو Hybrid.")
+                    </GzAccordionItem>
+                    <GzAccordionItem Title="@L("Does it support dark mode?", "هل يدعم الوضع الداكن؟")">
+                        @L("Yes. All tokens have light and dark values.",
+                           "نعم. جميع الرموز لها قيم فاتحة وداكنة.")
+                    </GzAccordionItem>
+                </GzAccordion>
+            </div>
+        </div>
+
+        @* ─── Breadcrumb ──────────────────────────────── *@
+        <div id="breadcrumb" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Breadcrumb</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Navigation trail with separator chevrons and RTL-safe rotation.</p>
+            </div>
+
+            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzBreadcrumb Items="@ActiveBreadcrumbItems" />
+            </div>
+        </div>
+
+        @* ─── FileUpload ───────────────────────────────── *@
+        <div id="fileupload" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">FileUpload</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Drag-and-drop file upload zone with file list, type/size validation, and remove controls.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="max-w-lg">
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("Single File", "ملف واحد")</p>
+                    <GzFileUpload Accept=".pdf,.docx,.txt" MaxSizeBytes="10485760" />
+                </div>
+
+                <GzSeparator />
+
+                <div class="max-w-lg">
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("Multiple Files", "ملفات متعددة")</p>
+                    <GzFileUpload Accept="image/*" Multiple="true" MaxSizeBytes="5242880" />
+                </div>
+            </div>
+        </div>
+
+        @* ─── Stepper ─────────────────────────────────── *@
+        <div id="stepper" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Stepper</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Multi-step wizard with numbered progress indicators, connectors, and navigation buttons.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzStepper Steps="@ActiveStepperSteps" @bind-ActiveStep="_activeStepperStep" />
             </div>
         </div>
 
@@ -678,43 +782,6 @@
                 </GzPopover>
             </div>
         </div>
-        @* ─── Accordion ───────────────────────────────── *@
-        <div id="accordion" class="scroll-mt-24">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold tracking-tight text-foreground">Accordion</h2>
-                <p class="mt-1 text-sm text-muted-foreground">Collapsible content sections with chevron rotation and hover state.</p>
-            </div>
-
-            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <GzAccordion>
-                    <GzAccordionItem Title="@L("Is GlazeUI free?", "هل GlazeUI مجاني؟")" DefaultOpen="true">
-                        @L("Yes. GlazeUI is open-source under the Apache 2.0 license. Copy components into your project and modify everything.",
-                           "نعم. GlazeUI مفتوح المصدر تحت رخصة Apache 2.0. انسخ المكونات إلى مشروعك وعدّل كل شيء.")
-                    </GzAccordionItem>
-                    <GzAccordionItem Title="@L("Can I use it with Blazor WASM?", "هل يمكنني استخدامه مع Blazor WASM؟")">
-                        @L("GlazeUI is built for Blazor Server but the Razor components work in any Blazor hosting model — Server, WASM, or Hybrid.",
-                           "تم بناء GlazeUI لـ Blazor Server لكن مكونات Razor تعمل في أي نموذج استضافة — Server أو WASM أو Hybrid.")
-                    </GzAccordionItem>
-                    <GzAccordionItem Title="@L("Does it support dark mode?", "هل يدعم الوضع الداكن؟")">
-                        @L("Yes. All tokens have light and dark values.",
-                           "نعم. جميع الرموز لها قيم فاتحة وداكنة.")
-                    </GzAccordionItem>
-                </GzAccordion>
-            </div>
-        </div>
-
-        @* ─── Breadcrumb ──────────────────────────────── *@
-        <div id="breadcrumb" class="scroll-mt-24">
-            <div class="mb-6">
-                <h2 class="text-xl font-semibold tracking-tight text-foreground">Breadcrumb</h2>
-                <p class="mt-1 text-sm text-muted-foreground">Navigation trail with separator chevrons and RTL-safe rotation.</p>
-            </div>
-
-            <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <GzBreadcrumb Items="@ActiveBreadcrumbItems" />
-            </div>
-        </div>
-
         @* ─── Toast ───────────────────────────────────── *@
         <div id="toast" class="scroll-mt-24">
             <div class="mb-6">
@@ -773,6 +840,32 @@
                          PageSize="5"
                          Filterable="true"
                          FilterPlaceholder="@L("Search users...", "ابحث عن المستخدمين...")" />
+        </div>
+
+        @* ─── DatePicker ───────────────────────────────── *@
+        <div id="datepicker" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">DatePicker</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Calendar dropdown with month/year navigation, min/max date constraints, keyboard navigation, and clearable selection.</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="max-w-sm">
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("Basic", "أساسي")</p>
+                    <GzDatePicker @bind-Value="_selectedDate" Placeholder="@L("Pick a date", "اختر تاريخاً")" />
+                    @if (_selectedDate.HasValue)
+                    {
+                        <p class="mt-2 text-sm text-muted-foreground">Selected: <strong class="text-foreground">@_selectedDate.Value.ToString("yyyy-MM-dd")</strong></p>
+                    }
+                </div>
+
+                <GzSeparator />
+
+                <div class="max-w-sm">
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("Disabled", "معطل")</p>
+                    <GzDatePicker Disabled="true" Placeholder="@L("Cannot select", "لا يمكن الاختيار")" />
+                </div>
+            </div>
         </div>
 
         </div> @* end flex-1 *@
@@ -866,6 +959,22 @@
     private bool _toastSuccess;
     private bool _toastError;
 
+    // ─── Slider ──────────────────────────────────────
+    private double _sliderValue = 50;
+    private double _sliderTicks = 50;
+
+    // ─── Stepper ─────────────────────────────────────
+    private int _activeStepperStep;
+    private readonly List<StepItem> _stepperSteps = new()
+    {
+        new() { Label = "Account", Description = "Create your account" },
+        new() { Label = "Profile", Description = "Set up your profile" },
+        new() { Label = "Review", Description = "Confirm your details" },
+    };
+
+    // ─── DatePicker ───────────────────────────────────
+    private DateOnly? _selectedDate;
+
     // ─── Combobox ────────────────────────────────────
     private string? _selectedCountry;
     private readonly List<SelectOption> _comboboxOptions = new()
@@ -948,4 +1057,13 @@
             new() { Header = "الحالة", Field = x => x.Status },
         }
         : _tableColumns;
+
+    private List<StepItem> ActiveStepperSteps => _isRtl
+        ? new()
+        {
+            new() { Label = "الحساب", Description = "أنشئ حسابك" },
+            new() { Label = "الملف الشخصي", Description = "أعد ملفك الشخصي" },
+            new() { Label = "المراجعة", Description = "أكد تفاصيلك" },
+        }
+        : _stepperSteps;
 }

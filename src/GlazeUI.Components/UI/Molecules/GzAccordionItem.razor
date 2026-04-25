@@ -1,0 +1,66 @@
+@* GzAccordionItem — Single collapsible section within GzAccordion *@
+
+<div class="@ComputedClass">
+    <button type="button"
+            class="@TriggerClass"
+            aria-expanded="@(_isOpen ? "true" : "false")"
+            @onclick="Toggle">
+        <span class="flex-1 text-start text-sm font-medium">@Title</span>
+        <svg class="@ChevronClass" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+        </svg>
+    </button>
+
+    @if (_isOpen)
+    {
+        <div class="overflow-hidden pb-4 ps-4 pe-4 text-sm text-muted-foreground animate-in fade-in duration-200">
+            @ChildContent
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Accordion item title.</summary>
+    [Parameter] public string Title { get; set; } = string.Empty;
+
+    /// <summary>Collapsible content.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Whether this item starts open.</summary>
+    [Parameter] public bool DefaultOpen { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _isOpen;
+
+    protected override void OnInitialized()
+    {
+        _isOpen = DefaultOpen;
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "group",
+        GetUserClass()
+    );
+
+    private string TriggerClass => Tw.Merge(
+        "flex w-full items-center gap-2 py-4 ps-4 pe-4",
+        "text-foreground cursor-pointer",
+        "transition-all duration-200 ease-out",
+        "hover:bg-accent/50",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background"
+    );
+
+    private string ChevronClass => Tw.Merge(
+        "size-4 shrink-0 text-muted-foreground transition-transform duration-200 ease-out",
+        _isOpen ? "rotate-180" : ""
+    );
+
+    private void Toggle() => _isOpen = !_isOpen;
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+}

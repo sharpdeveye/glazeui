@@ -2,7 +2,7 @@
 
 <PageTitle>Accessibility — GlazeUI</PageTitle>
 <HeadContent>
-    <meta name="description" content="WCAG 2.1 AA accessibility matrix for all 28 GlazeUI components — keyboard support, ARIA roles, screen reader labels, and focus management." />
+    <meta name="description" content="WCAG 2.1 AA accessibility matrix for all 34 GlazeUI components — keyboard support, ARIA roles, screen reader labels, and focus management." />
 </HeadContent>
 
 <div class="mx-auto flex max-w-6xl gap-10 px-4 py-12 sm:px-6 lg:px-8">
@@ -38,7 +38,7 @@
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <GzCard>
                     <ChildContent>
-                        <p class="text-2xl font-bold text-foreground">28</p>
+                        <p class="text-2xl font-bold text-foreground">34</p>
                         <p class="text-sm text-muted-foreground">Components audited</p>
                     </ChildContent>
                 </GzCard>
@@ -261,6 +261,15 @@
         new KeyboardRow("GzDialog", "—", "—", "Closes dialog", "—"),
         new KeyboardRow("GzDropdownMenu", "Focusable trigger", "Opens menu", "Closes menu", "Navigate items"),
         new KeyboardRow("GzPopover", "Focusable trigger", "Toggles panel", "—", "—"),
+        new KeyboardRow("GzAccordion", "Focuses trigger", "Toggles section", "—", "—"),
+        new KeyboardRow("GzBreadcrumb", "Focusable links", "Navigates", "—", "—"),
+        new KeyboardRow("GzToast", "Focusable dismiss", "Dismisses toast", "—", "—"),
+        new KeyboardRow("GzCombobox", "Focusable input", "Selects option", "Closes dropdown", "Navigate options"),
+        new KeyboardRow("GzDataTable", "Focusable headers", "Sorts column", "—", "Navigate pages"),
+        new KeyboardRow("GzSlider", "Focusable thumb", "—", "—", "Adjust value"),
+        new KeyboardRow("GzDatePicker", "Focusable input", "Opens calendar", "Closes calendar", "Navigate days"),
+        new KeyboardRow("GzFileUpload", "Focusable label", "Opens file dialog", "—", "—"),
+        new KeyboardRow("GzStepper", "Focusable steps", "Activates step", "—", "—"),
     };
 
     private readonly AriaRow[] _ariaMatrix = new[]
@@ -277,5 +286,14 @@
         new AriaRow("GzDialog", "dialog", "aria-modal=true"),
         new AriaRow("GzDropdownMenu", "menu", "role=menuitem on children"),
         new AriaRow("GzTooltip", "tooltip", "CSS-only visibility (group-hover/focus-within)"),
+        new AriaRow("GzAccordion", "region", "aria-expanded on triggers, aria-controls"),
+        new AriaRow("GzBreadcrumb", "navigation", "aria-label=Breadcrumb, aria-current=page on last item"),
+        new AriaRow("GzToast", "alert", "role=alert, aria-live=assertive"),
+        new AriaRow("GzCombobox", "combobox", "aria-expanded, aria-haspopup=listbox, aria-autocomplete=list"),
+        new AriaRow("GzDataTable", "table", "aria-sort on sortable headers, role=columnheader"),
+        new AriaRow("GzSlider", "slider", "aria-valuenow, aria-valuemin, aria-valuemax (native range)"),
+        new AriaRow("GzDatePicker", "none", "aria-label on day buttons, aria-current=step on active date"),
+        new AriaRow("GzFileUpload", "none", "Native input[type=file] with label association"),
+        new AriaRow("GzStepper", "list", "role=listitem, aria-current=step, aria-label on circles"),
     };
 }

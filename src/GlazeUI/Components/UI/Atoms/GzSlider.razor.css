@@ -1,0 +1,92 @@
+/* GzSlider — CSS-only fill track via gradient on the native range input.
+   The --fill CSS variable is set via inline style from Blazor.
+   This file is a companion to GzSlider.razor (Blazor CSS isolation). */
+
+::deep .gz-slider {
+    --fill: 0%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: linear-gradient(
+        to right,
+        var(--color-primary) var(--fill),
+        var(--color-muted) var(--fill)
+    );
+    outline: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+::deep .gz-slider:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Webkit (Chrome, Safari, Edge) thumb */
+::deep .gz-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    border: 2px solid var(--color-background);
+    box-shadow:
+        0 1px 3px 0 oklch(0% 0 0 / 0.1),
+        inset 0 1px 2px 0 oklch(100% 0 0 / 0.2);
+    cursor: pointer;
+    transition: transform 0.15s ease-out;
+}
+
+::deep .gz-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+::deep .gz-slider::-webkit-slider-thumb:active {
+    transform: scale(0.92);
+}
+
+::deep .gz-slider:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+        0 0 0 2px var(--color-background),
+        0 0 0 4px var(--color-ring),
+        inset 0 1px 2px 0 oklch(100% 0 0 / 0.2);
+}
+
+/* Firefox thumb */
+::deep .gz-slider::-moz-range-thumb {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    border: 2px solid var(--color-background);
+    box-shadow: 0 1px 3px 0 oklch(0% 0 0 / 0.1);
+    cursor: pointer;
+    transition: transform 0.15s ease-out;
+}
+
+::deep .gz-slider::-moz-range-thumb:hover {
+    transform: scale(1.1);
+}
+
+::deep .gz-slider::-moz-range-thumb:active {
+    transform: scale(0.92);
+}
+
+/* Firefox progress fill (native support) */
+::deep .gz-slider::-moz-range-progress {
+    background: var(--color-primary);
+    border-radius: 9999px;
+    height: 0.5rem;
+}
+
+/* Firefox track */
+::deep .gz-slider::-moz-range-track {
+    background: var(--color-muted);
+    border-radius: 9999px;
+    height: 0.5rem;
+}

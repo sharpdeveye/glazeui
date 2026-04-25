@@ -1,0 +1,55 @@
+@* GzSidebarLink — Sidebar navigation link with active state based on URL fragment *@
+
+@inject NavigationManager Navigation
+
+<a href="@Href"
+   data-enhance-nav="false"
+   class="@ComputedClass">
+    @Label
+</a>
+
+@code {
+    /// <summary>Link destination.</summary>
+    [Parameter] public string Href { get; set; } = "#";
+
+    /// <summary>Display text.</summary>
+    [Parameter] public string Label { get; set; } = string.Empty;
+
+    /// <summary>Optional: treat this link as active for any page starting with this path (e.g. "/docs").</summary>
+    [Parameter] public string? ActivePath { get; set; }
+
+    private bool IsActive
+    {
+        get
+        {
+            var uri = Navigation.Uri;
+
+            // Exact match (including fragment)
+            if (uri.EndsWith(Href, StringComparison.OrdinalIgnoreCase))
+                return true;
+
+            // Fragment match: /components#button → active when fragment = button
+            if (Href.Contains('#'))
+            {
+                var fragment = Href.Split('#').Last();
+                return uri.Contains($"#{fragment}", StringComparison.OrdinalIgnoreCase);
+            }
+
+            // Path prefix match
+            if (ActivePath is not null)
+            {
+                var path = new Uri(uri).AbsolutePath;
+                return path.Equals(ActivePath, StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
+        }
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "block rounded-md px-3 py-1.5 text-sm transition-colors duration-150",
+        IsActive
+            ? "bg-accent text-foreground font-medium"
+            : "text-muted-foreground hover:text-foreground"
+    );
+}

@@ -1,0 +1,309 @@
+@* GzDatePicker — Calendar dropdown with month/year nav, keyboard support, min/max constraints *@
+
+<div @attributes="GetFilteredAttributes()"
+     class="@WrapperClass"
+     @onfocusout="HandleFocusOut">
+
+    @* ─── Trigger Input ──────────────────── *@
+    <div class="relative">
+        <input type="text"
+               readonly
+               value="@DisplayValue"
+               placeholder="@Placeholder"
+               disabled="@Disabled"
+               class="@InputClass"
+               @onclick="Toggle"
+               @onkeydown="HandleTriggerKeyDown" />
+        <div class="absolute end-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            @if (Value.HasValue && Clearable)
+            {
+                <button type="button"
+                        class="p-0.5 text-muted-foreground hover:text-foreground transition-colors duration-150 cursor-pointer"
+                        tabindex="-1"
+                        @onclick="Clear"
+                        @onclick:stopPropagation="true">
+                    <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            }
+            <svg class="size-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+            </svg>
+        </div>
+    </div>
+
+    @* ─── Calendar Dropdown ──────────────── *@
+    @if (_isOpen)
+    {
+        <div class="absolute z-50 mt-1 rounded-lg border border-border/50 bg-popover p-3 shadow-lg"
+             @onkeydown="HandleCalendarKeyDown">
+            @* Month/Year Navigation *@
+            <div class="flex items-center justify-between mb-3">
+                <button type="button" class="@NavBtnClass" @onclick="PrevMonth" aria-label="Previous month">
+                    <svg class="size-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+                <span class="text-sm font-medium text-foreground">@_viewDate.ToString("MMMM yyyy")</span>
+                <button type="button" class="@NavBtnClass" @onclick="NextMonth" aria-label="Next month">
+                    <svg class="size-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+            </div>
+
+            @* Day Names Header *@
+            <div class="grid grid-cols-7 mb-1">
+                @foreach (var dayName in EffectiveDayNames)
+                {
+                    <div class="flex items-center justify-center size-9 text-xs font-medium text-muted-foreground">@dayName</div>
+                }
+            </div>
+
+            @* Calendar Grid *@
+            <div class="grid grid-cols-7">
+                @foreach (var day in _calendarDays)
+                {
+                    if (day == null)
+                    {
+                        <div class="size-9"></div>
+                    }
+                    else
+                    {
+                        var d = day.Value;
+                        var isToday = d == DateOnly.FromDateTime(DateTime.Today);
+                        var isSelected = Value.HasValue && d == Value.Value;
+                        var isDisabled = (MinDate.HasValue && d < MinDate) || (MaxDate.HasValue && d > MaxDate);
+                        var isFocused = d == _focusDate;
+                        var isCurrentMonth = d.Month == _viewDate.Month;
+
+                        <button type="button"
+                                class="@DayCellClass(isSelected, isToday, isDisabled, isFocused, isCurrentMonth)"
+                                disabled="@isDisabled"
+                                tabindex="@(isFocused ? 0 : -1)"
+                                aria-label="@d.ToString("MMMM d, yyyy")"
+                                @onclick="() => SelectDate(d)">
+                            @d.Day
+                        </button>
+                    }
+                }
+            </div>
+
+            @* Today Button *@
+            <div class="mt-2 border-t border-border/30 pt-2">
+                <button type="button"
+                        class="w-full rounded-md px-3 py-1.5 text-xs font-medium text-primary transition-colors duration-150 hover:bg-accent cursor-pointer"
+                        @onclick="GoToToday">
+                    Today
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Selected date value.</summary>
+    [Parameter] public DateOnly? Value { get; set; }
+
+    /// <summary>Two-way binding callback.</summary>
+    [Parameter] public EventCallback<DateOnly?> ValueChanged { get; set; }
+
+    /// <summary>Placeholder text.</summary>
+    [Parameter] public string Placeholder { get; set; } = "Pick a date";
+
+    /// <summary>Date display format.</summary>
+    [Parameter] public string Format { get; set; } = "yyyy-MM-dd";
+
+    /// <summary>Minimum selectable date.</summary>
+    [Parameter] public DateOnly? MinDate { get; set; }
+
+    /// <summary>Maximum selectable date.</summary>
+    [Parameter] public DateOnly? MaxDate { get; set; }
+
+    /// <summary>Whether the clear button is shown.</summary>
+    [Parameter] public bool Clearable { get; set; } = true;
+
+    /// <summary>Disabled state.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Custom abbreviated day names (7 items, starting from Sunday). Defaults to English.</summary>
+    [Parameter] public string[]? DayNames { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool _isOpen;
+    private DateOnly _viewDate;
+    private DateOnly _focusDate;
+    private DateOnly?[] _calendarDays = Array.Empty<DateOnly?>();
+
+    private static readonly string[] DefaultDayNames = { "Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" };
+
+    private string[] EffectiveDayNames => DayNames ?? DefaultDayNames;
+
+    protected override void OnInitialized()
+    {
+        _viewDate = Value ?? DateOnly.FromDateTime(DateTime.Today);
+        _focusDate = _viewDate;
+        BuildCalendar();
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (!_isOpen && Value.HasValue)
+        {
+            _viewDate = Value.Value;
+            _focusDate = Value.Value;
+        }
+        BuildCalendar();
+    }
+
+    private string DisplayValue => Value?.ToString(Format) ?? "";
+
+    private void BuildCalendar()
+    {
+        var firstOfMonth = new DateOnly(_viewDate.Year, _viewDate.Month, 1);
+        var daysInMonth = DateTime.DaysInMonth(_viewDate.Year, _viewDate.Month);
+        var startDow = (int)firstOfMonth.DayOfWeek; // 0=Sun
+
+        var days = new List<DateOnly?>();
+        // Leading blanks
+        for (var i = 0; i < startDow; i++) days.Add(null);
+        // Days of month
+        for (var d = 1; d <= daysInMonth; d++) days.Add(new DateOnly(_viewDate.Year, _viewDate.Month, d));
+        // Trailing blanks to fill 6 rows
+        while (days.Count < 42) days.Add(null);
+
+        _calendarDays = days.ToArray();
+    }
+
+    private void Toggle()
+    {
+        if (Disabled) return;
+        _isOpen = !_isOpen;
+        if (_isOpen)
+        {
+            _viewDate = Value ?? DateOnly.FromDateTime(DateTime.Today);
+            _focusDate = _viewDate;
+            BuildCalendar();
+        }
+    }
+
+    private async Task SelectDate(DateOnly date)
+    {
+        Value = date;
+        _isOpen = false;
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task Clear()
+    {
+        Value = null;
+        await ValueChanged.InvokeAsync(null);
+    }
+
+    private void GoToToday()
+    {
+        var today = DateOnly.FromDateTime(DateTime.Today);
+        _viewDate = today;
+        _focusDate = today;
+        BuildCalendar();
+    }
+
+    private void PrevMonth()
+    {
+        _viewDate = _viewDate.AddMonths(-1);
+        BuildCalendar();
+    }
+
+    private void NextMonth()
+    {
+        _viewDate = _viewDate.AddMonths(1);
+        BuildCalendar();
+    }
+
+    private async Task HandleFocusOut()
+    {
+        await Task.Delay(150);
+        _isOpen = false;
+    }
+
+    private void HandleTriggerKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key is "Enter" or " " or "ArrowDown")
+        {
+            if (!_isOpen) Toggle();
+        }
+        else if (e.Key == "Escape")
+        {
+            _isOpen = false;
+        }
+    }
+
+    private void HandleCalendarKeyDown(KeyboardEventArgs e)
+    {
+        switch (e.Key)
+        {
+            case "ArrowLeft": MoveFocus(-1); break;
+            case "ArrowRight": MoveFocus(1); break;
+            case "ArrowUp": MoveFocus(-7); break;
+            case "ArrowDown": MoveFocus(7); break;
+            case "Escape": _isOpen = false; break;
+        }
+    }
+
+    private void MoveFocus(int days)
+    {
+        _focusDate = _focusDate.AddDays(days);
+        if (_focusDate.Month != _viewDate.Month)
+        {
+            _viewDate = new DateOnly(_focusDate.Year, _focusDate.Month, 1);
+            BuildCalendar();
+        }
+    }
+
+    // ─── Styling ────────────────────────────────────
+    private string WrapperClass => Tw.Merge("relative", GetUserClass());
+
+    private string InputClass => Tw.Merge(
+        "flex w-full rounded-md bg-transparent px-3 py-2 pe-16 text-sm cursor-pointer",
+        "inset-ring inset-ring-border/50 placeholder:text-muted-foreground",
+        "transition-all duration-200 ease-out",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        "disabled:cursor-not-allowed disabled:opacity-50"
+    );
+
+    private string NavBtnClass => Tw.Merge(
+        "rounded-md p-1.5 text-muted-foreground transition-colors duration-150",
+        "hover:bg-accent hover:text-foreground cursor-pointer",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 ring-offset-background"
+    );
+
+    private string DayCellClass(bool isSelected, bool isToday, bool isDisabled, bool isFocused, bool isCurrentMonth) => Tw.Merge(
+        "flex items-center justify-center size-9 rounded-md text-sm transition-colors duration-100 cursor-pointer",
+        isSelected
+            ? "bg-primary text-primary-foreground font-medium shadow-sm inset-shadow-sm inset-shadow-white/20"
+            : isToday
+                ? "bg-accent text-accent-foreground font-medium"
+                : isCurrentMonth
+                    ? "text-foreground hover:bg-accent/50"
+                    : "text-muted-foreground/40",
+        isFocused && !isSelected ? "ring-2 ring-ring ring-offset-1 ring-offset-background" : null,
+        isDisabled ? "opacity-30 cursor-not-allowed pointer-events-none" : "active:scale-[0.9]",
+        "focus-visible:outline-none"
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}
