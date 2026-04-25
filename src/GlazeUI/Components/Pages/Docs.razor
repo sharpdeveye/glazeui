@@ -13,9 +13,12 @@
         <nav class="sticky top-24 space-y-1">
             <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">On this page</p>
             <GzSidebarLink Href="/docs#installation" Label="Installation" />
+            <GzSidebarLink Href="/docs#cli" Label="CLI" />
             <GzSidebarLink Href="/docs#tokens" Label="Design Tokens" />
             <GzSidebarLink Href="/docs#first-component" Label="First Component" />
             <GzSidebarLink Href="/docs#dark-mode" Label="Dark Mode" />
+            <GzSidebarLink Href="/docs#theming" Label="Theming" />
+            <GzSidebarLink Href="/docs#rtl" Label="RTL Support" />
             <GzSidebarLink Href="/docs#customization" Label="Customization" />
             <GzSidebarLink Href="/docs#architecture" Label="Architecture" />
 
@@ -88,6 +91,42 @@ dotnet run</code></pre>
                     After running, open <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">http://localhost:5011</code> and navigate to <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">/components</code>.
                 </GzAlert>
             </div>
+        </section>
+
+        @* ─── CLI ─────────────────────────────── *@
+        <section id="cli" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">CLI Tool</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-4 text-sm text-muted-foreground">
+                The GlazeUI CLI lets you add components directly to your project. Install as a global .NET tool:
+            </p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">Terminal</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>dotnet tool install -g GlazeUI.CLI
+
+# Initialize shared utilities
+glaze init
+
+# Add specific components
+glaze add button badge input select
+
+# Add all 44 components
+glaze add --all
+
+# Update installed components to latest
+glaze update --all
+
+# Apply a color theme
+glaze theme rose</code></pre>
+            </div>
+
+            <GzAlert Variant="AlertVariant.Info" Title="Dependency Resolution" class="mt-4">
+                The CLI automatically resolves dependencies. Adding <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">select</code> will also add <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">SelectOption.cs</code>, <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Tw.cs</code>, and <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Enums.cs</code>.
+            </GzAlert>
         </section>
 
         @* ─── Design Tokens ───────────────────── *@
@@ -221,6 +260,79 @@ dotnet run</code></pre>
             </GzAlert>
         </section>
 
+        @* ─── Theming ─────────────────────────── *@
+        <section id="theming" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">Theming</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-4 text-sm text-muted-foreground">
+                GlazeUI ships with 5 built-in color themes. Apply them via the CLI or customize your own.
+            </p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">Terminal</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code># List all themes
+glaze theme
+
+# Apply a preset
+glaze theme rose       # warm rose primary
+glaze theme emerald    # green primary
+glaze theme amber      # golden primary
+glaze theme violet     # purple primary
+
+# Custom oklch primary
+glaze theme --custom "oklch(0.55 0.20 180)"</code></pre>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
+                <div class="rounded-lg border border-border/50 p-3 text-center">
+                    <div class="mx-auto mb-2 size-8 rounded-full bg-primary"></div>
+                    <p class="text-xs font-medium text-foreground">Default</p>
+                </div>
+                <div class="rounded-lg border border-border/50 p-3 text-center">
+                    <div class="mx-auto mb-2 size-8 rounded-full" style="background: oklch(0.58 0.22 12)"></div>
+                    <p class="text-xs font-medium text-foreground">Rose</p>
+                </div>
+                <div class="rounded-lg border border-border/50 p-3 text-center">
+                    <div class="mx-auto mb-2 size-8 rounded-full" style="background: oklch(0.60 0.17 160)"></div>
+                    <p class="text-xs font-medium text-foreground">Emerald</p>
+                </div>
+                <div class="rounded-lg border border-border/50 p-3 text-center">
+                    <div class="mx-auto mb-2 size-8 rounded-full" style="background: oklch(0.70 0.16 75)"></div>
+                    <p class="text-xs font-medium text-foreground">Amber</p>
+                </div>
+                <div class="rounded-lg border border-border/50 p-3 text-center">
+                    <div class="mx-auto mb-2 size-8 rounded-full" style="background: oklch(0.55 0.20 290)"></div>
+                    <p class="text-xs font-medium text-foreground">Violet</p>
+                </div>
+            </div>
+        </section>
+
+        @* ─── RTL Support ─────────────────────── *@
+        <section id="rtl" class="mt-16 scroll-mt-24">
+            <h2 class="text-xl font-semibold tracking-tight text-foreground">RTL Support</h2>
+            <GzSeparator class="mt-3 mb-6" />
+
+            <p class="mb-4 text-sm text-muted-foreground">
+                All 44 components support right-to-left layouts. Set <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">dir="rtl"</code> on your HTML element or any container.
+            </p>
+
+            <div class="overflow-hidden rounded-lg border border-border/50 bg-muted">
+                <div class="border-b border-border/50 px-4 py-2">
+                    <span class="text-xs text-muted-foreground">App.razor</span>
+                </div>
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>&lt;html dir="rtl" lang="ar"&gt;
+  ...
+&lt;/html&gt;</code></pre>
+            </div>
+
+            <GzAlert Variant="AlertVariant.Info" Title="Logical Properties" class="mt-4">
+                GlazeUI uses Tailwind v4 logical properties (<code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">start-0</code>, <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">ps-4</code>, <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">me-2</code>) instead of physical <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">left/right</code>. Components flip automatically.
+            </GzAlert>
+        </section>
+
         @* ─── Customization ────────────────────── *@
         <section id="customization" class="mt-16 scroll-mt-24">
             <h2 class="text-xl font-semibold tracking-tight text-foreground">Customization</h2>
@@ -317,7 +429,7 @@ dotnet run</code></pre>
                     <div class="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <p class="font-semibold text-foreground">Ready to explore?</p>
-                            <p class="mt-1 text-sm text-muted-foreground">Browse all 28 components with live interactive examples.</p>
+                            <p class="mt-1 text-sm text-muted-foreground">Browse all 44 components with live interactive examples.</p>
                         </div>
                         <GzButton OnClick="@(() => Navigation.NavigateTo("/components"))">
                             View Components →
