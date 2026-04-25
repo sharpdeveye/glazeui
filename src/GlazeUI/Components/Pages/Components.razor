@@ -887,7 +887,7 @@
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div>
-                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Variants</p>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("Variants", "الأنواع")</p>
                     <div class="flex items-center gap-3">
                         <GzToggle @bind-Pressed="_toggleBold">
                             <ChildContent>
@@ -921,7 +921,7 @@
                     <div class="space-y-4">
                         @for (var i = 1; i <= 20; i++)
                         {
-                            <p class="text-sm text-muted-foreground">Scrollable item @i — Lorem ipsum dolor sit amet.</p>
+                            <p class="text-sm text-muted-foreground">@L($"Scrollable item {i} — Lorem ipsum dolor sit amet.", $"عنصر قابل للتمرير {i} — هذا نص تجريبي للعرض.")</p>
                         }
                     </div>
                 </GzScrollArea>
@@ -937,9 +937,9 @@
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div>
-                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">View mode</p>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("View mode", "وضع العرض")</p>
                     <GzToggleGroup Items="_viewModeItems" @bind-Value="_viewMode" />
-                    <p class="mt-2 text-sm text-muted-foreground">Selected: <strong class="text-foreground">@_viewMode</strong></p>
+                    <p class="mt-2 text-sm text-muted-foreground">@L("Selected", "المحدد"): <strong class="text-foreground">@_viewMode</strong></p>
                 </div>
             </div>
         </div>
@@ -955,12 +955,12 @@
                 <GzCollapsible>
                     <Trigger>
                         <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm">
-                            <ChildContent>Toggle Details</ChildContent>
+                            <ChildContent>@L("Toggle Details", "تبديل التفاصيل")</ChildContent>
                         </GzButton>
                     </Trigger>
                     <ChildContent>
                         <div class="mt-2 rounded-md border border-border/50 bg-muted/20 p-4">
-                            <p class="text-sm text-muted-foreground">This content is collapsed by default. Click the button to toggle visibility.</p>
+                            <p class="text-sm text-muted-foreground">@L("This content is collapsed by default. Click the button to toggle visibility.", "هذا المحتوى مطوي افتراضياً. انقر على الزر لتبديل الرؤية.")</p>
                         </div>
                     </ChildContent>
                 </GzCollapsible>
@@ -976,7 +976,7 @@
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <GzPagination @bind-CurrentPage="_currentPage" TotalPages="20" SiblingCount="1" />
-                <p class="text-sm text-muted-foreground">Current page: <strong class="text-foreground">@_currentPage</strong></p>
+                <p class="text-sm text-muted-foreground">@L("Current page", "الصفحة الحالية"): <strong class="text-foreground">@_currentPage</strong></p>
             </div>
         </div>
 
@@ -989,11 +989,11 @@
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div>
-                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Enter verification code</p>
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("Enter verification code", "أدخل رمز التحقق")</p>
                     <GzInputOTP Length="6" @bind-Value="_otpValue" />
                     @if (!string.IsNullOrEmpty(_otpValue))
                     {
-                        <p class="mt-2 text-sm text-muted-foreground">Value: <strong class="text-foreground">@_otpValue</strong></p>
+                        <p class="mt-2 text-sm text-muted-foreground">@L("Value", "القيمة"): <strong class="text-foreground">@_otpValue</strong></p>
                     }
                 </div>
             </div>
@@ -1008,27 +1008,27 @@
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex gap-3">
-                    <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _sheetOpen = true)">Open Sheet (End)</GzButton>
+                    <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _sheetOpen = true)">@L("Open Sheet (End)", "فتح اللوحة (النهاية)")</GzButton>
                 </div>
                 <GzSheet @bind-Open="_sheetOpen" Side="SheetSide.End">
                     <Header>
-                        <h3 class="text-lg font-semibold text-foreground">Sheet Panel</h3>
-                        <p class="text-sm text-muted-foreground">This is a slide-out panel from the end edge.</p>
+                        <h3 class="text-lg font-semibold text-foreground">@L("Sheet Panel", "لوحة جانبية")</h3>
+                        <p class="text-sm text-muted-foreground">@L("This is a slide-out panel from the end edge.", "هذه لوحة منزلقة من الحافة.")</p>
                     </Header>
                     <ChildContent>
                         <div class="space-y-4 py-4">
-                            <GzFormField Label="Name" Id="sheet-name">
-                                <GzInput Id="sheet-name" Placeholder="Enter your name" />
+                            <GzFormField Label="@L("Name", "الاسم")" Id="sheet-name">
+                                <GzInput Id="sheet-name" Placeholder="@L("Enter your name", "أدخل اسمك")" />
                             </GzFormField>
-                            <GzFormField Label="Email" Id="sheet-email">
-                                <GzInput Id="sheet-email" Type="email" Placeholder="you@example.com" />
+                            <GzFormField Label="@L("Email", "البريد الإلكتروني")" Id="sheet-email">
+                                <GzInput Id="sheet-email" Type="email" Placeholder="@L("you@example.com", "أنت@مثال.com")" />
                             </GzFormField>
                         </div>
                     </ChildContent>
                     <Footer>
                         <div class="flex justify-end gap-3">
-                            <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _sheetOpen = false)">Cancel</GzButton>
-                            <GzButton OnClick="@(() => _sheetOpen = false)">Save</GzButton>
+                            <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _sheetOpen = false)">@L("Cancel", "إلغاء")</GzButton>
+                            <GzButton OnClick="@(() => _sheetOpen = false)">@L("Save", "حفظ")</GzButton>
                         </div>
                     </Footer>
                 </GzSheet>
@@ -1045,7 +1045,7 @@
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <GzHoverCard Align="start">
                     <Trigger>
-                        <span class="text-sm font-medium text-primary underline-offset-4 cursor-pointer hover:underline">Hover over me</span>
+                        <span class="text-sm font-medium text-primary underline-offset-4 cursor-pointer hover:underline">@L("Hover over me", "مرر الماوس هنا")</span>
                     </Trigger>
                     <ChildContent>
                         <div class="space-y-2">
@@ -1072,14 +1072,14 @@
                 <GzContextMenu>
                     <Trigger>
                         <div class="flex items-center justify-center rounded-lg border-2 border-dashed border-border/50 bg-muted/20 p-8 text-sm text-muted-foreground">
-                            Right-click here to open context menu
+                            @L("Right-click here to open context menu", "انقر بزر الماوس الأيمن هنا لفتح قائمة السياق")
                         </div>
                     </Trigger>
                     <ChildContent>
-                        <GzDropdownMenuItem Label="Copy" Shortcut="⌘C" />
-                        <GzDropdownMenuItem Label="Paste" Shortcut="⌘V" />
+                        <GzDropdownMenuItem Shortcut="⌘C">@L("Copy", "نسخ")</GzDropdownMenuItem>
+                        <GzDropdownMenuItem Shortcut="⌘V">@L("Paste", "لصق")</GzDropdownMenuItem>
                         <GzSeparator />
-                        <GzDropdownMenuItem Label="Delete" Variant="ButtonVariant.Destructive" />
+                        <GzDropdownMenuItem>@L("Delete", "حذف")</GzDropdownMenuItem>
                     </ChildContent>
                 </GzContextMenu>
             </div>
@@ -1095,7 +1095,7 @@
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _commandOpen = true)">
                     <ChildContent>
-                        <span>Open Command Palette</span>
+                        <span>@L("Open Command Palette", "فتح لوحة الأوامر")</span>
                         <kbd class="ms-2 rounded border border-border/50 bg-muted px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">⌘K</kbd>
                     </ChildContent>
                 </GzButton>
