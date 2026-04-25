@@ -32,6 +32,11 @@
     <EmbeddedResource Include="../GlazeUI/Models/Enums.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Models/SelectOption.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Models/TabItem.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/BreadcrumbItem.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/DataTableColumn.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/StepItem.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/ToggleGroupItem.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/CommandItem.cs" LinkBase="Templates/Models" />
   </ItemGroup>
 
 </Project>
