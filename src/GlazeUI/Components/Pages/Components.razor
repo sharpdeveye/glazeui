@@ -1,4 +1,5 @@
 @page "/components"
+@inject ToastService ToastService
 
 <PageTitle>Components — GlazeUI</PageTitle>
 <HeadContent>
@@ -76,6 +77,8 @@
                 <GzSidebarLink Href="/components#hovercard" Label="HoverCard" />
                 <GzSidebarLink Href="/components#contextmenu" Label="ContextMenu" />
                 <GzSidebarLink Href="/components#command" Label="Command" />
+                <GzSidebarLink Href="/components#sortable" Label="Sortable" />
+                <GzSidebarLink Href="/components#kanban" Label="Kanban" />
             </nav>
         </aside>
 
@@ -441,8 +444,8 @@
                 <GzSeparator />
 
                 <div class="max-w-md">
-                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">With Ticks</p>
-                    <GzSlider @bind-Value="_sliderTicks" Min="0" Max="100" Step="25" ShowTicks="true" Label="@L("Quality", "الجودة")" />
+                    <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("With Ticks", "مع العلامات")</p>
+                    <GzSlider @bind-Value="_sliderTicks" Min="0" Max="100" Step="10" TickInterval="20" ShowTicks="true" Label="@L("Quality", "الجودة")" />
                 </div>
 
                 <GzSeparator />
@@ -796,26 +799,19 @@
         <div id="toast" class="scroll-mt-24">
             <div class="mb-6">
                 <h2 class="text-xl font-semibold tracking-tight text-foreground">Toast</h2>
-                <p class="mt-1 text-sm text-muted-foreground">Temporary notifications with auto-dismiss, close button, and 3 variants.</p>
+                <p class="mt-1 text-sm text-muted-foreground">@L("Sonner-style stacking notifications with auto-dismiss, action buttons, and 5 variants.", "إشعارات متراكبة بنمط Sonner مع إخفاء تلقائي وأزرار إجراء و5 أنماط.")</p>
             </div>
 
             <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex flex-wrap gap-3">
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _toastDefault = true)">Show Default</GzButton>
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _toastSuccess = true)">Show Success</GzButton>
-                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Destructive" OnClick="@(() => _toastError = true)">Show Error</GzButton>
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Show("Event created", "Your event has been scheduled for tomorrow at 3pm."))">Default</GzButton>
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Success("Changes saved", "Your profile has been updated successfully."))">Success</GzButton>
+                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Destructive" OnClick="@(() => ToastService.Error("Delete failed", "Something went wrong. Please try again."))">Error</GzButton>
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Info("New update available", "Version 2.4 is ready to install."))">Info</GzButton>
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Warning("Storage almost full", "You have used 95% of your storage."))">Warning</GzButton>
+                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Outline" OnClick="@(() => ToastService.Show(new ToastItem { Title = "Undo available", Message = "Message moved to trash.", ActionLabel = "Undo", OnAction = () => ToastService.Success("Restored", "Message moved back to inbox."), Duration = 8000 }))">With Action</GzButton>
                 </div>
-                <div class="space-y-3">
-                    <GzToast Title="Event created" @bind-Visible="_toastDefault" Duration="0">
-                        Your event has been scheduled for tomorrow at 3pm.
-                    </GzToast>
-                    <GzToast Title="Changes saved" Variant="ToastVariant.Success" @bind-Visible="_toastSuccess" Duration="0">
-                        Your profile has been updated successfully.
-                    </GzToast>
-                    <GzToast Title="Delete failed" Variant="ToastVariant.Error" @bind-Visible="_toastError" Duration="0">
-                        Something went wrong. Please try again.
-                    </GzToast>
-                </div>
+                <p class="text-xs text-muted-foreground">@L("Inject ToastService and call .Show(), .Success(), .Error(), .Info(), or .Warning() from anywhere.", "قم بحقن ToastService واستدعِ .Show() أو .Success() أو .Error() أو .Info() أو .Warning() من أي مكان.")</p>
             </div>
         </div>
 
@@ -1103,6 +1099,70 @@
             </div>
         </div>
 
+        @* ─── Sortable ─────────────────────────────────── *@
+        <div id="sortable" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Sortable</h2>
+                <p class="mt-1 text-sm text-muted-foreground">@L("Drag-and-drop reorderable grid with handle-only dragging, ring indicators, and flexible layout.", "شبكة قابلة لإعادة الترتيب بالسحب والإفلات مع مقابض السحب ومؤشرات الحلقة والتخطيط المرن.")</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex items-center justify-between">
+                    <p class="text-xs font-medium uppercase tracking-widest text-muted-foreground">@L("Layout", "التخطيط")</p>
+                    <GzToggleGroup @bind-Value="_sortableLayout" Items="_sortableLayoutItems" Size="ToggleGroupSize.Sm" />
+                </div>
+
+                <GzSortable T="SortableGridItem"
+                            Items="_sortableItems"
+                            GetValue="item => item.Id"
+                            OnReorder="HandleSortableReorder"
+                            Columns="GetSortableColumns()">
+                    <ItemTemplate>
+                        <div class="group relative rounded-lg border border-border/50 bg-background p-3 shadow-xs transition-colors hover:bg-accent/30">
+                            <GzSortableHandle class="absolute top-2.5 end-1.5 z-10" />
+                            <div class="min-w-0">
+                                <h4 class="truncate text-sm font-medium text-foreground">@context.Item.Title</h4>
+                                <p class="mt-0.5 truncate text-xs text-muted-foreground">@context.Item.Description</p>
+                            </div>
+                            <div class="mt-2 flex items-center justify-between">
+                                <GzBadge Variant="BadgeVariant.Secondary">@context.Item.Type</GzBadge>
+                                <span class="text-xs text-muted-foreground">@context.Item.Size</span>
+                            </div>
+                        </div>
+                    </ItemTemplate>
+                </GzSortable>
+            </div>
+        </div>
+
+        @* ─── Kanban ──────────────────────────────────────── *@
+        <div id="kanban" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Kanban</h2>
+                <p class="mt-1 text-sm text-muted-foreground">@L("Multi-column drag-and-drop board with cross-column item transfer and column headers.", "لوحة سحب وإفلات متعددة الأعمدة مع نقل العناصر بين الأعمدة ورؤوس الأعمدة.")</p>
+            </div>
+
+            <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzKanban T="KanbanTask"
+                          Columns="_kanbanColumns"
+                          ColumnsChanged="HandleKanbanChange"
+                          GetValue="t => t.Id">
+                    <ColumnHeader>
+                        <div class="mb-2 flex items-center justify-between">
+                            <h3 class="text-sm font-semibold text-foreground">@GetKanbanColumnTitle(context)</h3>
+                            <GzBadge Variant="BadgeVariant.Outline">@(_kanbanColumns.TryGetValue(context, out var items) ? items.Count : 0)</GzBadge>
+                        </div>
+                    </ColumnHeader>
+                    <ItemTemplate>
+                        <div class="group relative rounded-lg border border-border/50 bg-background p-3 shadow-xs transition-colors hover:bg-accent/30">
+                            <GzSortableHandle class="absolute top-2.5 end-1.5 z-10" />
+                            <p class="text-sm font-medium text-foreground">@context.Item.Title</p>
+                            <p class="mt-0.5 text-xs text-muted-foreground">@context.Item.Assignee</p>
+                        </div>
+                    </ItemTemplate>
+                </GzKanban>
+            </div>
+        </div>
+
         </div> @* end flex-1 *@
     </div>
 </section>
@@ -1189,10 +1249,6 @@
         new() { Label = "Breadcrumb" }
     };
 
-    // ─── Toast ───────────────────────────────────────
-    private bool _toastDefault;
-    private bool _toastSuccess;
-    private bool _toastError;
 
     // ─── Slider ──────────────────────────────────────
     private double _sliderValue = 50;
@@ -1350,4 +1406,91 @@
             }
         }
     };
+
+    // ─── Sortable ─────────────────────────────────────
+    private string? _sortableLayout = "grid";
+    private readonly List<ToggleGroupItem> _sortableLayoutItems = new()
+    {
+        new() { Value = "grid", Label = "Grid" },
+        new() { Value = "list", Label = "List" },
+    };
+
+    private int GetSortableColumns()
+    {
+        return _sortableLayout switch
+        {
+            "list" => 1,
+            _ => 3,
+        };
+    }
+
+    private List<SortableGridItem> _sortableItems = new()
+    {
+        new() { Id = "1", Title = "Hero Image", Description = "Main banner image", Type = "image", Size = "2.4 MB" },
+        new() { Id = "2", Title = "Product Specs", Description = "Technical docs", Type = "document", Size = "1.2 MB" },
+        new() { Id = "3", Title = "Demo Video", Description = "Product demo", Type = "video", Size = "15.7 MB" },
+        new() { Id = "4", Title = "Audio Guide", Description = "Voice instructions", Type = "audio", Size = "8.3 MB" },
+        new() { Id = "5", Title = "Gallery Photo 1", Description = "Product view 1", Type = "image", Size = "3.1 MB" },
+        new() { Id = "6", Title = "Gallery Photo 2", Description = "Product view 2", Type = "image", Size = "2.8 MB" },
+        new() { Id = "7", Title = "User Manual", Description = "Installation guide", Type = "document", Size = "4.2 MB" },
+        new() { Id = "8", Title = "Background Music", Description = "Ambient soundtrack", Type = "audio", Size = "12.1 MB" },
+        new() { Id = "9", Title = "Feature Highlight", Description = "Key features", Type = "featured", Size = "N/A" },
+    };
+
+    private void HandleSortableReorder(List<SortableGridItem> newItems)
+    {
+        _sortableItems = newItems;
+    }
+
+    private class SortableGridItem
+    {
+        public string Id { get; init; } = string.Empty;
+        public string Title { get; init; } = string.Empty;
+        public string Description { get; init; } = string.Empty;
+        public string Type { get; init; } = string.Empty;
+        public string Size { get; init; } = string.Empty;
+    }
+
+    // ─── Kanban ───────────────────────────────────────
+    private Dictionary<string, List<KanbanTask>> _kanbanColumns = new()
+    {
+        ["todo"] = new()
+        {
+            new() { Id = "k1", Title = "Design landing page", Assignee = "Sarah" },
+            new() { Id = "k2", Title = "Write API docs", Assignee = "Ahmed" },
+            new() { Id = "k3", Title = "Setup CI/CD", Assignee = "Mike" },
+        },
+        ["progress"] = new()
+        {
+            new() { Id = "k4", Title = "Build auth flow", Assignee = "Lina" },
+            new() { Id = "k5", Title = "Database schema", Assignee = "Omar" },
+        },
+        ["done"] = new()
+        {
+            new() { Id = "k6", Title = "Project setup", Assignee = "Sarah" },
+        },
+    };
+
+    private void HandleKanbanChange(Dictionary<string, List<KanbanTask>> newColumns)
+    {
+        _kanbanColumns = newColumns;
+    }
+
+    private string GetKanbanColumnTitle(string columnId)
+    {
+        return columnId switch
+        {
+            "todo" => _isRtl ? "المهام" : "To Do",
+            "progress" => _isRtl ? "قيد التنفيذ" : "In Progress",
+            "done" => _isRtl ? "مكتمل" : "Done",
+            _ => columnId,
+        };
+    }
+
+    private class KanbanTask
+    {
+        public string Id { get; init; } = string.Empty;
+        public string Title { get; init; } = string.Empty;
+        public string Assignee { get; init; } = string.Empty;
+    }
 }

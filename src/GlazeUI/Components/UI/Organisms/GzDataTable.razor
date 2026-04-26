@@ -173,33 +173,20 @@
     <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 px-4 py-3 text-sm text-muted-foreground">
         <div class="flex items-center gap-2">
             <span>Rows per page</span>
-            <div class="w-20">
+            <div class="w-[70px]">
                 <GzSelect Options="@_pageSizeSelectOptions"
                           Value="@_effectivePageSize.ToString()"
-                          ValueChanged="HandlePageSizeSelect" />
+                          ValueChanged="HandlePageSizeSelect"
+                          Size="SelectSize.Sm" />
             </div>
         </div>
 
         <span>Page @_currentPage of @_totalPages (@_filteredItems.Count items)</span>
 
-        <div class="flex items-center gap-1">
-            <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm"
-                      Disabled="@(_currentPage <= 1)" OnClick="FirstPage">
-                <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" /></svg>
-            </GzButton>
-            <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm"
-                      Disabled="@(_currentPage <= 1)" OnClick="PrevPage">
-                <svg class="size-3.5 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>
-            </GzButton>
-            <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm"
-                      Disabled="@(_currentPage >= _totalPages)" OnClick="NextPage">
-                <svg class="size-3.5 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>
-            </GzButton>
-            <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm"
-                      Disabled="@(_currentPage >= _totalPages)" OnClick="LastPage">
-                <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 4.5l7.5 7.5-7.5 7.5m6-15l7.5 7.5-7.5 7.5" /></svg>
-            </GzButton>
-        </div>
+        <GzPagination CurrentPage="_currentPage"
+                      TotalPages="_totalPages"
+                      SiblingCount="1"
+                      CurrentPageChanged="HandlePageChanged" />
     </div>
 
     @* ─── CSV Download Anchor (hidden) ──── *@
@@ -378,10 +365,11 @@
         .ToList();
 
     // ─── Pagination ─────────────────────────────────
-    private void FirstPage() { _currentPage = 1; Recalculate(); }
-    private void PrevPage() { _currentPage = Math.Max(1, _currentPage - 1); Recalculate(); }
-    private void NextPage() { _currentPage = Math.Min(_totalPages, _currentPage + 1); Recalculate(); }
-    private void LastPage() { _currentPage = _totalPages; Recalculate(); }
+    private void HandlePageChanged(int page)
+    {
+        _currentPage = page;
+        Recalculate();
+    }
 
     // ─── Column Visibility ──────────────────────────
     private void ToggleColumn(DataTableColumn<TItem> col)

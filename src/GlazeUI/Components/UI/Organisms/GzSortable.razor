@@ -1,0 +1,144 @@
+@* GzSortable — Drag-and-drop reorderable list/grid with handle-only dragging *@
+@typeparam T
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass"
+     style="@GridStyle">
+    @for (var i = 0; i < Items.Count; i++)
+    {
+        var index = i;
+        var item = Items[i];
+        var value = GetValue(item);
+        var isDragging = value == _dragValue;
+        var isDropTarget = index == _dropIndex && _dragValue is not null && !isDragging;
+
+        <div data-sort-item
+             class="@GetItemClass(isDragging, isDropTarget)"
+             ondragover="event.preventDefault()"
+             @ondragstart="() => HandleDragStart(value, index)"
+             @ondragenter="() => HandleDragEnter(index)"
+             @ondrop="HandleDrop"
+             @ondrop:preventDefault
+             @ondragend="HandleDragEnd">
+            @if (ItemTemplate is not null)
+            {
+                @ItemTemplate(new SortableItemContext<T>
+                {
+                    Item = item,
+                    Index = index,
+                    IsDragging = isDragging,
+                    IsDropTarget = isDropTarget,
+                })
+            }
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>The list of items to render and reorder.</summary>
+    [Parameter] public List<T> Items { get; set; } = new();
+
+    /// <summary>Extract a unique string ID from each item.</summary>
+    [Parameter] public Func<T, string> GetValue { get; set; } = _ => string.Empty;
+
+    /// <summary>Template for rendering each item. Receives SortableItemContext&lt;T&gt;.</summary>
+    [Parameter] public RenderFragment<SortableItemContext<T>>? ItemTemplate { get; set; }
+
+    /// <summary>Callback when items are reordered. Receives the new list order.</summary>
+    [Parameter] public EventCallback<List<T>> OnReorder { get; set; }
+
+    /// <summary>Number of grid columns. 1 = vertical list (default). 2+ = CSS grid.</summary>
+    [Parameter] public int Columns { get; set; } = 1;
+
+    /// <summary>Disable all drag interactions.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string? _dragValue;
+    private int _dragIndex = -1;
+    private int _dropIndex = -1;
+
+    private string ComputedClass => Tw.Merge(
+        Disabled ? "opacity-50 pointer-events-none" : null,
+        GetUserClass()
+    );
+
+    private string GridStyle => Columns > 1
+        ? $"display:grid;grid-template-columns:repeat({Columns},minmax(0,1fr));gap:0.75rem"
+        : "display:flex;flex-direction:column;gap:0.75rem";
+
+    private string GetItemClass(bool isDragging, bool isDropTarget) => Tw.Merge(
+        "group/sort-item relative transition-all duration-200 ease-out",
+        isDragging ? "opacity-40" : null,
+        isDropTarget ? "ring-2 ring-primary/50 ring-offset-2 ring-offset-background rounded-lg" : null
+    );
+
+    private void HandleDragStart(string value, int index)
+    {
+        if (Disabled) return;
+        _dragValue = value;
+        _dragIndex = index;
+    }
+
+    private void HandleDragEnter(int index)
+    {
+        if (_dragValue is null || Disabled) return;
+        if (index != _dropIndex)
+        {
+            _dropIndex = index;
+        }
+    }
+
+    private async Task HandleDrop()
+    {
+        if (_dragValue is null || _dragIndex < 0 || _dropIndex < 0 || Disabled) return;
+        if (_dragIndex == _dropIndex)
+        {
+            ResetState();
+            return;
+        }
+
+        // Reorder
+        var newItems = new List<T>(Items);
+        var movedItem = newItems[_dragIndex];
+        newItems.RemoveAt(_dragIndex);
+
+        var insertIndex = _dropIndex;
+        if (insertIndex > newItems.Count) insertIndex = newItems.Count;
+        newItems.Insert(insertIndex, movedItem);
+
+        ResetState();
+
+        if (OnReorder.HasDelegate)
+        {
+            await OnReorder.InvokeAsync(newItems);
+        }
+    }
+
+    private void HandleDragEnd()
+    {
+        ResetState();
+    }
+
+    private void ResetState()
+    {
+        _dragValue = null;
+        _dragIndex = -1;
+        _dropIndex = -1;
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

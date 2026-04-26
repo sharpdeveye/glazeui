@@ -129,7 +129,20 @@ public enum ToastVariant
 {
     Default,
     Success,
-    Error
+    Error,
+    Info,
+    Warning
+}
+
+/// <summary>Position of the GzToaster container on the viewport.</summary>
+public enum ToasterPosition
+{
+    TopRight,
+    TopLeft,
+    TopCenter,
+    BottomRight,
+    BottomLeft,
+    BottomCenter
 }
 
 // ─── DataTable ──────────────────────────────────────────
@@ -178,4 +191,13 @@ public enum ScrollOrientation
     Vertical,
     Horizontal,
     Both
+}
+
+// ─── Select ─────────────────────────────────────────────
+
+/// <summary>Size preset for GzSelect trigger height.</summary>
+public enum SelectSize
+{
+    Default,
+    Sm
 }

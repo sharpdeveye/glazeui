@@ -1,124 +1,85 @@
-@* GzToast — Temporary notification with auto-dismiss and close button *@
+@* GzToast — Individual toast notification card (used inside GzToaster) *@
 
-@if (_visible)
-{
-    <div @attributes="GetFilteredAttributes()"
-         class="@ComputedClass"
-         role="@(Variant == ToastVariant.Error ? "alert" : "status")"
-         aria-live="@(Variant == ToastVariant.Error ? "assertive" : "polite")">
-        <div class="flex items-start gap-3">
-            @* Icon *@
-            <div class="shrink-0 mt-0.5">
-                @switch (Variant)
-                {
-                    case ToastVariant.Success:
-                        <svg class="size-4 text-primary" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                        break;
-                    case ToastVariant.Error:
-                        <svg class="size-4 text-destructive" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
-                        break;
-                    default:
-                        <svg class="size-4 text-foreground" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-                        break;
-                }
-            </div>
-
-            @* Content *@
-            <div class="flex-1 min-w-0">
-                @if (!string.IsNullOrWhiteSpace(Title))
-                {
-                    <p class="text-sm font-medium text-foreground">@Title</p>
-                }
-                @if (ChildContent is not null)
-                {
-                    <p class="mt-1 text-sm text-muted-foreground">@ChildContent</p>
-                }
-            </div>
-
-            @* Close *@
-            <button type="button"
-                    class="shrink-0 rounded-sm p-0.5 text-muted-foreground/60 transition-colors duration-200 cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    aria-label="Dismiss"
-                    @onclick="Dismiss">
-                <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
+<div class="@ComputedClass"
+     role="@(Item.Variant == ToastVariant.Error ? "alert" : "status")"
+     aria-live="@(Item.Variant == ToastVariant.Error ? "assertive" : "polite")">
+    <div class="flex items-start gap-3">
+        @* Icon *@
+        <div class="shrink-0 mt-0.5">
+            @switch (Item.Variant)
+            {
+                case ToastVariant.Success:
+                    <svg class="size-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    break;
+                case ToastVariant.Error:
+                    <svg class="size-4 text-destructive" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
+                    break;
+                case ToastVariant.Warning:
+                    <svg class="size-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
+                    break;
+                case ToastVariant.Info:
+                    <svg class="size-4 text-sky-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    break;
+                default:
+                    <svg class="size-4 text-foreground" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+                    break;
+            }
         </div>
+
+        @* Content *@
+        <div class="flex-1 min-w-0">
+            @if (!string.IsNullOrWhiteSpace(Item.Title))
+            {
+                <p class="text-sm font-medium text-foreground">@Item.Title</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(Item.Message))
+            {
+                <p class="@(string.IsNullOrWhiteSpace(Item.Title) ? "" : "mt-1") text-sm text-muted-foreground">@Item.Message</p>
+            }
+            @if (!string.IsNullOrWhiteSpace(Item.ActionLabel))
+            {
+                <button type="button"
+                        class="mt-2 text-sm font-medium text-primary underline-offset-4 transition-colors duration-150 cursor-pointer hover:underline"
+                        @onclick="HandleAction">
+                    @Item.ActionLabel
+                </button>
+            }
+        </div>
+
+        @* Close *@
+        <button type="button"
+                class="shrink-0 rounded-sm p-0.5 text-muted-foreground/60 transition-colors duration-200 cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Dismiss"
+                @onclick="HandleDismiss">
+            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
     </div>
-}
+</div>
 
 @code {
-    /// <summary>Toast heading.</summary>
-    [Parameter] public string? Title { get; set; }
+    /// <summary>The toast data to render.</summary>
+    [Parameter] public ToastItem Item { get; set; } = new();
 
-    /// <summary>Toast body content.</summary>
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-
-    /// <summary>Visual variant: Default, Success, Error.</summary>
-    [Parameter] public ToastVariant Variant { get; set; } = ToastVariant.Default;
-
-    /// <summary>Auto-dismiss after this many milliseconds. 0 = never.</summary>
-    [Parameter] public int Duration { get; set; } = 5000;
-
-    /// <summary>Controls visibility — supports two-way binding.</summary>
-    [Parameter] public bool Visible { get; set; } = true;
-
-    /// <summary>Callback when visibility changes.</summary>
-    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
-
-    /// <summary>Additional HTML attributes.</summary>
-    [Parameter(CaptureUnmatchedValues = true)]
-    public Dictionary<string, object>? AdditionalAttributes { get; set; }
-
-    private bool _visible;
-    private System.Timers.Timer? _timer;
-
-    protected override void OnParametersSet()
-    {
-        _visible = Visible;
-        if (_visible && Duration > 0)
-            StartTimer();
-    }
-
-    private void StartTimer()
-    {
-        _timer?.Dispose();
-        _timer = new System.Timers.Timer(Duration);
-        _timer.Elapsed += async (_, _) =>
-        {
-            _timer?.Dispose();
-            await InvokeAsync(Dismiss);
-        };
-        _timer.AutoReset = false;
-        _timer.Start();
-    }
-
-    private async Task Dismiss()
-    {
-        _visible = false;
-        await VisibleChanged.InvokeAsync(false);
-        StateHasChanged();
-    }
+    /// <summary>Callback to dismiss this toast.</summary>
+    [Parameter] public EventCallback<string> OnDismiss { get; set; }
 
     private string ComputedClass => Tw.Merge(
-        "pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg",
+        "pointer-events-auto w-full overflow-hidden rounded-lg",
         "border border-border/50 bg-background shadow-lg",
-        "p-4 animate-in fade-in-0 slide-in-from-bottom-4 zoom-in-95 duration-200",
-        GetUserClass()
+        "p-4 animate-in fade-in-0 slide-in-from-bottom-4 zoom-in-95 duration-200"
     );
 
-    private string? GetUserClass() =>
-        AdditionalAttributes?.TryGetValue("class", out var cls) == true
-            ? cls?.ToString() : null;
-
-    private Dictionary<string, object> GetFilteredAttributes()
+    private async Task HandleDismiss()
     {
-        if (AdditionalAttributes is null) return new();
-        return AdditionalAttributes
-            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
-            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        if (OnDismiss.HasDelegate)
+            await OnDismiss.InvokeAsync(Item.Id);
     }
 
-    public void Dispose() => _timer?.Dispose();
+    private async Task HandleAction()
+    {
+        Item.OnAction?.Invoke();
+        await HandleDismiss();
+    }
 }

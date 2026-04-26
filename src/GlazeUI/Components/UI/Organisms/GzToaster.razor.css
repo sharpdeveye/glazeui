@@ -1,0 +1,31 @@
+/* GzToaster.razor.css — Sonner-style stacking behavior.
+   Uses CSS custom property --toast-index set on each wrapper.
+   Collapsed = default, Expanded = :hover on container. */
+
+/* ─── Toast wrapper base ─── */
+::deep .gz-toast-wrapper {
+    pointer-events: auto;
+    transform-origin: center bottom;
+    transition: all 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Collapsed state (not hovered) ─── */
+.gz-toaster:not(:hover) ::deep .gz-toast-wrapper {
+    margin-bottom: calc(min(var(--toast-index, 0), 1) * -56px);
+    transform: scale(calc(1 - var(--toast-index, 0) * 0.05));
+    opacity: calc(1 - var(--toast-index, 0) * 0.2);
+}
+
+/* Hide toasts beyond 3rd when collapsed */
+.gz-toaster:not(:hover) ::deep .gz-toast-hidden {
+    opacity: 0;
+    pointer-events: none;
+    margin-bottom: -100%;
+}
+
+/* ─── Expanded state (hovered) ─── */
+.gz-toaster:hover ::deep .gz-toast-wrapper {
+    margin-bottom: 0;
+    transform: none;
+    opacity: 1;
+}

@@ -9,7 +9,7 @@
             aria-haspopup="listbox"
             aria-activedescendant="@(_isOpen && _highlightIndex >= 0 ? $"gz-select-opt-{_highlightIndex}" : null)"
             aria-label="@(string.IsNullOrWhiteSpace(Placeholder) ? "Select an option" : Placeholder)"
-            class="@TriggerClass"
+            class="@TriggerClasses"
             disabled="@Disabled"
             @onclick="Toggle"
             @onkeydown="HandleKeyDown">
@@ -77,6 +77,9 @@
     /// <summary>Whether the select is disabled.</summary>
     [Parameter] public bool Disabled { get; set; }
 
+    /// <summary>Size preset — Default (h-10) or Sm (h-9).</summary>
+    [Parameter] public SelectSize Size { get; set; } = SelectSize.Default;
+
     /// <summary>Additional HTML attributes.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
@@ -96,13 +99,15 @@
         GetUserClass()
     );
 
-    private const string TriggerClass =
-        "flex h-10 w-full items-center justify-between rounded-md px-3 py-2 text-sm cursor-pointer " +
-        "bg-background inset-ring inset-ring-border/50 " +
-        "transition-all duration-200 ease-out " +
-        "hover:bg-accent/50 " +
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background " +
-        "disabled:pointer-events-none disabled:opacity-50";
+    private string TriggerClasses => Tw.Merge(
+        "flex w-full items-center justify-between rounded-md cursor-pointer",
+        Size == SelectSize.Sm ? "h-9 px-2.5 text-xs" : "h-10 px-3 py-2 text-sm",
+        "bg-background inset-ring inset-ring-border/50",
+        "transition-all duration-200 ease-out",
+        "hover:bg-accent/50",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        "disabled:pointer-events-none disabled:opacity-50"
+    );
 
     private string ChevronClass => Tw.Merge(
         "size-4 shrink-0 text-muted-foreground transition-transform duration-200",

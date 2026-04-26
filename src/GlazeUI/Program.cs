@@ -1,10 +1,13 @@
 using GlazeUI.Components;
+using GlazeUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddScoped<ToastService>();
 
 var app = builder.Build();
 

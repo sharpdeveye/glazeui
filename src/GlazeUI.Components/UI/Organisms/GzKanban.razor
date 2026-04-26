@@ -1,0 +1,239 @@
+@* GzKanban — Multi-column drag-and-drop kanban board *@
+@typeparam T
+
+<div @attributes="GetFilteredAttributes()"
+     class="@ComputedClass"
+     style="@GridStyle">
+    @foreach (var columnId in Columns.Keys)
+    {
+        var colId = columnId;
+        var colItems = Columns[colId];
+        var isColumnDropTarget = colId == _dropColumn && _dragValue is not null;
+
+        <div class="@GetColumnClass(isColumnDropTarget)"
+             ondragover="event.preventDefault()"
+             @ondragenter="() => HandleColumnDragEnter(colId)">
+
+            @if (ColumnHeader is not null)
+            {
+                @ColumnHeader(colId)
+            }
+
+            <div class="flex flex-col gap-2 min-h-[60px]">
+                @for (var i = 0; i < colItems.Count; i++)
+                {
+                    var index = i;
+                    var item = colItems[i];
+                    var value = GetValue(item);
+                    var isDragging = value == _dragValue;
+                    var isDropTarget = colId == _dropColumn && index == _dropIndex && !isDragging;
+
+                    <div data-sort-item
+                         class="@GetItemClass(isDragging, isDropTarget)"
+                         ondragover="event.preventDefault()"
+                         @ondragstart="() => HandleDragStart(colId, value, index)"
+                         @ondragenter="() => HandleItemDragEnter(colId, index)"
+                         @ondrop="HandleDrop"
+                         @ondrop:preventDefault
+                         @ondragend="HandleDragEnd">
+                        @if (ItemTemplate is not null)
+                        {
+                            @ItemTemplate(new KanbanItemContext<T>
+                            {
+                                Item = item,
+                                Column = colId,
+                                Index = index,
+                                IsDragging = isDragging,
+                                IsDropTarget = isDropTarget,
+                            })
+                        }
+                    </div>
+                }
+            </div>
+
+            @* Empty column drop zone *@
+            @if (colItems.Count == 0)
+            {
+                <div class="flex-1"
+                     ondragover="event.preventDefault()"
+                     @ondragenter="() => HandleItemDragEnter(colId, 0)"
+                     @ondrop="HandleDrop"
+                     @ondrop:preventDefault>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Columns dictionary — key is column ID, value is list of items.</summary>
+    [Parameter] public Dictionary<string, List<T>> Columns { get; set; } = new();
+
+    /// <summary>Callback when columns change (reorder or cross-column move).</summary>
+    [Parameter] public EventCallback<Dictionary<string, List<T>>> ColumnsChanged { get; set; }
+
+    /// <summary>Extract a unique string ID from each item.</summary>
+    [Parameter] public Func<T, string> GetValue { get; set; } = _ => string.Empty;
+
+    /// <summary>Template for rendering each item. Receives KanbanItemContext&lt;T&gt;.</summary>
+    [Parameter] public RenderFragment<KanbanItemContext<T>>? ItemTemplate { get; set; }
+
+    /// <summary>Template for rendering each column header. Receives column ID string.</summary>
+    [Parameter] public RenderFragment<string>? ColumnHeader { get; set; }
+
+    /// <summary>Callback when an item is moved. Receives KanbanMoveEvent.</summary>
+    [Parameter] public EventCallback<KanbanMoveEvent> OnMove { get; set; }
+
+    /// <summary>Disable all drag interactions.</summary>
+    [Parameter] public bool Disabled { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string? _dragValue;
+    private string? _dragSourceColumn;
+    private int _dragSourceIndex = -1;
+    private string? _dropColumn;
+    private int _dropIndex = -1;
+
+    private string ComputedClass => Tw.Merge(
+        "grid gap-4",
+        Disabled ? "opacity-50 pointer-events-none" : null,
+        GetUserClass()
+    );
+
+    private string GridStyle
+    {
+        get
+        {
+            var count = Columns.Count;
+            if (count <= 1) return string.Empty;
+            return $"grid-template-columns: repeat({count}, minmax(0, 1fr))";
+        }
+    }
+
+    private string GetColumnClass(bool isDropTarget) => Tw.Merge(
+        "flex flex-col gap-3 rounded-xl border border-border/50 bg-muted/30 p-4 transition-all duration-200",
+        isDropTarget ? "ring-2 ring-primary/30 ring-offset-1 ring-offset-background" : null
+    );
+
+    private string GetItemClass(bool isDragging, bool isDropTarget) => Tw.Merge(
+        "group/sort-item relative transition-all duration-200 ease-out",
+        isDragging ? "opacity-40" : null,
+        isDropTarget ? "ring-2 ring-primary/50 ring-offset-2 ring-offset-background rounded-lg" : null
+    );
+
+    private void HandleDragStart(string column, string value, int index)
+    {
+        if (Disabled) return;
+        _dragValue = value;
+        _dragSourceColumn = column;
+        _dragSourceIndex = index;
+    }
+
+    private void HandleColumnDragEnter(string column)
+    {
+        if (_dragValue is null || Disabled) return;
+        _dropColumn = column;
+        // Default to end of column
+        if (Columns.TryGetValue(column, out var items))
+        {
+            _dropIndex = items.Count;
+        }
+    }
+
+    private void HandleItemDragEnter(string column, int index)
+    {
+        if (_dragValue is null || Disabled) return;
+        _dropColumn = column;
+        _dropIndex = index;
+    }
+
+    private async Task HandleDrop()
+    {
+        if (_dragValue is null || _dragSourceColumn is null || _dropColumn is null || Disabled)
+        {
+            ResetState();
+            return;
+        }
+
+        // Same column, same position — no-op
+        if (_dragSourceColumn == _dropColumn && _dragSourceIndex == _dropIndex)
+        {
+            ResetState();
+            return;
+        }
+
+        // Fire OnMove if delegate exists
+        if (OnMove.HasDelegate)
+        {
+            await OnMove.InvokeAsync(new KanbanMoveEvent
+            {
+                SourceColumn = _dragSourceColumn,
+                SourceIndex = _dragSourceIndex,
+                TargetColumn = _dropColumn,
+                TargetIndex = _dropIndex,
+            });
+            ResetState();
+            return;
+        }
+
+        // Default: mutate columns
+        var newColumns = new Dictionary<string, List<T>>();
+        foreach (var kvp in Columns)
+        {
+            newColumns[kvp.Key] = new List<T>(kvp.Value);
+        }
+
+        var sourceList = newColumns[_dragSourceColumn];
+        var movedItem = sourceList[_dragSourceIndex];
+        sourceList.RemoveAt(_dragSourceIndex);
+
+        var targetList = newColumns[_dropColumn];
+        var insertIdx = _dropIndex;
+
+        // Adjust index if same column and moving down
+        if (_dragSourceColumn == _dropColumn && _dragSourceIndex < insertIdx)
+        {
+            insertIdx--;
+        }
+
+        if (insertIdx > targetList.Count) insertIdx = targetList.Count;
+        if (insertIdx < 0) insertIdx = 0;
+        targetList.Insert(insertIdx, movedItem);
+
+        ResetState();
+
+        if (ColumnsChanged.HasDelegate)
+        {
+            await ColumnsChanged.InvokeAsync(newColumns);
+        }
+    }
+
+    private void HandleDragEnd()
+    {
+        ResetState();
+    }
+
+    private void ResetState()
+    {
+        _dragValue = null;
+        _dragSourceColumn = null;
+        _dragSourceIndex = -1;
+        _dropColumn = null;
+        _dropIndex = -1;
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

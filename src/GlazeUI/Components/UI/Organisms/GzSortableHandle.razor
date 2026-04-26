@@ -1,0 +1,49 @@
+@* GzSortableHandle — Drag handle for GzSortable/GzKanban items *@
+
+<div @attributes="GetFilteredAttributes()"
+     data-sort-handle
+     class="@ComputedClass">
+    @if (ChildContent is not null)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <svg class="size-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <circle cx="9" cy="5" r="1" fill="currentColor" />
+            <circle cx="15" cy="5" r="1" fill="currentColor" />
+            <circle cx="9" cy="12" r="1" fill="currentColor" />
+            <circle cx="15" cy="12" r="1" fill="currentColor" />
+            <circle cx="9" cy="19" r="1" fill="currentColor" />
+            <circle cx="15" cy="19" r="1" fill="currentColor" />
+        </svg>
+    }
+</div>
+
+@code {
+    /// <summary>Optional custom handle content. Defaults to a 6-dot grip icon.</summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Additional HTML attributes.</summary>
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "cursor-grab active:cursor-grabbing select-none touch-none",
+        "opacity-0 transition-opacity duration-150 group-hover/sort-item:opacity-100",
+        "focus-visible:outline-none focus-visible:opacity-100",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

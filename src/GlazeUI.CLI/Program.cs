@@ -56,6 +56,9 @@ class Program
         ["hovercard"]        = ("Organisms", "GzHoverCard.razor"),
         ["contextmenu"]      = ("Organisms", "GzContextMenu.razor"),
         ["command"]          = ("Organisms", "GzCommand.razor"),
+        ["sortable"]         = ("Organisms", "GzSortable.razor"),
+        ["sortablehandle"]   = ("Organisms", "GzSortableHandle.razor"),
+        ["kanban"]           = ("Organisms", "GzKanban.razor"),
     };
 
     // Shared dependencies
@@ -69,7 +72,9 @@ class Program
         ["datatablecolumn"]  = ("Models",    "DataTableColumn.cs"),
         ["stepitem"]         = ("Models",    "StepItem.cs"),
         ["togglegroupitem"]  = ("Models",    "ToggleGroupItem.cs"),
-        ["commanditem"]      = ("Models",    "CommandItem.cs"),
+        ["commanditem"]          = ("Models",    "CommandItem.cs"),
+        ["sortableitemcontext"]   = ("Models",    "SortableItemContext.cs"),
+        ["kanbanitemcontext"]     = ("Models",    "KanbanItemContext.cs"),
     };
 
     // Component → required shared file keys
@@ -84,6 +89,8 @@ class Program
         ["togglegroup"]   = new[] { "togglegroupitem" },
         ["command"]       = new[] { "commanditem" },
         ["dropdownmenu"]  = new[] { "dropdownmenuitem" },
+        ["sortable"]      = new[] { "sortableitemcontext", "sortablehandle" },
+        ["kanban"]        = new[] { "kanbanitemcontext", "sortablehandle" },
     };
 
     // Bundled theme presets

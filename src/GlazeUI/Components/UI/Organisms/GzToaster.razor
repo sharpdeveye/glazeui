@@ -1,0 +1,107 @@
+@* GzToaster — Sonner-style stacking toast container.
+   Place once in layout: <GzToaster @rendermode="InteractiveServer" /> *@
+@implements IDisposable
+@inject ToastService ToastService
+
+<div class="@ContainerClass gz-toaster" aria-label="Notifications">
+    @{ var count = _toasts.Count; }
+    @for (var i = 0; i < count; i++)
+    {
+        var idx = i;
+        var reverseIndex = count - 1 - i;
+        var isHidden = reverseIndex >= 3;
+        <div class="gz-toast-wrapper @(isHidden ? "gz-toast-hidden" : "")"
+             style="--toast-index: @reverseIndex; z-index: @(count - reverseIndex);">
+            <GzToast Item="_toasts[idx]" OnDismiss="HandleDismiss" />
+        </div>
+    }
+</div>
+
+@code {
+    /// <summary>Where on the viewport the toasts appear.</summary>
+    [Parameter] public ToasterPosition Position { get; set; } = ToasterPosition.BottomRight;
+
+    /// <summary>Maximum number of visible toasts. Oldest are hidden first.</summary>
+    [Parameter] public int MaxVisible { get; set; } = 5;
+
+    private List<ToastItem> _toasts = new();
+    private readonly Dictionary<string, System.Timers.Timer> _timers = new();
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnChange += HandleToastsChanged;
+    }
+
+    private void HandleToastsChanged()
+    {
+        InvokeAsync(() =>
+        {
+            var all = ToastService.Toasts;
+
+            // Start timers for new toasts
+            foreach (var toast in all)
+            {
+                if (toast.Duration > 0 && !_timers.ContainsKey(toast.Id))
+                {
+                    var timer = new System.Timers.Timer(toast.Duration);
+                    var id = toast.Id;
+                    timer.Elapsed += async (_, _) =>
+                    {
+                        timer.Dispose();
+                        await InvokeAsync(() => ToastService.Dismiss(id));
+                    };
+                    timer.AutoReset = false;
+                    timer.Start();
+                    _timers[toast.Id] = timer;
+                }
+            }
+
+            // Clean up timers for dismissed toasts
+            var activeIds = all.Select(t => t.Id).ToHashSet();
+            var staleIds = _timers.Keys.Where(k => !activeIds.Contains(k)).ToList();
+            foreach (var id in staleIds)
+            {
+                if (_timers.Remove(id, out var t)) t.Dispose();
+            }
+
+            // Show only the last MaxVisible toasts
+            _toasts = all.Count > MaxVisible
+                ? all.Skip(all.Count - MaxVisible).ToList()
+                : all.ToList();
+
+            StateHasChanged();
+        });
+    }
+
+    private void HandleDismiss(string id)
+    {
+        ToastService.Dismiss(id);
+    }
+
+    private string ContainerClass => Tw.Merge(
+        "fixed z-[100] flex flex-col gap-3 p-4 pointer-events-none",
+        "w-full max-w-sm",
+        GetPositionClass()
+    );
+
+    private string GetPositionClass()
+    {
+        return Position switch
+        {
+            ToasterPosition.TopRight => "top-0 end-0",
+            ToasterPosition.TopLeft => "top-0 start-0",
+            ToasterPosition.TopCenter => "top-0 start-1/2 -translate-x-1/2",
+            ToasterPosition.BottomRight => "bottom-0 end-0",
+            ToasterPosition.BottomLeft => "bottom-0 start-0",
+            ToasterPosition.BottomCenter => "bottom-0 start-1/2 -translate-x-1/2",
+            _ => "bottom-0 end-0",
+        };
+    }
+
+    public void Dispose()
+    {
+        ToastService.OnChange -= HandleToastsChanged;
+        foreach (var timer in _timers.Values) timer.Dispose();
+        _timers.Clear();
+    }
+}

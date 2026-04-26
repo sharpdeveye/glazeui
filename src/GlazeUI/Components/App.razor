@@ -19,7 +19,22 @@
 
 <body class="min-h-screen bg-background text-foreground antialiased">
     <Routes @rendermode="InteractiveServer" />
+    <GzToaster @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        // GzSortable/GzKanban — handle-only drag enabler (event delegation)
+        document.addEventListener('pointerdown', e => {
+            const h = e.target.closest('[data-sort-handle]');
+            if (h) { const it = h.closest('[data-sort-item]'); if (it) it.draggable = true; }
+        });
+        document.addEventListener('dragend', e => {
+            const it = e.target.closest('[data-sort-item]');
+            if (it) it.draggable = false;
+        });
+        document.addEventListener('pointerup', () => {
+            document.querySelectorAll('[data-sort-item][draggable="true"]').forEach(el => el.draggable = false);
+        });
+    </script>
 </body>
 
 </html>

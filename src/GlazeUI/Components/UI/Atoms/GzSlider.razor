@@ -28,18 +28,19 @@
 
     @if (ShowTicks && Step > 0)
     {
-        <div class="relative mt-2" style="height: 16px; padding: 0 10px;">
-            @{
-                var ticks = GetTickValues();
-                var range = Max - Min;
-            }
+        var ticks = GetTickValues();
+        var interval = TickInterval > 0 ? TickInterval : Step;
+        <span class="mt-3 flex w-full items-center justify-between gap-1 px-2.5 text-xs font-medium text-muted-foreground"
+              aria-hidden="true">
             @foreach (var tick in ticks)
             {
-                var pct = range > 0 ? ((tick - Min) / range) * 100 : 0;
-                <span class="absolute text-[10px] tabular-nums text-muted-foreground/70 -translate-x-1/2 select-none"
-                      style="inset-inline-start: @FormatPct(pct)">@FormatTick(tick)</span>
+                var isMajor = IsMajorTick(tick, interval);
+                <span class="flex w-0 flex-col items-center justify-center gap-2">
+                    <span class="@Tw.Merge("w-px bg-muted-foreground/70", isMajor ? "h-1" : "h-0.5")"></span>
+                    <span class="@Tw.Merge(isMajor ? null : "opacity-0")">@FormatTick(tick)</span>
+                </span>
             }
-        </div>
+        </span>
     }
 </div>
 
@@ -68,7 +69,7 @@
     /// <summary>Whether to show tick marks.</summary>
     [Parameter] public bool ShowTicks { get; set; }
 
-    /// <summary>Interval between displayed tick labels. Defaults to Step.</summary>
+    /// <summary>Interval between major tick labels. Minor ticks show pips only. Defaults to Step.</summary>
     [Parameter] public double TickInterval { get; set; }
 
     /// <summary>Disabled state.</summary>
@@ -130,15 +131,19 @@
     private List<double> GetTickValues()
     {
         var values = new List<double>();
-        for (var tick = Min; tick <= Max; tick += TickInterval)
+        for (var tick = Min; tick <= Max; tick += Step)
             values.Add(tick);
-        if (values.Count == 0 || Math.Abs(values[values.Count - 1] - Max) > 0.001)
+        if (values.Count == 0 || Math.Abs(values[^1] - Max) > 0.001)
             values.Add(Max);
         return values;
     }
 
-    private static string FormatPct(double pct) =>
-        pct.ToString("F4", System.Globalization.CultureInfo.InvariantCulture) + "%";
+    private bool IsMajorTick(double tick, double interval)
+    {
+        if (interval <= 0) return true;
+        var offset = tick - Min;
+        return Math.Abs(offset % interval) < 0.001 || Math.Abs(offset % interval - interval) < 0.001;
+    }
 
     private string FormatTick(double tick) =>
         tick == Math.Floor(tick) ? tick.ToString("F0") : tick.ToString("G");
