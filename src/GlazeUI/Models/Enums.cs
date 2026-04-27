@@ -201,3 +201,71 @@ public enum SelectSize
     Default,
     Sm
 }
+
+// ─── Charts ─────────────────────────────────────────────
+
+/// <summary>Sparkline visual type.</summary>
+public enum SparklineType
+{
+    Line,
+    Area
+}
+
+/// <summary>Bar chart orientation.</summary>
+public enum ChartOrientation
+{
+    Vertical,
+    Horizontal
+}
+
+// ─── Drawer ─────────────────────────────────────────────
+
+/// <summary>Which edge the drawer slides in from.</summary>
+public enum DrawerSide
+{
+    Bottom,
+    Top,
+    Left,
+    Right
+}
+
+// ─── Spinner ────────────────────────────────────────────
+
+/// <summary>Size preset for GzSpinner.</summary>
+public enum SpinnerSize
+{
+    Sm,
+    Md,
+    Lg
+}
+
+// ─── Sidebar ────────────────────────────────────────────
+
+/// <summary>Visual variant for GzSidebar.</summary>
+public enum SidebarVariant
+{
+    /// <summary>Standard fixed sidebar.</summary>
+    Default,
+    /// <summary>Floating with gap and rounded corners.</summary>
+    Floating,
+    /// <summary>Inset within a padded container.</summary>
+    Inset
+}
+
+/// <summary>Collapsible behavior for GzSidebar.</summary>
+public enum SidebarCollapsible
+{
+    /// <summary>Slides entirely off-screen when collapsed.</summary>
+    Offcanvas,
+    /// <summary>Collapses to icon-only rail.</summary>
+    Icon,
+    /// <summary>Always visible, no collapse.</summary>
+    None
+}
+
+/// <summary>Which side the sidebar is placed on.</summary>
+public enum SidebarSide
+{
+    Left,
+    Right
+}

@@ -1,0 +1,127 @@
+@* GzSidebarProvider — Wraps sidebar + main content.
+   Provides SidebarState via CascadingValue.
+   Handles keyboard shortcut (Cmd+B) and mobile breakpoint. *@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div data-sidebar-provider
+     data-state="@_state.StateValue"
+     data-collapsible="@_state.CollapsibleValue"
+     data-side="@_state.SideValue"
+     style="--sidebar-width: @Width; --sidebar-width-icon: @IconWidth;"
+     class="@ComputedClass">
+    <CascadingValue Value="_state" IsFixed="false">
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Default expanded state.</summary>
+    [Parameter] public bool DefaultOpen { get; set; } = true;
+
+    /// <summary>Controlled open state.</summary>
+    [Parameter] public bool? Open { get; set; }
+
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    /// <summary>Collapsible behavior.</summary>
+    [Parameter] public SidebarCollapsible Collapsible { get; set; } = SidebarCollapsible.Offcanvas;
+
+    /// <summary>Which side.</summary>
+    [Parameter] public SidebarSide Side { get; set; } = SidebarSide.Left;
+
+    /// <summary>Visual variant.</summary>
+    [Parameter] public SidebarVariant Variant { get; set; } = SidebarVariant.Default;
+
+    /// <summary>Sidebar width CSS value.</summary>
+    [Parameter] public string Width { get; set; } = "16rem";
+
+    /// <summary>Icon-collapsed width CSS value.</summary>
+    [Parameter] public string IconWidth { get; set; } = "3rem";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private readonly SidebarState _state = new();
+    private DotNetObjectReference<GzSidebarProvider>? _dotnetRef;
+
+    protected override void OnInitialized()
+    {
+        _state.IsExpanded = Open ?? DefaultOpen;
+        _state.Collapsible = Collapsible;
+        _state.Side = Side;
+        _state.Variant = Variant;
+        _state.NotifyStateChanged = () =>
+        {
+            if (OpenChanged.HasDelegate)
+                OpenChanged.InvokeAsync(_state.IsExpanded);
+            InvokeAsync(StateHasChanged);
+        };
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (Open.HasValue && Open.Value != _state.IsExpanded)
+            _state.IsExpanded = Open.Value;
+
+        _state.Collapsible = Collapsible;
+        _state.Side = Side;
+        _state.Variant = Variant;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotnetRef = DotNetObjectReference.Create(this);
+            try
+            {
+                var isMobile = await JS.InvokeAsync<bool>("glazeSidebar.init", _dotnetRef);
+                _state.IsMobile = isMobile;
+                if (isMobile) _state.IsExpanded = false;
+                StateHasChanged();
+            }
+            catch { /* SSR safety */ }
+        }
+    }
+
+    [JSInvokable]
+    public void ToggleSidebar()
+    {
+        _state.Toggle();
+    }
+
+    [JSInvokable]
+    public void SetMobile(bool isMobile)
+    {
+        _state.IsMobile = isMobile;
+        if (isMobile)
+        {
+            _state.IsExpanded = false;
+            _state.MobileOpen = false;
+        }
+        else
+        {
+            _state.IsExpanded = Open ?? DefaultOpen;
+        }
+        InvokeAsync(StateHasChanged);
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "group/sidebar-wrapper flex min-h-svh w-full",
+        "has-[[data-variant=inset]]:bg-sidebar-background",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    public ValueTask DisposeAsync()
+    {
+        _dotnetRef?.Dispose();
+        return ValueTask.CompletedTask;
+    }
+}

@@ -1,0 +1,154 @@
+@* GzDonutChart — Pie / Donut ring chart with legend and center content.
+   Pure SVG arcs rendered from C#. CSS-only hover state. *@
+
+<div @attributes="GetFilteredAttributes()" class="@ComputedClass">
+    @if (Data is not null && Data.Count > 0)
+    {
+        var total = Data.Sum(d => Math.Abs(d.Value));
+        var slices = ComputeSlices(total);
+
+        <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:gap-6">
+            @* Ring *@
+            <div class="relative inline-flex shrink-0">
+                <svg width="@Size" height="@Size" viewBox="0 0 @Size @Size" role="img" aria-label="@AriaLabel">
+                    @foreach (var s in slices)
+                    {
+                        <path d="@s.Path" fill="@s.Color"
+                              class="transition-all duration-300 ease-out opacity-90 hover:opacity-100 cursor-pointer"
+                              stroke="var(--color-background)" stroke-width="2"
+                              data-chart-label="@s.Label" data-chart-value="@s.Value.ToString("N0") (@s.Pct.ToString("F1")%)" data-chart-color="@s.Color" />
+                    }
+                </svg>
+
+                @* Center content *@
+                @if (CenterContent is not null || ShowTotal)
+                {
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        @if (CenterContent is not null)
+                        {
+                            @CenterContent
+                        }
+                        else if (ShowTotal)
+                        {
+                            <span class="text-2xl font-bold text-foreground tabular-nums">@total.ToString("N0")</span>
+                            <span class="text-xs text-muted-foreground">Total</span>
+                        }
+                    </div>
+                }
+            </div>
+
+            @* Legend *@
+            @if (ShowLegend)
+            {
+                <div class="flex flex-col gap-2">
+                    @foreach (var s in slices)
+                    {
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="inline-block size-3 shrink-0 rounded-full" style="background-color: @s.Color;"></span>
+                            <span class="text-muted-foreground">@s.Label</span>
+                            <span class="ms-auto font-medium tabular-nums text-foreground">@s.Value.ToString("N0")</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<ChartDataPoint>? Data { get; set; }
+
+    /// <summary>0 = full pie, 0.6 = typical donut. Ratio of inner radius to outer.</summary>
+    [Parameter] public double InnerRadius { get; set; } = 0.6;
+
+    [Parameter] public int Size { get; set; } = 200;
+    [Parameter] public bool ShowLegend { get; set; } = true;
+    [Parameter] public bool ShowTotal { get; set; } = true;
+    [Parameter] public RenderFragment? CenterContent { get; set; }
+    [Parameter] public string AriaLabel { get; set; } = "Donut chart";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private static readonly System.Globalization.CultureInfo Inv = System.Globalization.CultureInfo.InvariantCulture;
+
+    private static readonly string[] ChartColors = {
+        "var(--color-chart-1)", "var(--color-chart-2)", "var(--color-chart-3)",
+        "var(--color-chart-4)", "var(--color-chart-5)"
+    };
+
+    private record struct Slice(string Path, string Color, string Label, double Value, double Pct);
+
+    private List<Slice> ComputeSlices(double total)
+    {
+        if (Data is null || total == 0) return new();
+
+        var cx = Size / 2.0;
+        var cy = Size / 2.0;
+        var outerR = (Size - 4) / 2.0;
+        var innerR = outerR * InnerRadius;
+        var slices = new List<Slice>();
+        var startAngle = -90.0;
+
+        for (var i = 0; i < Data.Count; i++)
+        {
+            var d = Data[i];
+            var pct = Math.Abs(d.Value) / total * 100;
+            var sweep = Math.Abs(d.Value) / total * 360;
+            var endAngle = startAngle + sweep;
+            var color = d.Color ?? ChartColors[i % ChartColors.Length];
+
+            var path = BuildArcPath(cx, cy, outerR, innerR, startAngle, endAngle);
+            slices.Add(new Slice(path, color, d.Label, d.Value, pct));
+            startAngle = endAngle;
+        }
+        return slices;
+    }
+
+    private string BuildArcPath(double cx, double cy, double outerR, double innerR,
+                                double startDeg, double endDeg)
+    {
+        var sweepDeg = endDeg - startDeg;
+        var largeArc = sweepDeg > 180 ? 1 : 0;
+
+        var outerStart = PolarToCart(cx, cy, outerR, startDeg);
+        var outerEnd = PolarToCart(cx, cy, outerR, endDeg);
+        var innerStart = PolarToCart(cx, cy, innerR, endDeg);
+        var innerEnd = PolarToCart(cx, cy, innerR, startDeg);
+
+        if (InnerRadius == 0)
+        {
+            return $"M{cx.ToString(Inv)},{cy.ToString(Inv)} " +
+                   $"L{outerStart.x.ToString(Inv)},{outerStart.y.ToString(Inv)} " +
+                   $"A{outerR.ToString(Inv)},{outerR.ToString(Inv)} 0 {largeArc} 1 {outerEnd.x.ToString(Inv)},{outerEnd.y.ToString(Inv)} Z";
+        }
+
+        return $"M{outerStart.x.ToString(Inv)},{outerStart.y.ToString(Inv)} " +
+               $"A{outerR.ToString(Inv)},{outerR.ToString(Inv)} 0 {largeArc} 1 {outerEnd.x.ToString(Inv)},{outerEnd.y.ToString(Inv)} " +
+               $"L{innerStart.x.ToString(Inv)},{innerStart.y.ToString(Inv)} " +
+               $"A{innerR.ToString(Inv)},{innerR.ToString(Inv)} 0 {largeArc} 0 {innerEnd.x.ToString(Inv)},{innerEnd.y.ToString(Inv)} Z";
+    }
+
+    private static (double x, double y) PolarToCart(double cx, double cy, double r, double deg)
+    {
+        var rad = deg * Math.PI / 180;
+        return (cx + r * Math.Cos(rad), cy + r * Math.Sin(rad));
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "w-full",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

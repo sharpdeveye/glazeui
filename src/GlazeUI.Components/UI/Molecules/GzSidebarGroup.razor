@@ -1,0 +1,21 @@
+@* GzSidebarGroup — Groups nav items with optional label. *@
+
+<div data-sidebar="group" class="@ComputedClass">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "relative flex w-full min-w-0 flex-col p-2",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+}

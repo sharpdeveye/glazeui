@@ -1,0 +1,174 @@
+@* GzCarousel — Horizontal content carousel with CSS scroll-snap.
+   Touch-native scrolling, IntersectionObserver dot sync, autoplay. *@
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div @attributes="GetFilteredAttributes()" class="@ComputedClass" role="region" aria-roledescription="carousel" aria-label="@AriaLabel">
+    @* Track — native scroll-snap handles touch + mouse drag *@
+    <div @ref="_track"
+         data-gz-carousel="@_id"
+         class="gz-carousel-track flex snap-x snap-mandatory overflow-x-auto scroll-smooth"
+         style="gap: @($"{Gap}px");">
+        @if (ChildContent is not null)
+        {
+            @ChildContent
+        }
+    </div>
+
+    @* Navigation arrows *@
+    @if (ShowArrows && SlideCount > 1)
+    {
+        <button type="button"
+                class="@ArrowClass absolute start-2 top-1/2 -translate-y-1/2"
+                aria-label="Previous slide"
+                disabled="@(_activeIndex <= 0)"
+                @onclick="PrevSlide">
+            <svg class="size-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+        </button>
+        <button type="button"
+                class="@ArrowClass absolute end-2 top-1/2 -translate-y-1/2"
+                aria-label="Next slide"
+                disabled="@(_activeIndex >= SlideCount - 1)"
+                @onclick="NextSlide">
+            <svg class="size-4 rtl:rotate-180" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+        </button>
+    }
+
+    @* Dot indicators *@
+    @if (ShowDots && SlideCount > 1)
+    {
+        <div class="mt-3 flex items-center justify-center gap-1.5" role="tablist">
+            @for (var i = 0; i < SlideCount; i++)
+            {
+                var idx = i;
+                <button type="button"
+                        role="tab"
+                        aria-selected="@(idx == _activeIndex)"
+                        aria-label="@($"Slide {idx + 1}")"
+                        class="@(idx == _activeIndex ? ActiveDotClass : DotClass)"
+                        @onclick="@(() => GoToSlide(idx))">
+                </button>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>Total number of slides.</summary>
+    [Parameter] public int SlideCount { get; set; } = 1;
+
+    [Parameter] public bool ShowArrows { get; set; } = true;
+    [Parameter] public bool ShowDots { get; set; } = true;
+    [Parameter] public int Gap { get; set; } = 16;
+    [Parameter] public string AriaLabel { get; set; } = "Image carousel";
+
+    /// <summary>Enable autoplay sliding.</summary>
+    [Parameter] public bool Autoplay { get; set; }
+
+    /// <summary>Autoplay interval in milliseconds.</summary>
+    [Parameter] public int AutoplayInterval { get; set; } = 4000;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private ElementReference _track;
+    private DotNetObjectReference<GzCarousel>? _dotnetRef;
+    private int _activeIndex;
+    private readonly string _id = Guid.NewGuid().ToString("N")[..8];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _dotnetRef = DotNetObjectReference.Create(this);
+            try
+            {
+                await JS.InvokeVoidAsync("glazeCarousel.init",
+                    _id, _track, _dotnetRef, Autoplay, AutoplayInterval);
+            }
+            catch { /* SSR safety */ }
+        }
+    }
+
+    /// <summary>Called from JS IntersectionObserver when visible slide changes.</summary>
+    [JSInvokable]
+    public void UpdateActiveIndex(int index)
+    {
+        if (index == _activeIndex) return;
+        _activeIndex = index;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task PrevSlide()
+    {
+        _activeIndex = Math.Max(0, _activeIndex - 1);
+        await ScrollToActive();
+    }
+
+    private async Task NextSlide()
+    {
+        _activeIndex = Math.Min(SlideCount - 1, _activeIndex + 1);
+        await ScrollToActive();
+    }
+
+    private async Task GoToSlide(int index)
+    {
+        _activeIndex = Math.Clamp(index, 0, SlideCount - 1);
+        await ScrollToActive();
+    }
+
+    private async Task ScrollToActive()
+    {
+        try { await JS.InvokeVoidAsync("glazeCarousel.scrollTo", _id, _activeIndex); }
+        catch { /* SSR safety */ }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try { await JS.InvokeVoidAsync("glazeCarousel.dispose", _id); }
+        catch { /* circuit may be gone */ }
+        _dotnetRef?.Dispose();
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "group relative w-full",
+        GetUserClass()
+    );
+
+    private string ArrowClass => Tw.Merge(
+        "z-10 inline-flex size-8 items-center justify-center rounded-full",
+        "border border-border/50 bg-background/90 text-foreground shadow-md backdrop-blur-sm",
+        "cursor-pointer transition-all duration-200 ease-out active:scale-[0.95]",
+        "hover:bg-accent hover:text-accent-foreground",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        "disabled:pointer-events-none disabled:opacity-30"
+    );
+
+    private string DotClass => Tw.Merge(
+        "size-2 rounded-full bg-muted-foreground/30 cursor-pointer",
+        "transition-all duration-200 ease-out hover:bg-muted-foreground/50"
+    );
+
+    private string ActiveDotClass => Tw.Merge(
+        "size-2 rounded-full bg-primary cursor-pointer",
+        "transition-all duration-200 ease-out"
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

@@ -1,0 +1,183 @@
+@* GzBarChart — Vertical or horizontal bar chart with grid, labels, hover tooltips.
+   Pure SVG rendered from C# data. CSS-only hover states. *@
+
+<div @attributes="GetFilteredAttributes()" class="@ComputedClass">
+    @if (Data is not null && Data.Count > 0)
+    {
+        var metrics = ComputeMetrics();
+
+        <svg width="100%" height="@Height" viewBox="0 0 @metrics.SvgW @metrics.SvgH"
+             preserveAspectRatio="xMidYMid meet" role="img" aria-label="@AriaLabel">
+
+            @* Grid lines *@
+            @if (ShowGrid)
+            {
+                @for (var g = 0; g <= 4; g++)
+                {
+                    if (Orientation == ChartOrientation.Vertical)
+                    {
+                        var gy = metrics.PlotY + metrics.PlotH * g / 4.0;
+                        <line x1="@metrics.PlotX.ToString(Inv)" y1="@gy.ToString(Inv)"
+                              x2="@(metrics.PlotX + metrics.PlotW).ToString(Inv)" y2="@gy.ToString(Inv)"
+                              stroke="var(--color-border)" stroke-opacity="0.4" stroke-dasharray="4 4" />
+                    }
+                    else
+                    {
+                        var gx = metrics.PlotX + metrics.PlotW * g / 4.0;
+                        <line x1="@gx.ToString(Inv)" y1="@metrics.PlotY.ToString(Inv)"
+                              x2="@gx.ToString(Inv)" y2="@(metrics.PlotY + metrics.PlotH).ToString(Inv)"
+                              stroke="var(--color-border)" stroke-opacity="0.4" stroke-dasharray="4 4" />
+                    }
+                }
+            }
+
+            @* Bars *@
+            @for (var i = 0; i < Data.Count; i++)
+            {
+                var d = Data[i];
+                var pct = metrics.Range == 0 ? 0.5 : (d.Value - metrics.MinVal) / metrics.Range;
+                var color = d.Color ?? GetSeriesColor(i);
+
+                @if (Orientation == ChartOrientation.Vertical)
+                {
+                    var barW = metrics.BarSize;
+                    var barH = Math.Max(2, pct * metrics.PlotH);
+                    var bx = metrics.PlotX + i * (barW + Gap) + Gap / 2.0;
+                    var by = metrics.PlotY + metrics.PlotH - barH;
+
+                    <rect x="@bx.ToString(Inv)" y="@by.ToString(Inv)"
+                          width="@barW.ToString(Inv)" height="@barH.ToString(Inv)"
+                          rx="@BarRadius" fill="@color"
+                          data-chart-label="@d.Label" data-chart-value="@d.Value.ToString("N1")" data-chart-color="@color"
+                          class="transition-all duration-300 ease-out opacity-90 hover:opacity-100 cursor-pointer" />
+
+                    @if (ShowValues)
+                    {
+                        @SvgText((bx + barW / 2).ToString(Inv), (by - 6).ToString(Inv), "middle", d.Value.ToString("G4"))
+                    }
+
+                    @if (ShowLabels)
+                    {
+                        @SvgText((bx + barW / 2).ToString(Inv), (metrics.PlotY + metrics.PlotH + 16).ToString(Inv), "middle", TruncateLabel(d.Label, 8))
+                    }
+                }
+                else
+                {
+                    var barH = metrics.BarSize;
+                    var barW = Math.Max(2, pct * metrics.PlotW);
+                    var bx = metrics.PlotX;
+                    var by = metrics.PlotY + i * (barH + Gap) + Gap / 2.0;
+
+                    <rect x="@bx.ToString(Inv)" y="@by.ToString(Inv)"
+                          width="@barW.ToString(Inv)" height="@barH.ToString(Inv)"
+                          rx="@BarRadius" fill="@color"
+                          data-chart-label="@d.Label" data-chart-value="@d.Value.ToString("N1")" data-chart-color="@color"
+                          class="transition-all duration-300 ease-out opacity-90 hover:opacity-100 cursor-pointer" />
+
+                    @if (ShowLabels)
+                    {
+                        @SvgText((bx - 8).ToString(Inv), (by + barH / 2 + 4).ToString(Inv), "end", TruncateLabel(d.Label, 10))
+                    }
+
+                    @if (ShowValues)
+                    {
+                        @SvgText((bx + barW + 8).ToString(Inv), (by + barH / 2 + 4).ToString(Inv), "start", d.Value.ToString("G4"))
+                    }
+                }
+            }
+        </svg>
+    }
+</div>
+
+@code {
+    [Parameter] public List<ChartDataPoint>? Data { get; set; }
+    [Parameter] public ChartOrientation Orientation { get; set; } = ChartOrientation.Vertical;
+    [Parameter] public bool ShowGrid { get; set; } = true;
+    [Parameter] public bool ShowLabels { get; set; } = true;
+    [Parameter] public bool ShowValues { get; set; } = false;
+    [Parameter] public int BarRadius { get; set; } = 4;
+    [Parameter] public int Height { get; set; } = 200;
+    [Parameter] public int Gap { get; set; } = 4;
+    [Parameter] public string AriaLabel { get; set; } = "Bar chart";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private static readonly System.Globalization.CultureInfo Inv = System.Globalization.CultureInfo.InvariantCulture;
+
+    private static readonly string[] ChartColors = {
+        "var(--color-chart-1)", "var(--color-chart-2)", "var(--color-chart-3)",
+        "var(--color-chart-4)", "var(--color-chart-5)"
+    };
+
+    private string GetSeriesColor(int i) => ChartColors[i % ChartColors.Length];
+
+    /// <summary>Renders an SVG text element as raw markup (Razor reserves the text tag).</summary>
+    private static MarkupString SvgText(string x, string y, string anchor, string content)
+    {
+        var escaped = System.Web.HttpUtility.HtmlEncode(content);
+        return new MarkupString(
+            $"<text x=\"{x}\" y=\"{y}\" text-anchor=\"{anchor}\" fill=\"var(--color-muted-foreground)\" " +
+            $"font-size=\"11\" font-family=\"var(--font-sans)\" class=\"select-none\">{escaped}</text>"
+        );
+    }
+
+    private record struct Metrics(double SvgW, double SvgH, double PlotX, double PlotY,
+                                  double PlotW, double PlotH, double BarSize,
+                                  double MinVal, double MaxVal, double Range);
+
+    private Metrics ComputeMetrics()
+    {
+        var count = Data?.Count ?? 0;
+        var minVal = Data?.Min(d => d.Value) ?? 0;
+        var maxVal = Data?.Max(d => d.Value) ?? 1;
+        if (minVal > 0) minVal = 0;
+        var range = maxVal - minVal;
+        if (range == 0) range = 1;
+
+        if (Orientation == ChartOrientation.Vertical)
+        {
+            var padLeft = 10.0;
+            var padBottom = ShowLabels ? 24.0 : 8.0;
+            var padTop = ShowValues ? 20.0 : 8.0;
+            var svgW = Math.Max(200, count * 40 + count * Gap + padLeft);
+            var plotW = svgW - padLeft - 10;
+            var plotH = Height - padTop - padBottom;
+            var barSize = (plotW - count * Gap) / Math.Max(1, count);
+            return new(svgW, Height, padLeft, padTop, plotW, plotH, barSize, minVal, maxVal, range);
+        }
+        else
+        {
+            var padLeft = ShowLabels ? 80.0 : 10.0;
+            var padRight = ShowValues ? 50.0 : 10.0;
+            var svgH = Math.Max(100, count * 32 + count * Gap);
+            var plotW = 400 - padLeft - padRight;
+            var plotH = svgH - 8;
+            var barSize = (plotH - count * Gap) / Math.Max(1, count);
+            return new(400, svgH, padLeft, 4, plotW, plotH, barSize, minVal, maxVal, range);
+        }
+    }
+
+    private static string TruncateLabel(string label, int max)
+    {
+        if (label.Length <= max) return label;
+        return label[..(max - 1)] + "…";
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "w-full overflow-x-auto",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

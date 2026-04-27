@@ -1,0 +1,31 @@
+@* GzKbd — Keyboard shortcut badge for displaying key combinations. *@
+
+<kbd @attributes="GetFilteredAttributes()" class="@ComputedClass">@ChildContent</kbd>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "inline-flex items-center justify-center gap-0.5",
+        "rounded-md border border-border/70 bg-muted px-1.5 py-0.5",
+        "font-mono text-[11px] font-medium text-muted-foreground",
+        "shadow-[0_2px_0_0] shadow-border/50",
+        "select-none",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

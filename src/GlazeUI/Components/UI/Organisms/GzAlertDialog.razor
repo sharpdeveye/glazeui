@@ -1,0 +1,96 @@
+@* GzAlertDialog — Confirm/Cancel modal with destructive variant.
+   Uses role="alertdialog" for screen readers. *@
+
+@if (Visible)
+{
+    @* Backdrop *@
+    <div class="fixed inset-0 z-50 bg-foreground/60 backdrop-blur-sm animate-in fade-in-0 duration-200"
+         @onclick="HandleCancel"></div>
+
+    @* Dialog *@
+    <div role="alertdialog"
+         aria-modal="true"
+         aria-labelledby="@_titleId"
+         aria-describedby="@_descId"
+         class="@DialogClass">
+        <div class="flex flex-col gap-2">
+            <h2 id="@_titleId" class="text-lg font-semibold text-foreground">@Title</h2>
+            @if (!string.IsNullOrWhiteSpace(Description))
+            {
+                <p id="@_descId" class="text-sm text-muted-foreground">@Description</p>
+            }
+        </div>
+
+        @if (ChildContent is not null)
+        {
+            <div class="mt-2">@ChildContent</div>
+        }
+
+        <div class="mt-6 flex items-center justify-end gap-3">
+            <button type="button" @onclick="HandleCancel"
+                    class="inline-flex h-9 items-center justify-center rounded-lg border border-border/50 bg-background px-4 text-sm font-medium text-foreground shadow-sm cursor-pointer transition-all duration-200 ease-out active:scale-[0.98] hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background">
+                @CancelLabel
+            </button>
+            <button type="button" @onclick="HandleConfirm"
+                    class="@ActionButtonClass">
+                @if (Loading)
+                {
+                    <GzSpinner Size="SpinnerSize.Sm" class="me-2" />
+                }
+                @ActionLabel
+            </button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
+    [Parameter] public string Title { get; set; } = "Are you sure?";
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string ActionLabel { get; set; } = "Continue";
+    [Parameter] public string CancelLabel { get; set; } = "Cancel";
+    [Parameter] public bool Destructive { get; set; }
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private readonly string _titleId = $"alert-title-{Guid.NewGuid().ToString("N")[..6]}";
+    private readonly string _descId = $"alert-desc-{Guid.NewGuid().ToString("N")[..6]}";
+
+    private string DialogClass => Tw.Merge(
+        "fixed inset-x-4 top-1/2 z-50 -translate-y-1/2 sm:inset-x-auto sm:start-1/2 sm:-translate-x-1/2",
+        "w-auto max-w-lg rounded-xl border border-border/50 bg-background p-6 shadow-xl",
+        "animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4 duration-200"
+    );
+
+    private string ActionButtonClass => Tw.Merge(
+        "inline-flex h-9 items-center justify-center rounded-lg px-4 text-sm font-medium shadow-sm",
+        "inset-shadow-sm inset-shadow-white/20 cursor-pointer",
+        "transition-all duration-200 ease-out active:scale-[0.98]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background",
+        "disabled:pointer-events-none disabled:opacity-50",
+        Destructive
+            ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            : "bg-primary text-primary-foreground hover:bg-primary/90"
+    );
+
+    private async Task HandleConfirm()
+    {
+        if (OnConfirm.HasDelegate) await OnConfirm.InvokeAsync();
+        await Close();
+    }
+
+    private async Task HandleCancel()
+    {
+        if (OnCancel.HasDelegate) await OnCancel.InvokeAsync();
+        await Close();
+    }
+
+    private async Task Close()
+    {
+        Visible = false;
+        if (VisibleChanged.HasDelegate) await VisibleChanged.InvokeAsync(false);
+    }
+}

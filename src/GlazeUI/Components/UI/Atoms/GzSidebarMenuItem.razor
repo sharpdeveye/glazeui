@@ -1,0 +1,21 @@
+@* GzSidebarMenuItem — Menu item wrapper (li). *@
+
+<li data-sidebar="menu-item" class="@ComputedClass">
+    @ChildContent
+</li>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "group/menu-item relative",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+}

@@ -1,0 +1,12 @@
+/* GzCarousel.razor.css — Hide scrollbar + touch scroll behavior */
+
+/* Hide scrollbar across all browsers while keeping scroll functional */
+::deep .gz-carousel-track {
+    -ms-overflow-style: none;   /* IE/Edge */
+    scrollbar-width: none;      /* Firefox */
+    -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
+}
+
+::deep .gz-carousel-track::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Opera */
+}

@@ -1,0 +1,23 @@
+@* GzSidebarContent — Scrollable middle region of the sidebar. *@
+
+<div data-sidebar="content"
+     class="@ComputedClass">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto",
+        "group-data-[collapsible=icon]:overflow-hidden",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+}

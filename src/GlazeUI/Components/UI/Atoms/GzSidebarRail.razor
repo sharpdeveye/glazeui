@@ -1,0 +1,25 @@
+@* GzSidebarRail — Thin clickable rail on the sidebar edge to toggle collapse. *@
+
+<button type="button"
+        data-sidebar="rail"
+        aria-label="Toggle sidebar"
+        tabindex="-1"
+        @onclick="HandleClick"
+        class="@ComputedClass">
+</button>
+
+@code {
+    [CascadingParameter] public SidebarState? SidebarState { get; set; }
+
+    private void HandleClick()
+    {
+        SidebarState?.Toggle();
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2",
+        "transition-all ease-linear after:absolute after:inset-y-0 after:start-1/2 after:w-[2px]",
+        "hover:after:bg-sidebar-border cursor-pointer sm:flex",
+        SidebarState?.Side == SidebarSide.Left ? "-end-4" : "start-0"
+    );
+}

@@ -1,0 +1,168 @@
+@page "/charts"
+
+<PageTitle>Charts — GlazeUI</PageTitle>
+<HeadContent>
+    <meta name="description" content="Pure SVG charts for Blazor — Area, Bar, Donut, Radial, and Sparkline. Zero JavaScript. Fully themed." />
+</HeadContent>
+
+<div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <div class="mb-10">
+        <h1 class="text-3xl font-bold tracking-tight text-foreground">Charts</h1>
+        <p class="mt-2 text-base text-muted-foreground">Pure SVG charts rendered from C# data. Zero JavaScript dependencies. Fully themed with light/dark support.</p>
+    </div>
+
+    <div class="space-y-16">
+
+        @* ─── Sparklines ────────────────────────────────── *@
+        <section id="sparkline" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Sparkline</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Tiny inline charts for cards, tables, and KPI dashboards.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    @* KPI Card 1 *@
+                    <div class="rounded-lg border border-border/50 bg-background p-4">
+                        <p class="text-xs font-medium text-muted-foreground">Revenue</p>
+                        <div class="mt-1 flex items-end justify-between">
+                            <span class="text-2xl font-bold tabular-nums text-foreground">$45.2k</span>
+                            <GzSparkline Data="_revenueData" Type="SparklineType.Area" Height="36" Width="100" />
+                        </div>
+                        <p class="mt-1.5 text-xs text-success">+12.5% from last month</p>
+                    </div>
+
+                    @* KPI Card 2 *@
+                    <div class="rounded-lg border border-border/50 bg-background p-4">
+                        <p class="text-xs font-medium text-muted-foreground">Users</p>
+                        <div class="mt-1 flex items-end justify-between">
+                            <span class="text-2xl font-bold tabular-nums text-foreground">2,340</span>
+                            <GzSparkline Data="_usersData" Color="var(--color-chart-2)" Height="36" Width="100" />
+                        </div>
+                        <p class="mt-1.5 text-xs text-success">+8.2% from last month</p>
+                    </div>
+
+                    @* KPI Card 3 *@
+                    <div class="rounded-lg border border-border/50 bg-background p-4">
+                        <p class="text-xs font-medium text-muted-foreground">Bounce Rate</p>
+                        <div class="mt-1 flex items-end justify-between">
+                            <span class="text-2xl font-bold tabular-nums text-foreground">24.5%</span>
+                            <GzSparkline Data="_bounceData" Color="var(--color-chart-5)" Type="SparklineType.Area" Height="36" Width="100" />
+                        </div>
+                        <p class="mt-1.5 text-xs text-destructive">+2.1% from last month</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @* ─── Area Chart ────────────────────────────────── *@
+        <section id="areachart" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Area Chart</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Multi-series line chart with gradient fill, grid, dots, and legend.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzAreaChart Series="_areaSeries" Labels="_areaLabels" Height="260" />
+            </div>
+        </section>
+
+        @* ─── Bar Chart ─────────────────────────────────── *@
+        <section id="barchart" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Bar Chart</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Vertical and horizontal bar charts with auto-coloring from theme tokens.</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs">
+                    <p class="mb-4 text-sm font-medium text-foreground">Vertical</p>
+                    <GzBarChart Data="_barData" ShowValues="true" Height="220" />
+                </div>
+
+                <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs">
+                    <p class="mb-4 text-sm font-medium text-foreground">Horizontal</p>
+                    <GzBarChart Data="_barData" Orientation="ChartOrientation.Horizontal" ShowValues="true" Height="220" />
+                </div>
+            </div>
+        </section>
+
+        @* ─── Donut Chart ───────────────────────────────── *@
+        <section id="donutchart" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Donut Chart</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Pie and donut ring charts with legend and center content.</p>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs">
+                    <p class="mb-4 text-sm font-medium text-foreground">Donut (with total)</p>
+                    <GzDonutChart Data="_donutData" />
+                </div>
+
+                <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs">
+                    <p class="mb-4 text-sm font-medium text-foreground">Full Pie</p>
+                    <GzDonutChart Data="_donutData" InnerRadius="0" ShowTotal="false" />
+                </div>
+            </div>
+        </section>
+
+        @* ─── Radial Chart ──────────────────────────────── *@
+        <section id="radialchart" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Radial Chart</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Circular gauges and progress rings with animated transitions.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap items-center justify-center gap-8">
+                    <GzRadialChart Value="72" Color="var(--color-chart-1)" />
+                    <GzRadialChart Value="45" Color="var(--color-chart-2)" Size="100" StrokeWidth="8" />
+                    <GzRadialChart Value="91" Color="var(--color-chart-4)" Size="140" StrokeWidth="14">
+                        <CenterContent>
+                            <span class="text-2xl font-bold text-foreground">91%</span>
+                            <span class="text-[10px] text-muted-foreground">Uptime</span>
+                        </CenterContent>
+                    </GzRadialChart>
+                    <GzRadialChart Value="28" Color="var(--color-destructive)" Size="100" StrokeWidth="8" />
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+@code {
+    // ─── Sparkline data ─────────────────────────────
+    private readonly List<double> _revenueData = new() { 12, 18, 14, 22, 19, 28, 34, 30, 38, 42, 45 };
+    private readonly List<double> _usersData = new() { 180, 220, 195, 240, 260, 230, 280, 310, 290, 340 };
+    private readonly List<double> _bounceData = new() { 22, 20, 24, 19, 21, 23, 25, 22, 26, 24 };
+
+    // ─── Area chart data ────────────────────────────
+    private readonly List<string> _areaLabels = new() { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+    private readonly List<ChartSeries> _areaSeries = new()
+    {
+        new() { Name = "Desktop", Color = "var(--color-chart-1)", Values = new() { 186, 305, 237, 73, 209, 214, 280, 320, 290, 340, 370, 400 } },
+        new() { Name = "Mobile", Color = "var(--color-chart-2)", Values = new() { 80, 200, 120, 190, 130, 140, 180, 220, 200, 260, 290, 310 } },
+    };
+
+    // ─── Bar chart data ─────────────────────────────
+    private readonly List<ChartDataPoint> _barData = new()
+    {
+        new() { Label = "Chrome", Value = 275 },
+        new() { Label = "Safari", Value = 200 },
+        new() { Label = "Firefox", Value = 187 },
+        new() { Label = "Edge", Value = 173 },
+        new() { Label = "Other", Value = 90 },
+    };
+
+    // ─── Donut chart data ───────────────────────────
+    private readonly List<ChartDataPoint> _donutData = new()
+    {
+        new() { Label = "Chrome", Value = 275 },
+        new() { Label = "Safari", Value = 200 },
+        new() { Label = "Firefox", Value = 187 },
+        new() { Label = "Edge", Value = 173 },
+        new() { Label = "Other", Value = 90 },
+    };
+}

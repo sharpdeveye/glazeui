@@ -1,0 +1,83 @@
+@* GzDrawer — Slides in from bottom, top, left, or right.
+   Like Sheet but semantically distinct for mobile-first drawer patterns. *@
+
+@if (Visible)
+{
+    @* Backdrop *@
+    <div class="fixed inset-0 z-50 bg-foreground/60 backdrop-blur-sm animate-in fade-in-0 duration-200"
+         @onclick="HandleClose"></div>
+
+    @* Drawer panel *@
+    <div role="dialog" aria-modal="true" class="@PanelClass">
+        @* Handle (bottom drawer only) *@
+        @if (Side == DrawerSide.Bottom)
+        {
+            <div class="mx-auto mt-3 mb-4 size-10 h-1.5 w-10 shrink-0 rounded-full bg-muted-foreground/30"></div>
+        }
+
+        @* Header *@
+        @if (!string.IsNullOrWhiteSpace(Title))
+        {
+            <div class="px-6 pb-2">
+                <h2 class="text-lg font-semibold text-foreground">@Title</h2>
+                @if (!string.IsNullOrWhiteSpace(Description))
+                {
+                    <p class="mt-1 text-sm text-muted-foreground">@Description</p>
+                }
+            </div>
+        }
+
+        @* Content *@
+        <div class="flex-1 overflow-y-auto px-6 py-4">
+            @ChildContent
+        </div>
+
+        @* Footer *@
+        @if (Footer is not null)
+        {
+            <div class="border-t border-border/50 px-6 py-4">
+                @Footer
+            </div>
+        }
+
+        @* Close button *@
+        <button type="button" @onclick="HandleClose"
+                class="absolute top-4 end-4 rounded-sm p-1 text-muted-foreground/60 cursor-pointer transition-colors duration-200 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Close">
+            <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter] public bool Visible { get; set; }
+    [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public DrawerSide Side { get; set; } = DrawerSide.Bottom;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Footer { get; set; }
+
+    private string PanelClass => Tw.Merge(
+        "fixed z-50 flex flex-col bg-background shadow-xl",
+        "animate-in duration-300",
+        GetSideClass()
+    );
+
+    private string GetSideClass() => Side switch
+    {
+        DrawerSide.Bottom => "inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl border-t border-border/50 slide-in-from-bottom",
+        DrawerSide.Top => "inset-x-0 top-0 max-h-[85vh] rounded-b-2xl border-b border-border/50 slide-in-from-top",
+        DrawerSide.Left => "inset-y-0 start-0 w-80 max-w-[85vw] border-e border-border/50 slide-in-from-left",
+        DrawerSide.Right => "inset-y-0 end-0 w-80 max-w-[85vw] border-s border-border/50 slide-in-from-right",
+        _ => "inset-x-0 bottom-0 max-h-[85vh] rounded-t-2xl border-t border-border/50 slide-in-from-bottom"
+    };
+
+    private async Task HandleClose()
+    {
+        Visible = false;
+        if (VisibleChanged.HasDelegate) await VisibleChanged.InvokeAsync(false);
+    }
+}

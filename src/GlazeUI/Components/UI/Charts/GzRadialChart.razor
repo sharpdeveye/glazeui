@@ -1,0 +1,97 @@
+@* GzRadialChart — Circular gauge / progress ring.
+   Pure SVG. Animates via CSS transition on stroke-dashoffset. *@
+
+<div @attributes="GetFilteredAttributes()" class="@ComputedClass">
+    <svg width="@Size" height="@Size" viewBox="0 0 @Size @Size" class="block -rotate-90">
+        @{
+            var center = Size / 2.0;
+            var radius = (Size - StrokeWidth) / 2.0;
+            var circumference = 2 * Math.PI * radius;
+            var pct = Math.Clamp(Value / Max, 0, 1);
+            var dashOffset = circumference * (1 - pct);
+        }
+
+        @* Track (background ring) *@
+        <circle cx="@center.ToString(Inv)"
+                cy="@center.ToString(Inv)"
+                r="@radius.ToString(Inv)"
+                fill="none"
+                stroke="var(--color-muted)"
+                stroke-width="@StrokeWidth"
+                opacity="0.3" />
+
+        @* Progress arc *@
+        <circle cx="@center.ToString(Inv)"
+                cy="@center.ToString(Inv)"
+                r="@radius.ToString(Inv)"
+                fill="none"
+                stroke="@ResolvedColor"
+                stroke-width="@StrokeWidth"
+                stroke-linecap="round"
+                stroke-dasharray="@circumference.ToString(Inv)"
+                stroke-dashoffset="@dashOffset.ToString(Inv)"
+                class="transition-all duration-700 ease-out" />
+    </svg>
+
+    @* Center content *@
+    <div class="absolute inset-0 flex items-center justify-center">
+        @if (CenterContent is not null)
+        {
+            @CenterContent
+        }
+        else if (ShowValue)
+        {
+            <span class="text-lg font-semibold text-foreground tabular-nums">
+                @((pct * 100).ToString("F0"))%
+            </span>
+        }
+    </div>
+</div>
+
+@code {
+    /// <summary>Current value (0 to Max).</summary>
+    [Parameter] public double Value { get; set; }
+
+    /// <summary>Maximum value.</summary>
+    [Parameter] public double Max { get; set; } = 100;
+
+    /// <summary>SVG size in pixels.</summary>
+    [Parameter] public int Size { get; set; } = 120;
+
+    /// <summary>Ring thickness.</summary>
+    [Parameter] public int StrokeWidth { get; set; } = 12;
+
+    /// <summary>Arc color. Falls back to chart-1 token.</summary>
+    [Parameter] public string? Color { get; set; }
+
+    /// <summary>Show percentage in center when no CenterContent.</summary>
+    [Parameter] public bool ShowValue { get; set; } = true;
+
+    /// <summary>Custom content for the center of the ring.</summary>
+    [Parameter] public RenderFragment? CenterContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private static readonly System.Globalization.CultureInfo Inv = System.Globalization.CultureInfo.InvariantCulture;
+    private double pct => Math.Clamp(Value / Max, 0, 1);
+
+    private string ResolvedColor => Color ?? "var(--color-chart-1)";
+
+    private string ComputedClass => Tw.Merge(
+        "relative inline-flex",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

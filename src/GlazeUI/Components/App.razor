@@ -35,6 +35,140 @@
             document.querySelectorAll('[data-sort-item][draggable="true"]').forEach(el => el.draggable = false);
         });
     </script>
+    <script>
+        // GzCarousel — IntersectionObserver scroll-sync + autoplay
+        window.glazeCarousel = {
+            _instances: {},
+            init: function(id, trackEl, dotnet, autoplay, interval) {
+                if (!trackEl) return;
+                const slides = Array.from(trackEl.children);
+                if (!slides.length) return;
+
+                const state = { activeIndex: 0, autoTimer: null, dotnet: dotnet, paused: false };
+                this._instances[id] = state;
+
+                // IntersectionObserver to track which slide is most visible
+                const observer = new IntersectionObserver((entries) => {
+                    let best = null;
+                    entries.forEach(e => {
+                        if (!best || e.intersectionRatio > best.ratio) {
+                            best = { index: slides.indexOf(e.target), ratio: e.intersectionRatio };
+                        }
+                    });
+                    if (best && best.ratio > 0.5 && best.index !== state.activeIndex) {
+                        state.activeIndex = best.index;
+                        dotnet.invokeMethodAsync('UpdateActiveIndex', best.index);
+                    }
+                }, { root: trackEl, threshold: [0, 0.5, 1] });
+
+                slides.forEach(s => observer.observe(s));
+                state.observer = observer;
+
+                // Pause on hover/touch
+                trackEl.addEventListener('pointerenter', () => { state.paused = true; });
+                trackEl.addEventListener('pointerleave', () => { state.paused = false; });
+
+                // Autoplay
+                if (autoplay && interval > 0) {
+                    state.autoTimer = setInterval(() => {
+                        if (state.paused) return;
+                        var next = (state.activeIndex + 1) % slides.length;
+                        slides[next]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    }, interval);
+                }
+            },
+            scrollTo: function(id, index) {
+                var trackEl = document.querySelector('[data-gz-carousel="' + id + '"]');
+                if (!trackEl) return;
+                var slide = trackEl.children[index];
+                if (slide) slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            },
+            dispose: function(id) {
+                var s = this._instances[id];
+                if (!s) return;
+                if (s.autoTimer) clearInterval(s.autoTimer);
+                if (s.observer) s.observer.disconnect();
+                delete this._instances[id];
+            }
+        };
+    </script>
+
+    <!-- Global chart tooltip (positioned by JS event delegation) -->
+    <div id="gz-chart-tip" style="
+        position:fixed;z-index:9999;pointer-events:none;opacity:0;
+        transition:opacity 150ms ease-out;
+        padding:6px 10px;border-radius:8px;
+        background:var(--color-popover);color:var(--color-popover-foreground);
+        border:1px solid var(--color-border);
+        box-shadow:0 4px 12px oklch(0 0 0/.12);
+        font-size:12px;font-family:var(--font-sans);
+        white-space:nowrap;max-width:220px;
+    "></div>
+    <script>
+        // Chart tooltip — event delegation on [data-chart-label]
+        (function(){
+            const tip = document.getElementById('gz-chart-tip');
+            if (!tip) return;
+            let raf = 0;
+
+            document.addEventListener('pointerenter', function(e) {
+                const el = e.target.closest('[data-chart-label]');
+                if (!el) return;
+                const label = el.getAttribute('data-chart-label');
+                const value = el.getAttribute('data-chart-value') || '';
+                const color = el.getAttribute('data-chart-color') || 'var(--color-primary)';
+
+                tip.innerHTML =
+                    '<div style="display:flex;align-items:center;gap:6px">' +
+                        '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + color + '"></span>' +
+                        '<span style="color:var(--color-muted-foreground)">' + label + '</span>' +
+                        (value ? '<span style="font-weight:600;margin-left:auto;padding-left:12px">' + value + '</span>' : '') +
+                    '</div>';
+                tip.style.opacity = '1';
+            }, true);
+
+            document.addEventListener('pointermove', function(e) {
+                if (tip.style.opacity !== '1') return;
+                cancelAnimationFrame(raf);
+                raf = requestAnimationFrame(function() {
+                    const x = Math.min(e.clientX + 12, window.innerWidth - tip.offsetWidth - 8);
+                    const y = Math.max(e.clientY - tip.offsetHeight - 8, 4);
+                    tip.style.left = x + 'px';
+                    tip.style.top = y + 'px';
+                });
+            }, true);
+
+            document.addEventListener('pointerleave', function(e) {
+                const el = e.target.closest('[data-chart-label]');
+                if (el) tip.style.opacity = '0';
+            }, true);
+        })();
+    </script>
+    <script>
+        // GzSidebar — keyboard shortcut + mobile detection
+        window.glazeSidebar = {
+            _dotnet: null,
+            _mql: null,
+            init: function(dotnet) {
+                this._dotnet = dotnet;
+                // Cmd+B / Ctrl+B toggle
+                document.addEventListener('keydown', function(e) {
+                    if ((e.metaKey || e.ctrlKey) && e.key === 'b') {
+                        e.preventDefault();
+                        dotnet.invokeMethodAsync('ToggleSidebar');
+                    }
+                });
+                // Mobile breakpoint
+                this._mql = window.matchMedia('(max-width: 767px)');
+                var handler = function(e) {
+                    dotnet.invokeMethodAsync('SetMobile', e.matches);
+                };
+                this._mql.addEventListener('change', handler);
+                // Return initial state
+                return this._mql.matches;
+            }
+        };
+    </script>
 </body>
 
 </html>

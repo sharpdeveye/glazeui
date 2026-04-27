@@ -1,0 +1,164 @@
+@* GzSparkline — Inline trend line / area chart for cards, tables, KPIs.
+   Pure SVG rendered from C# data. Zero JS. *@
+
+<svg @attributes="GetFilteredAttributes()"
+     class="@ComputedClass"
+     width="@Width"
+     height="@Height"
+     viewBox="0 0 @Width @Height"
+     preserveAspectRatio="none"
+     role="img"
+     aria-label="@AriaLabel">
+
+    @if (Data is not null && Data.Count > 1)
+    {
+        var points = ComputePoints();
+        var pathD = BuildPath(points);
+
+        @* Gradient definition for area fill *@
+        @if (Type == SparklineType.Area)
+        {
+            <defs>
+                <linearGradient id="@_gradientId" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="@ResolvedColor" stop-opacity="0.3" />
+                    <stop offset="100%" stop-color="@ResolvedColor" stop-opacity="0.02" />
+                </linearGradient>
+            </defs>
+
+            <path d="@BuildAreaPath(points)"
+                  fill="url(#@_gradientId)"
+                  class="transition-all duration-500 ease-out" />
+        }
+
+        @* Main line *@
+        <path d="@pathD"
+              fill="none"
+              stroke="@ResolvedColor"
+              stroke-width="@StrokeWidth.ToString(Inv)"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="@LineClass" />
+
+        @* End dot *@
+        @if (ShowDot && points.Count > 0)
+        {
+            var last = points[^1];
+            var lastVal = Data![^1];
+            <circle cx="@last.X.ToString(Inv)"
+                    cy="@last.Y.ToString(Inv)"
+                    r="@((StrokeWidth + 1).ToString(Inv))"
+                    fill="@ResolvedColor"
+                    data-chart-label="Latest" data-chart-value="@lastVal.ToString("N1")" data-chart-color="@ResolvedColor"
+                    class="transition-all duration-300 ease-out cursor-pointer" />
+        }
+    }
+</svg>
+
+@code {
+    /// <summary>Data points to plot.</summary>
+    [Parameter] public List<double>? Data { get; set; }
+
+    /// <summary>Line or Area (gradient fill below line).</summary>
+    [Parameter] public SparklineType Type { get; set; } = SparklineType.Line;
+
+    /// <summary>Stroke/fill color. Defaults to chart-1 token.</summary>
+    [Parameter] public string? Color { get; set; }
+
+    /// <summary>SVG width in pixels.</summary>
+    [Parameter] public int Width { get; set; } = 128;
+
+    /// <summary>SVG height in pixels.</summary>
+    [Parameter] public int Height { get; set; } = 32;
+
+    /// <summary>Line thickness.</summary>
+    [Parameter] public double StrokeWidth { get; set; } = 1.5;
+
+    /// <summary>Show dot on last data point.</summary>
+    [Parameter] public bool ShowDot { get; set; } = true;
+
+    /// <summary>Animate the line drawing on mount.</summary>
+    [Parameter] public bool Animated { get; set; } = true;
+
+    /// <summary>Accessible label for screen readers.</summary>
+    [Parameter] public string AriaLabel { get; set; } = "Sparkline chart";
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private static readonly System.Globalization.CultureInfo Inv = System.Globalization.CultureInfo.InvariantCulture;
+    private readonly string _gradientId = $"gz-spark-grad-{Guid.NewGuid().ToString("N")[..6]}";
+
+    private string ResolvedColor => Color ?? "var(--color-chart-1)";
+
+    private string ComputedClass => Tw.Merge(
+        "shrink-0",
+        GetUserClass()
+    );
+
+    private string LineClass => Animated
+        ? "gz-sparkline-animated transition-all duration-500 ease-out"
+        : "transition-all duration-500 ease-out";
+
+    // ─── Geometry ───────────────────────────────────
+    private record struct Point(double X, double Y);
+
+    private List<Point> ComputePoints()
+    {
+        if (Data is null || Data.Count == 0) return new();
+
+        var pad = StrokeWidth + 2;
+        var minVal = Data.Min();
+        var maxVal = Data.Max();
+        var range = maxVal - minVal;
+        if (range == 0) range = 1;
+
+        var usableW = Width - pad * 2;
+        var usableH = Height - pad * 2;
+        var step = usableW / Math.Max(1, Data.Count - 1);
+
+        var points = new List<Point>(Data.Count);
+        for (var i = 0; i < Data.Count; i++)
+        {
+            var x = pad + i * step;
+            var y = pad + usableH - (Data[i] - minVal) / range * usableH;
+            points.Add(new Point(x, y));
+        }
+        return points;
+    }
+
+    private string BuildPath(List<Point> pts)
+    {
+        if (pts.Count == 0) return "";
+        var sb = new System.Text.StringBuilder();
+        sb.Append($"M{pts[0].X.ToString(Inv)},{pts[0].Y.ToString(Inv)}");
+
+        for (var i = 1; i < pts.Count; i++)
+        {
+            var prev = pts[i - 1];
+            var curr = pts[i];
+            var cpx = (prev.X + curr.X) / 2;
+            sb.Append($" C{cpx.ToString(Inv)},{prev.Y.ToString(Inv)} {cpx.ToString(Inv)},{curr.Y.ToString(Inv)} {curr.X.ToString(Inv)},{curr.Y.ToString(Inv)}");
+        }
+        return sb.ToString();
+    }
+
+    private string BuildAreaPath(List<Point> pts)
+    {
+        if (pts.Count == 0) return "";
+        var line = BuildPath(pts);
+        var bottom = Height - StrokeWidth;
+        return $"{line} L{pts[^1].X.ToString(Inv)},{bottom.ToString(Inv)} L{pts[0].X.ToString(Inv)},{bottom.ToString(Inv)} Z";
+    }
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

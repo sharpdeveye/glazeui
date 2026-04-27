@@ -1,0 +1,22 @@
+@* GzSidebarHeader — Sticky top section with separator. *@
+
+<div data-sidebar="header" class="@ComputedClass">
+    @ChildContent
+</div>
+<div class="mx-3 h-px bg-sidebar-border"></div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "flex flex-col gap-2 p-3",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+}

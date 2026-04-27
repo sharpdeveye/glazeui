@@ -1,0 +1,201 @@
+@page "/sidebar"
+@layout EmptyLayout
+
+<PageTitle>Sidebar — GlazeUI</PageTitle>
+
+@{
+    var content = GetContent();
+    var spring = "transition-timing-function: cubic-bezier(0.25, 1.1, 0.4, 1);";
+}
+
+<div style="--color-sidebar-background: oklch(0.06 0 0); --color-sidebar-foreground: oklch(0.96 0 0); --color-sidebar-accent: oklch(0.16 0 0); --color-sidebar-accent-foreground: oklch(0.96 0 0); --color-sidebar-border: oklch(0.22 0 0); --color-sidebar-primary: oklch(0.96 0 0); --color-sidebar-primary-foreground: oklch(0.06 0 0); --color-sidebar-ring: oklch(0.55 0.18 250);"
+     class="min-h-screen flex items-center justify-center p-4 bg-[#0f0f0f]">
+    <div class="flex flex-row shadow-2xl rounded-2xl overflow-hidden">
+        @* ─── Icon Rail ─── *@
+        <aside class="bg-sidebar-background flex flex-col gap-2 items-center p-4 w-16 h-[800px] border-e border-sidebar-border">
+            @* Logo *@
+            <div class="mb-2 size-10 flex items-center justify-center">
+                <svg class="size-6 text-sidebar-foreground" fill="none" viewBox="0 0 24 16">
+                    <rect x="0" y="0" width="24" height="7" rx="1" fill="currentColor"/>
+                    <rect x="6" y="6" width="12" height="4" rx="1" fill="currentColor" opacity="0.5"/>
+                    <rect x="0" y="9" width="24" height="7" rx="1" fill="currentColor"/>
+                </svg>
+            </div>
+
+            @* Nav Icons *@
+            <div class="flex flex-col gap-1.5 w-full items-center">
+                @foreach (var nav in NavItems)
+                {
+                    <button type="button"
+                            class="@Tw.Merge("flex items-center justify-center rounded-lg size-10 transition-colors duration-300 cursor-pointer", _activeSection == nav.Id ? "bg-sidebar-accent text-sidebar-foreground" : "text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground/80")"
+                            title="@nav.Label"
+                            @onclick="() => SetSection(nav.Id)"
+                            style="@spring">
+                        @((MarkupString)Ico(nav.IconPath))
+                    </button>
+                }
+            </div>
+
+            <div class="flex-1"></div>
+
+            @* Settings + Avatar *@
+            <div class="flex flex-col gap-2 w-full items-center">
+                <button type="button"
+                        class="@Tw.Merge("flex items-center justify-center rounded-lg size-10 transition-colors duration-300 cursor-pointer", _activeSection == "settings" ? "bg-sidebar-accent text-sidebar-foreground" : "text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground/80")"
+                        title="Settings"
+                        @onclick='() => SetSection("settings")'
+                        style="@spring">
+                    @((MarkupString)Ico(IcoCog))
+                </button>
+                <div class="flex items-center justify-center rounded-full size-8 bg-sidebar-accent text-sidebar-foreground text-xs font-medium">
+                    @((MarkupString)Ico(IcoUser))
+                </div>
+            </div>
+        </aside>
+
+        @* ─── Detail Panel ─── *@
+        <aside class="@Tw.Merge("bg-sidebar-background flex flex-col gap-3 items-start h-[800px] transition-all duration-500 overflow-hidden", _detailCollapsed ? "w-16 px-1 py-4" : "w-80 p-4")"
+               style="@spring">
+
+            @* Brand badge *@
+            @if (!_detailCollapsed)
+            {
+                <div class="flex items-center gap-2 px-1 w-full shrink-0">
+                    <div class="size-8 flex items-center justify-center">
+                        <svg class="size-5 text-sidebar-foreground" fill="none" viewBox="0 0 24 16">
+                            <rect x="0" y="0" width="24" height="7" rx="1" fill="currentColor"/>
+                            <rect x="6" y="6" width="12" height="4" rx="1" fill="currentColor" opacity="0.5"/>
+                            <rect x="0" y="9" width="24" height="7" rx="1" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <span class="text-[16px] font-semibold text-sidebar-foreground">Interfaces</span>
+                </div>
+            }
+
+            @* Section title + collapse toggle *@
+            @if (_detailCollapsed)
+            {
+                <div class="w-full flex justify-center">
+                    <button type="button" @onclick="ToggleDetail"
+                            class="flex items-center justify-center rounded-lg size-10 cursor-pointer transition-colors duration-300 text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                            style="@spring" aria-label="Expand sidebar">
+                        @((MarkupString)Ico(IcoChevDown, "size-4 rotate-90"))
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="flex items-center justify-between w-full shrink-0">
+                    <span class="text-[18px] font-semibold text-sidebar-foreground px-2">@content.Title</span>
+                    <button type="button" @onclick="ToggleDetail"
+                            class="flex items-center justify-center rounded-lg size-10 cursor-pointer transition-colors duration-300 text-sidebar-foreground/40 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                            style="@spring" aria-label="Collapse sidebar">
+                        @((MarkupString)Ico(IcoChevDown, "size-4 -rotate-90"))
+                    </button>
+                </div>
+            }
+
+            @* Search *@
+            <div class="@Tw.Merge("relative shrink-0 transition-all duration-500", _detailCollapsed ? "w-full flex justify-center" : "w-full")" style="@spring">
+                <div class="@Tw.Merge("bg-sidebar-accent/60 relative rounded-lg flex items-center transition-all duration-500", _detailCollapsed ? "size-10 justify-center" : "w-full h-10")" style="@spring">
+                    <div class="@Tw.Merge("flex items-center justify-center shrink-0", _detailCollapsed ? "p-1" : "px-2")">
+                        <span class="size-6 flex items-center justify-center text-sidebar-foreground">
+                            @((MarkupString)Ico(IcoSearch))
+                        </span>
+                    </div>
+                    @if (!_detailCollapsed)
+                    {
+                        <input type="text" placeholder="Search..." @bind="_search" @bind:event="oninput"
+                               class="flex-1 bg-transparent border-none outline-none text-[14px] text-sidebar-foreground placeholder:text-sidebar-foreground/30 pr-2" />
+                    }
+                    <div class="absolute inset-0 rounded-lg pointer-events-none" style="border: 1px solid var(--color-sidebar-border);"></div>
+                </div>
+            </div>
+
+            @* Menu sections *@
+            <div class="@Tw.Merge("flex flex-col w-full overflow-y-auto flex-1 transition-all duration-500", _detailCollapsed ? "gap-2 items-center" : "gap-3 items-start")" style="@spring">
+                @foreach (var grp in content.Sections)
+                {
+                    <div class="flex flex-col w-full">
+                        @if (!_detailCollapsed)
+                        {
+                            <div class="flex items-center h-8 px-3">
+                                <span class="text-[13px] text-sidebar-foreground/40 font-medium">@grp.Title</span>
+                            </div>
+                        }
+
+                        @foreach (var item in grp.Items)
+                        {
+                            var itemKey = $"{grp.Title}-{item.Label}";
+                            var isExp = _expandedItems.Contains(itemKey);
+
+                            @* Menu item *@
+                            <div class="@Tw.Merge("relative shrink-0 transition-all duration-500", _detailCollapsed ? "w-full flex justify-center" : "w-full")" style="@spring">
+                                <div class="@Tw.Merge("rounded-lg cursor-pointer transition-all duration-200 flex items-center relative", item.IsActive ? "bg-sidebar-accent" : "hover:bg-sidebar-accent", _detailCollapsed ? "size-10 justify-center p-0" : "w-full h-10 px-3 py-2")"
+                                     style="@spring"
+                                     @onclick="() => { if (item.HasDropdown) ToggleExpand(itemKey); }"
+                                     title="@(_detailCollapsed ? item.Label : null)">
+
+                                    @if (item.IconPath is not null)
+                                    {
+                                        <span class="flex items-center justify-center shrink-0 text-sidebar-foreground">
+                                            @((MarkupString)Ico(item.IconPath))
+                                        </span>
+                                    }
+
+                                    @if (!_detailCollapsed)
+                                    {
+                                        <span class="flex-1 text-[14px] text-sidebar-foreground truncate ms-3">@item.Label</span>
+
+                                        @if (item.HasDropdown)
+                                        {
+                                            <span class="flex items-center justify-center shrink-0 ms-2 text-sidebar-foreground transition-transform duration-300"
+                                                  style="@spring transform: @(isExp ? "rotate(180deg)" : "rotate(0deg)");">
+                                                @((MarkupString)Ico(IcoChevDown))
+                                            </span>
+                                        }
+                                    }
+                                </div>
+                            </div>
+
+                            @* Sub items *@
+                            @if (isExp && item.Children is not null && !_detailCollapsed)
+                            {
+                                <div class="flex flex-col gap-0.5 mb-1">
+                                    @foreach (var child in item.Children)
+                                    {
+                                        <div class="w-full ps-9 pe-1">
+                                            <div class="h-9 w-full rounded-lg cursor-pointer transition-colors duration-200 hover:bg-sidebar-accent flex items-center px-3">
+                                                <span class="text-[13px] text-sidebar-foreground/60 truncate">@child.Label</span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+
+            @* User footer *@
+            @if (!_detailCollapsed)
+            {
+                <div class="w-full mt-auto pt-2 shrink-0" style="border-top: 1px solid var(--color-sidebar-border);">
+                    <div class="flex items-center gap-2.5 px-2 py-2">
+                        <div class="flex items-center justify-center rounded-full size-8 bg-sidebar-accent text-sidebar-foreground">
+                            @((MarkupString)Ico(IcoUser))
+                        </div>
+                        <span class="text-[14px] text-sidebar-foreground">Olivia Martin</span>
+                        <button type="button" class="ms-auto size-8 rounded-md flex items-center justify-center cursor-pointer hover:bg-sidebar-accent transition-colors duration-200" aria-label="More">
+                            <svg class="size-4" viewBox="0 0 16 16" fill="none">
+                                <circle cx="4" cy="8" r="1" fill="currentColor" class="text-sidebar-foreground"/>
+                                <circle cx="8" cy="8" r="1" fill="currentColor" class="text-sidebar-foreground"/>
+                                <circle cx="12" cy="8" r="1" fill="currentColor" class="text-sidebar-foreground"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            }
+        </aside>
+    </div>
+</div>

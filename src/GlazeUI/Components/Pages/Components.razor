@@ -48,6 +48,8 @@
                 <GzSidebarLink Href="/components#slider" Label="Slider" />
                 <GzSidebarLink Href="/components#toggle" Label="Toggle" />
                 <GzSidebarLink Href="/components#scrollarea" Label="ScrollArea" />
+                <GzSidebarLink Href="/components#spinner" Label="Spinner" />
+                <GzSidebarLink Href="/components#kbd" Label="Kbd" />
 
                 <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Molecules</p>
                 <GzSidebarLink Href="/components#card" Label="Card" />
@@ -79,6 +81,12 @@
                 <GzSidebarLink Href="/components#command" Label="Command" />
                 <GzSidebarLink Href="/components#sortable" Label="Sortable" />
                 <GzSidebarLink Href="/components#kanban" Label="Kanban" />
+                <GzSidebarLink Href="/components#alertdialog" Label="AlertDialog" />
+                <GzSidebarLink Href="/components#drawer" Label="Drawer" />
+                <GzSidebarLink Href="/components#carousel" Label="Carousel" />
+
+                <p class="mb-2 mt-4 text-xs font-medium uppercase tracking-widest text-muted-foreground">Charts</p>
+                <GzSidebarLink Href="/charts" Label="All Charts ↗" />
             </nav>
         </aside>
 
@@ -1163,6 +1171,121 @@
             </div>
         </div>
 
+        @* ─── Spinner ─────────────────────────────────── *@
+        <div id="spinner" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Spinner</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Animated loading spinner with 3 sizes.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex items-center gap-6">
+                    <GzSpinner Size="SpinnerSize.Sm" />
+                    <GzSpinner Size="SpinnerSize.Md" />
+                    <GzSpinner Size="SpinnerSize.Lg" />
+                </div>
+            </div>
+        </div>
+
+        @* ─── Kbd ─────────────────────────────────────── *@
+        <div id="kbd" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Kbd</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Keyboard shortcut badges with keycap styling.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                    Press <GzKbd>⌘</GzKbd> <GzKbd>K</GzKbd> to open the command palette,
+                    or <GzKbd>Ctrl</GzKbd> <GzKbd>Shift</GzKbd> <GzKbd>P</GzKbd> on Windows.
+                    Use <GzKbd>Esc</GzKbd> to close.
+                </div>
+            </div>
+        </div>
+
+        @* ─── AlertDialog ────────────────────────────── *@
+        <div id="alertdialog" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">AlertDialog</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Confirm/cancel modal with destructive variant and loading state.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap gap-3">
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _alertDefault = true)">Open AlertDialog</GzButton>
+                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Destructive" OnClick="@(() => _alertDestructive = true)">Destructive</GzButton>
+                </div>
+
+                <GzAlertDialog @bind-Visible="_alertDefault"
+                               Title="Save changes?"
+                               Description="Your unsaved changes will be lost if you don't save them."
+                               ActionLabel="Save" />
+
+                <GzAlertDialog @bind-Visible="_alertDestructive"
+                               Title="Delete account?"
+                               Description="This action cannot be undone. All your data will be permanently removed."
+                               ActionLabel="Delete"
+                               Destructive="true" />
+            </div>
+        </div>
+
+        @* ─── Drawer ─────────────────────────────────── *@
+        <div id="drawer" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Drawer</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Slide-in panel from bottom, top, left, or right.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <div class="flex flex-wrap gap-3">
+                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _drawerBottom = true)">Bottom</GzButton>
+                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Outline" OnClick="@(() => _drawerRight = true)">Right</GzButton>
+                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Outline" OnClick="@(() => _drawerLeft = true)">Left</GzButton>
+                </div>
+
+                <GzDrawer @bind-Visible="_drawerBottom" Title="Move Goal" Description="Set your daily activity goal.">
+                    <div class="flex flex-col items-center gap-4 py-6">
+                        <GzRadialChart Value="65" Color="var(--color-chart-1)" Size="140" StrokeWidth="14" />
+                        <GzSlider Value="65" class="w-full max-w-xs" />
+                    </div>
+                </GzDrawer>
+
+                <GzDrawer @bind-Visible="_drawerRight" Title="Settings" Side="DrawerSide.Right">
+                    <div class="space-y-4">
+                        <GzFormField Label="Name" Id="drawer-name"><GzInput id="drawer-name" placeholder="John Doe" /></GzFormField>
+                        <GzFormField Label="Email" Id="drawer-email"><GzInput id="drawer-email" placeholder="john@example.com" /></GzFormField>
+                    </div>
+                </GzDrawer>
+
+                <GzDrawer @bind-Visible="_drawerLeft" Title="Navigation" Side="DrawerSide.Left">
+                    <nav class="space-y-1">
+                        <a href="#" class="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent">Dashboard</a>
+                        <a href="#" class="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent">Settings</a>
+                        <a href="#" class="block rounded-md px-3 py-2 text-sm text-foreground hover:bg-accent">Profile</a>
+                    </nav>
+                </GzDrawer>
+            </div>
+        </div>
+
+        @* ─── Carousel ───────────────────────────────── *@
+        <div id="carousel" class="scroll-mt-24">
+            <div class="mb-6">
+                <h2 class="text-xl font-semibold tracking-tight text-foreground">Carousel</h2>
+                <p class="mt-1 text-sm text-muted-foreground">Horizontal slider with CSS scroll-snap, arrows, and dot indicators.</p>
+            </div>
+
+            <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
+                <GzCarousel SlideCount="5" Autoplay="true" AutoplayInterval="3000" class="max-w-md mx-auto">
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        <div class="flex h-48 w-full shrink-0 snap-center items-center justify-center rounded-xl border border-border/50 bg-muted text-2xl font-bold text-muted-foreground">
+                            @i
+                        </div>
+                    }
+                </GzCarousel>
+            </div>
+        </div>
+
         </div> @* end flex-1 *@
     </div>
 </section>
@@ -1178,6 +1301,15 @@
     private bool _dialogOpen;
     private bool _dialogSmOpen;
     private string? _selectedFramework;
+
+    // ─── AlertDialog ─────────────────────────────────
+    private bool _alertDefault;
+    private bool _alertDestructive;
+
+    // ─── Drawer ──────────────────────────────────────
+    private bool _drawerBottom;
+    private bool _drawerRight;
+    private bool _drawerLeft;
 
     private List<TabItem> _demoPanels = new();
 

@@ -1,0 +1,48 @@
+@* GzSpinner — Animated loading spinner. Pure CSS animation via animate-spin. *@
+
+<svg @attributes="GetFilteredAttributes()"
+     class="@ComputedClass"
+     viewBox="0 0 24 24"
+     fill="none"
+     role="status"
+     aria-label="Loading">
+    <circle cx="12" cy="12" r="10"
+            stroke="currentColor" stroke-width="3"
+            opacity="0.2" />
+    <path d="M12 2a10 10 0 0 1 10 10"
+          stroke="currentColor" stroke-width="3" stroke-linecap="round" />
+</svg>
+
+@code {
+    /// <summary>Spinner size.</summary>
+    [Parameter] public SpinnerSize Size { get; set; } = SpinnerSize.Md;
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string ComputedClass => Tw.Merge(
+        "animate-spin text-primary",
+        GetSizeClass(),
+        GetUserClass()
+    );
+
+    private string GetSizeClass() => Size switch
+    {
+        SpinnerSize.Sm => "size-4",
+        SpinnerSize.Md => "size-6",
+        SpinnerSize.Lg => "size-8",
+        _ => "size-6"
+    };
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+
+    private Dictionary<string, object> GetFilteredAttributes()
+    {
+        if (AdditionalAttributes is null) return new();
+        return AdditionalAttributes
+            .Where(kvp => !kvp.Key.Equals("class", StringComparison.OrdinalIgnoreCase))
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+    }
+}

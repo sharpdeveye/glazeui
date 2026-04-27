@@ -1,0 +1,37 @@
+@* GzSidebarTrigger — Hamburger toggle button for the sidebar. *@
+
+<button type="button"
+        data-sidebar="trigger"
+        class="@ComputedClass"
+        aria-label="Toggle sidebar"
+        @onclick="HandleClick">
+    <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+    </svg>
+    <span class="sr-only">Toggle Sidebar</span>
+</button>
+
+@code {
+    [CascadingParameter] public SidebarState? SidebarState { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private void HandleClick()
+    {
+        SidebarState?.Toggle();
+    }
+
+    private string ComputedClass => Tw.Merge(
+        "inline-flex size-8 items-center justify-center rounded-md",
+        "text-sidebar-foreground cursor-pointer",
+        "transition-colors duration-200 ease-out",
+        "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
+        GetUserClass()
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+}

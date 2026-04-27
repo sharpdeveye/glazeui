@@ -27,6 +27,8 @@ class Program
         ["slider"]     = ("Atoms",     "GzSlider.razor"),
         ["toggle"]     = ("Atoms",     "GzToggle.razor"),
         ["scrollarea"] = ("Atoms",     "GzScrollArea.razor"),
+        ["spinner"]    = ("Atoms",     "GzSpinner.razor"),
+        ["kbd"]        = ("Atoms",     "GzKbd.razor"),
         // Molecules
         ["card"]          = ("Molecules", "GzCard.razor"),
         ["alert"]         = ("Molecules", "GzAlert.razor"),
@@ -59,6 +61,30 @@ class Program
         ["sortable"]         = ("Organisms", "GzSortable.razor"),
         ["sortablehandle"]   = ("Organisms", "GzSortableHandle.razor"),
         ["kanban"]           = ("Organisms", "GzKanban.razor"),
+        ["alertdialog"]      = ("Organisms", "GzAlertDialog.razor"),
+        ["drawer"]           = ("Organisms", "GzDrawer.razor"),
+        ["carousel"]         = ("Organisms", "GzCarousel.razor"),
+        ["sidebarprovider"]  = ("Organisms", "GzSidebarProvider.razor"),
+        ["sidebar"]          = ("Organisms", "GzSidebar.razor"),
+        ["sidebarinset"]     = ("Organisms", "GzSidebarInset.razor"),
+        ["sidebarheader"]    = ("Atoms",     "GzSidebarHeader.razor"),
+        ["sidebarfooter"]    = ("Atoms",     "GzSidebarFooter.razor"),
+        ["sidebarcontent"]   = ("Atoms",     "GzSidebarContent.razor"),
+        ["sidebargroup"]     = ("Molecules", "GzSidebarGroup.razor"),
+        ["sidebargrouplabel"]= ("Atoms",     "GzSidebarGroupLabel.razor"),
+        ["sidebarmenu"]      = ("Atoms",     "GzSidebarMenu.razor"),
+        ["sidebarmenuitem"]  = ("Atoms",     "GzSidebarMenuItem.razor"),
+        ["sidebarmenubutton"]= ("Molecules", "GzSidebarMenuButton.razor"),
+        ["sidebarmenubadge"] = ("Atoms",     "GzSidebarMenuBadge.razor"),
+        ["sidebarmenusub"]   = ("Molecules", "GzSidebarMenuSub.razor"),
+        ["sidebarrail"]      = ("Atoms",     "GzSidebarRail.razor"),
+        ["sidebartrigger"]   = ("Atoms",     "GzSidebarTrigger.razor"),
+        // Charts
+        ["sparkline"]        = ("Charts",    "GzSparkline.razor"),
+        ["barchart"]         = ("Charts",    "GzBarChart.razor"),
+        ["areachart"]        = ("Charts",    "GzAreaChart.razor"),
+        ["donutchart"]       = ("Charts",    "GzDonutChart.razor"),
+        ["radialchart"]      = ("Charts",    "GzRadialChart.razor"),
     };
 
     // Shared dependencies
@@ -75,6 +101,9 @@ class Program
         ["commanditem"]          = ("Models",    "CommandItem.cs"),
         ["sortableitemcontext"]   = ("Models",    "SortableItemContext.cs"),
         ["kanbanitemcontext"]     = ("Models",    "KanbanItemContext.cs"),
+        ["chartmodels"]           = ("Models",    "ChartModels.cs"),
+        ["toastitem"]             = ("Models",    "ToastItem.cs"),
+        ["sidebarstate"]          = ("Models",    "SidebarState.cs"),
     };
 
     // Component → required shared file keys
@@ -91,6 +120,12 @@ class Program
         ["dropdownmenu"]  = new[] { "dropdownmenuitem" },
         ["sortable"]      = new[] { "sortableitemcontext", "sortablehandle" },
         ["kanban"]        = new[] { "kanbanitemcontext", "sortablehandle" },
+        ["alertdialog"]   = new[] { "spinner" },
+        ["sparkline"]     = new[] { "chartmodels" },
+        ["barchart"]      = new[] { "chartmodels" },
+        ["areachart"]     = new[] { "chartmodels" },
+        ["donutchart"]    = new[] { "chartmodels" },
+        ["sidebar"]       = new[] { "sidebarprovider", "sidebarstate", "sidebarinset", "sidebarheader", "sidebarfooter", "sidebarcontent", "sidebargroup", "sidebargrouplabel", "sidebarmenu", "sidebarmenuitem", "sidebarmenubutton", "sidebarmenubadge", "sidebarmenusub", "sidebarrail", "sidebartrigger" },
     };
 
     // Bundled theme presets

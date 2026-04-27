@@ -1,0 +1,94 @@
+@* GzSidebarMenuButton — Interactive menu item button/link.
+   Premium hover, active state, icon-mode collapse with tooltip. *@
+
+@if (!string.IsNullOrEmpty(Href))
+{
+    <a href="@Href"
+       data-sidebar="menu-button"
+       data-active="@IsActive.ToString().ToLowerInvariant()"
+       class="@ComputedClass"
+       title="@(IsIconMode ? TooltipText : null)">
+        @if (Icon is not null)
+        {
+            <span class="shrink-0 [&>svg]:size-4">@Icon</span>
+        }
+        <span class="@TextClass">@ChildContent</span>
+    </a>
+}
+else
+{
+    <button type="button"
+            data-sidebar="menu-button"
+            data-active="@IsActive.ToString().ToLowerInvariant()"
+            class="@ComputedClass"
+            title="@(IsIconMode ? TooltipText : null)"
+            @onclick="OnClick">
+        @if (Icon is not null)
+        {
+            <span class="shrink-0 [&>svg]:size-4">@Icon</span>
+        }
+        <span class="@TextClass">@ChildContent</span>
+    </button>
+}
+
+@code {
+    [CascadingParameter] public SidebarState? SidebarState { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Icon { get; set; }
+
+    /// <summary>Render as link instead of button.</summary>
+    [Parameter] public string? Href { get; set; }
+
+    /// <summary>Mark as active.</summary>
+    [Parameter] public bool IsActive { get; set; }
+
+    /// <summary>Tooltip text shown in icon-collapsed mode.</summary>
+    [Parameter] public string? TooltipText { get; set; }
+
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private bool IsIconMode => SidebarState is not null
+        && SidebarState.Collapsible == SidebarCollapsible.Icon
+        && !SidebarState.IsExpanded;
+
+    private string ComputedClass => Tw.Merge(
+        // Base layout
+        "peer/menu-button flex w-full items-center gap-2.5 overflow-hidden rounded-md",
+        "px-2.5 py-2 text-[13px] leading-tight",
+        // Tokens
+        "text-sidebar-foreground/80 outline-none ring-sidebar-ring",
+        // Transitions
+        "transition-all duration-150 ease-out",
+        "cursor-pointer select-none",
+        // Hover — subtle lift
+        "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        // Active press
+        "active:scale-[0.98]",
+        // Focus
+        "focus-visible:ring-2 focus-visible:ring-offset-1 ring-offset-sidebar-background",
+        // Disabled
+        "disabled:pointer-events-none disabled:opacity-50",
+        // Active state — premium
+        IsActive
+            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium shadow-[inset_0_1px_0_0_rgba(255,255,255,0.04)]"
+            : "font-normal",
+        // Icon mode
+        IsIconMode
+            ? "size-9 justify-center px-0 py-0 [&>span:last-child]:hidden"
+            : "",
+        GetUserClass()
+    );
+
+    private string TextClass => Tw.Merge(
+        "truncate",
+        IsIconMode ? "sr-only" : ""
+    );
+
+    private string? GetUserClass() =>
+        AdditionalAttributes?.TryGetValue("class", out var cls) == true
+            ? cls?.ToString() : null;
+}

@@ -1,0 +1,134 @@
+@* GzSidebar — Main collapsible sidebar panel.
+   Fixed positioning, transitions width, mobile sheet overlay. *@
+
+@if (_state is not null)
+{
+    @* Desktop sidebar *@
+    @if (!_state.IsMobile)
+    {
+        @* Spacer div that reserves layout space *@
+        <div data-sidebar="spacer"
+             data-side="@_state.SideValue"
+             class="@SpacerClass"></div>
+
+        @* Fixed sidebar panel *@
+        <aside data-sidebar="sidebar"
+               data-variant="@VariantValue"
+               data-state="@_state.StateValue"
+               data-collapsible="@_state.CollapsibleValue"
+               data-side="@_state.SideValue"
+               class="@SidebarClass">
+            <div class="@InnerClass">
+                @ChildContent
+            </div>
+        </aside>
+    }
+    else
+    {
+        @* Mobile: Sheet overlay *@
+        <GzSheet @bind-Visible="_state.MobileOpen"
+                 Side="@(_state.Side == SidebarSide.Left ? SheetSide.Start : SheetSide.End)"
+                 class="w-[--sidebar-width] bg-sidebar-background p-0 text-sidebar-foreground [&>button]:hidden">
+            <div class="flex h-full w-full flex-col">
+                @ChildContent
+            </div>
+        </GzSheet>
+    }
+}
+
+@code {
+    [CascadingParameter] public SidebarState? _state { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string VariantValue => _state?.Variant switch
+    {
+        SidebarVariant.Floating => "floating",
+        SidebarVariant.Inset => "inset",
+        _ => "sidebar"
+    };
+
+    private string SpacerClass
+    {
+        get
+        {
+            var isNone = _state?.Collapsible == SidebarCollapsible.None;
+            var isCollapsed = _state is not null && !_state.IsExpanded && !isNone;
+            var isIcon = _state?.Collapsible == SidebarCollapsible.Icon;
+            var isOffcanvas = _state?.Collapsible == SidebarCollapsible.Offcanvas;
+
+            // Determine width
+            string widthClass;
+            if (isNone)
+                widthClass = "w-[--sidebar-width]";
+            else if (isCollapsed && isIcon)
+                widthClass = "w-[--sidebar-width-icon]";
+            else if (isCollapsed && isOffcanvas)
+                widthClass = "w-0";
+            else
+                widthClass = "w-[--sidebar-width]";
+
+            return Tw.Merge(
+                "relative hidden shrink-0 bg-transparent md:block",
+                "transition-[width] duration-200 ease-linear",
+                widthClass
+            );
+        }
+    }
+
+    private string SidebarClass
+    {
+        get
+        {
+            var isNone = _state?.Collapsible == SidebarCollapsible.None;
+            var isCollapsed = _state is not null && !_state.IsExpanded && !isNone;
+            var isIcon = _state?.Collapsible == SidebarCollapsible.Icon;
+            var isOffcanvas = _state?.Collapsible == SidebarCollapsible.Offcanvas;
+            var isLeft = _state?.Side == SidebarSide.Left;
+
+            // Determine width/position
+            string widthClass;
+            if (isNone)
+                widthClass = "w-[--sidebar-width]";
+            else if (isCollapsed && isIcon)
+                widthClass = "w-[--sidebar-width-icon]";
+            else if (isCollapsed && isOffcanvas)
+                widthClass = isLeft
+                    ? "w-[--sidebar-width] -translate-x-full"
+                    : "w-[--sidebar-width] translate-x-full";
+            else
+                widthClass = "w-[--sidebar-width]";
+
+            return Tw.Merge(
+                "fixed inset-y-0 z-10 hidden h-svh md:flex",
+                "transition-[width,transform] duration-200 ease-linear",
+                isLeft ? "left-0" : "right-0",
+                widthClass
+            );
+        }
+    }
+
+    private string InnerClass
+    {
+        get
+        {
+            var isFloating = _state?.Variant == SidebarVariant.Floating;
+            var isInset = _state?.Variant == SidebarVariant.Inset;
+            var isRight = _state?.Side == SidebarSide.Right;
+
+            return Tw.Merge(
+                "flex h-full w-full flex-col",
+                "bg-sidebar-background text-sidebar-foreground",
+                isFloating
+                    ? "m-2 rounded-lg border border-sidebar-border shadow-lg overflow-hidden h-[calc(100%-1rem)]"
+                    : "",
+                isInset ? "bg-transparent" : "",
+                !isFloating && !isInset && !isRight ? "border-e border-sidebar-border" : "",
+                !isFloating && !isInset && isRight ? "border-s border-sidebar-border" : ""
+            );
+        }
+    }
+}
