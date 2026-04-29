@@ -11,7 +11,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>glaze</ToolCommandName>
     <PackageId>GlazeUI.CLI</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.2</Version>
     <Authors>SharpDevEye</Authors>
     <Company>GlazeUI Contributors</Company>
     <Description>CLI tool for GlazeUI — add premium Blazor components to your project.</Description>
@@ -28,6 +28,8 @@
     <EmbeddedResource Include="../GlazeUI/Components/UI/Molecules/*.razor.css" LinkBase="Templates/Molecules" />
     <EmbeddedResource Include="../GlazeUI/Components/UI/Organisms/*.razor" LinkBase="Templates/Organisms" />
     <EmbeddedResource Include="../GlazeUI/Components/UI/Organisms/*.razor.css" LinkBase="Templates/Organisms" />
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Charts/*.razor" LinkBase="Templates/Charts" />
+    <EmbeddedResource Include="../GlazeUI/Components/UI/Charts/*.razor.css" LinkBase="Templates/Charts" />
     <EmbeddedResource Include="../GlazeUI/Utilities/Tw.cs" LinkBase="Templates/Utilities" />
     <EmbeddedResource Include="../GlazeUI/Models/Enums.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Models/SelectOption.cs" LinkBase="Templates/Models" />
@@ -37,6 +39,13 @@
     <EmbeddedResource Include="../GlazeUI/Models/StepItem.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Models/ToggleGroupItem.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Models/CommandItem.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/SortableItemContext.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/KanbanItemContext.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/ChartModels.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/ToastItem.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/SidebarState.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Models/SidebarContentModels.cs" LinkBase="Templates/Models" />
+    <EmbeddedResource Include="../GlazeUI/Styles/input.css" LogicalName="GlazeUI.CLI.Templates.Styles.glazeui.css" />
   </ItemGroup>
 
 </Project>
