@@ -17,7 +17,7 @@
             44 components across 3 tiers — atoms, molecules, and organisms. Every component ships with semantic tokens, full state coverage, keyboard accessibility, and TailwindMerge class composition.
         </p>
         <div class="mt-4 flex items-center gap-3">
-            <GzButton Variant="@(_isRtl ? ButtonVariant.Default : ButtonVariant.Outline)" Size="ButtonSize.Sm" OnClick="@(() => _isRtl = !_isRtl)">
+            <GzButton Variant="@(_isRtl ? ComponentVariant.Default : ComponentVariant.Outline)" Size="ComponentSize.Sm" OnClick="@(() => _isRtl = !_isRtl)">
                 @(_isRtl ? "RTL Mode" : "LTR Mode")
             </GzButton>
             <span class="text-xs text-muted-foreground">Toggle to preview all components in RTL layout</span>
@@ -106,11 +106,11 @@
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Variants</p>
                     <div class="flex flex-wrap items-center gap-3">
                         <GzButton>@L("Default", "افتراضي")</GzButton>
-                        <GzButton Variant="ButtonVariant.Secondary">@L("Secondary", "ثانوي")</GzButton>
-                        <GzButton Variant="ButtonVariant.Destructive">@L("Destructive", "تدميري")</GzButton>
-                        <GzButton Variant="ButtonVariant.Outline">@L("Outline", "محيط")</GzButton>
-                        <GzButton Variant="ButtonVariant.Ghost">@L("Ghost", "شبحي")</GzButton>
-                        <GzButton Variant="ButtonVariant.Link">@L("Link", "رابط")</GzButton>
+                        <GzButton Variant="ComponentVariant.Secondary">@L("Secondary", "ثانوي")</GzButton>
+                        <GzButton Variant="ComponentVariant.Destructive">@L("Destructive", "تدميري")</GzButton>
+                        <GzButton Variant="ComponentVariant.Outline">@L("Outline", "محيط")</GzButton>
+                        <GzButton Variant="ComponentVariant.Ghost">@L("Ghost", "شبحي")</GzButton>
+                        <GzButton Variant="ComponentVariant.Link">@L("Link", "رابط")</GzButton>
                     </div>
                 </div>
 
@@ -120,10 +120,10 @@
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Sizes</p>
                     <div class="flex flex-wrap items-center gap-3">
-                        <GzButton Size="ButtonSize.Sm">@L("Small", "صغير")</GzButton>
-                        <GzButton Size="ButtonSize.Md">@L("Medium", "متوسط")</GzButton>
-                        <GzButton Size="ButtonSize.Lg">@L("Large", "كبير")</GzButton>
-                        <GzButton Size="ButtonSize.Icon" aria-label="Settings">
+                        <GzButton Size="ComponentSize.Sm">@L("Small", "صغير")</GzButton>
+                        <GzButton Size="ComponentSize.Md">@L("Medium", "متوسط")</GzButton>
+                        <GzButton Size="ComponentSize.Lg">@L("Large", "كبير")</GzButton>
+                        <GzButton Size="ComponentSize.Icon" aria-label="Settings">
                             <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -139,10 +139,10 @@
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">States</p>
                     <div class="flex flex-wrap items-center gap-3">
                         <GzButton Disabled="true">@L("Disabled", "معطل")</GzButton>
-                        <GzButton Variant="ButtonVariant.Outline" Disabled="true">@L("Disabled Outline", "محيط معطل")</GzButton>
+                        <GzButton Variant="ComponentVariant.Outline" Disabled="true">@L("Disabled Outline", "محيط معطل")</GzButton>
                         <GzButton Loading="true">@L("Loading...", "جاري التحميل...")</GzButton>
-                        <GzButton Variant="ButtonVariant.Secondary" Loading="true">@L("Saving", "حفظ")</GzButton>
-                        <GzButton Variant="ButtonVariant.Destructive" Loading="true">@L("Deleting", "حذف")</GzButton>
+                        <GzButton Variant="ComponentVariant.Secondary" Loading="true">@L("Saving", "حفظ")</GzButton>
+                        <GzButton Variant="ComponentVariant.Destructive" Loading="true">@L("Deleting", "حذف")</GzButton>
                     </div>
                 </div>
 
@@ -160,7 +160,7 @@
                             </Icon>
                             <ChildContent>New Project</ChildContent>
                         </GzButton>
-                        <GzButton Variant="ButtonVariant.Outline">
+                        <GzButton Variant="ComponentVariant.Outline">
                             <Icon>
                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -183,9 +183,9 @@
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex flex-wrap items-center gap-3">
                     <GzBadge>Default</GzBadge>
-                    <GzBadge Variant="BadgeVariant.Secondary">Secondary</GzBadge>
-                    <GzBadge Variant="BadgeVariant.Destructive">Destructive</GzBadge>
-                    <GzBadge Variant="BadgeVariant.Outline">Outline</GzBadge>
+                    <GzBadge Variant="ComponentVariant.Secondary">Secondary</GzBadge>
+                    <GzBadge Variant="ComponentVariant.Destructive">Destructive</GzBadge>
+                    <GzBadge Variant="ComponentVariant.Outline">Outline</GzBadge>
                 </div>
             </div>
         </div>
@@ -335,25 +335,25 @@
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">With image</p>
                     <div class="flex items-center gap-4">
-                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=JD" Alt="John Doe" Size="AvatarSize.Sm" />
-                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=AS" Alt="Alice Smith" Size="AvatarSize.Md" />
-                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=BW" Alt="Bob Wilson" Size="AvatarSize.Lg" />
+                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=JD" Alt="John Doe" Size="ComponentSize.Sm" />
+                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=AS" Alt="Alice Smith" Size="ComponentSize.Md" />
+                        <GzAvatar Src="https://api.dicebear.com/9.x/initials/svg?seed=BW" Alt="Bob Wilson" Size="ComponentSize.Lg" />
                     </div>
                 </div>
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Initials fallback</p>
                     <div class="flex items-center gap-4">
-                        <GzAvatar Initials="JD" Alt="John Doe" Size="AvatarSize.Sm" />
-                        <GzAvatar Initials="AS" Alt="Alice Smith" Size="AvatarSize.Md" />
-                        <GzAvatar Initials="BW" Alt="Bob Wilson" Size="AvatarSize.Lg" />
+                        <GzAvatar Initials="JD" Alt="John Doe" Size="ComponentSize.Sm" />
+                        <GzAvatar Initials="AS" Alt="Alice Smith" Size="ComponentSize.Md" />
+                        <GzAvatar Initials="BW" Alt="Bob Wilson" Size="ComponentSize.Lg" />
                     </div>
                 </div>
                 <div>
                     <p class="mb-3 text-xs font-medium uppercase tracking-widest text-muted-foreground">Default icon</p>
                     <div class="flex items-center gap-4">
-                        <GzAvatar Alt="User" Size="AvatarSize.Sm" />
-                        <GzAvatar Alt="User" Size="AvatarSize.Md" />
-                        <GzAvatar Alt="User" Size="AvatarSize.Lg" />
+                        <GzAvatar Alt="User" Size="ComponentSize.Sm" />
+                        <GzAvatar Alt="User" Size="ComponentSize.Md" />
+                        <GzAvatar Alt="User" Size="ComponentSize.Lg" />
                     </div>
                 </div>
             </div>
@@ -422,15 +422,15 @@
                 <div class="max-w-lg space-y-4">
                     <div>
                         <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Small (25%)</p>
-                        <GzProgress Value="25" Size="ProgressSize.Sm" />
+                        <GzProgress Value="25" Size="ComponentSize.Sm" />
                     </div>
                     <div>
                         <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Medium (60%)</p>
-                        <GzProgress Value="60" Size="ProgressSize.Md" />
+                        <GzProgress Value="60" Size="ComponentSize.Md" />
                     </div>
                     <div>
                         <p class="mb-2 text-xs font-medium uppercase tracking-widest text-muted-foreground">Large (85%)</p>
-                        <GzProgress Value="85" Size="ProgressSize.Lg" />
+                        <GzProgress Value="85" Size="ComponentSize.Lg" />
                     </div>
                 </div>
             </div>
@@ -494,8 +494,8 @@
                         </ChildContent>
                         <Footer>
                             <div class="flex justify-end gap-2">
-                                <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Sm">Cancel</GzButton>
-                                <GzButton Size="ButtonSize.Sm">Save</GzButton>
+                                <GzButton Variant="ComponentVariant.Ghost" Size="ComponentSize.Sm">Cancel</GzButton>
+                                <GzButton Size="ComponentSize.Sm">Save</GzButton>
                             </div>
                         </Footer>
                     </GzCard>
@@ -506,7 +506,7 @@
                             <div class="space-y-3">
                                 <h3 class="text-base font-semibold text-foreground">Simple Card</h3>
                                 <p class="text-sm text-muted-foreground">A card with content only — no header or footer. Useful for basic containers.</p>
-                                <GzBadge Variant="BadgeVariant.Secondary">New</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary">New</GzBadge>
                             </div>
                         </ChildContent>
                     </GzCard>
@@ -522,19 +522,19 @@
             </div>
 
             <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <GzAlert Variant="AlertVariant.Default" Title="Default">
+                <GzAlert Variant="ComponentVariant.Default" Title="Default">
                     This is a default alert for general information.
                 </GzAlert>
-                <GzAlert Variant="AlertVariant.Info" Title="Info">
+                <GzAlert Variant="ComponentVariant.Info" Title="Info">
                     Your workspace is syncing. This may take a few seconds.
                 </GzAlert>
-                <GzAlert Variant="AlertVariant.Success" Title="Success">
+                <GzAlert Variant="ComponentVariant.Success" Title="Success">
                     Your changes have been saved successfully.
                 </GzAlert>
-                <GzAlert Variant="AlertVariant.Warning" Title="Warning">
+                <GzAlert Variant="ComponentVariant.Warning" Title="Warning">
                     Your trial expires in 3 days. Upgrade to keep your data.
                 </GzAlert>
-                <GzAlert Variant="AlertVariant.Destructive" Title="Error">
+                <GzAlert Variant="ComponentVariant.Destructive" Title="Error">
                     Failed to deploy. Check your build logs for details.
                 </GzAlert>
             </div>
@@ -590,16 +590,16 @@
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex flex-wrap items-center gap-6">
                     <GzTooltip Text="Appears on top" Position="TooltipPosition.Top">
-                        <GzButton Variant="ButtonVariant.Outline">Top</GzButton>
+                        <GzButton Variant="ComponentVariant.Outline">Top</GzButton>
                     </GzTooltip>
                     <GzTooltip Text="Appears on the right" Position="TooltipPosition.Right">
-                        <GzButton Variant="ButtonVariant.Outline">Right</GzButton>
+                        <GzButton Variant="ComponentVariant.Outline">Right</GzButton>
                     </GzTooltip>
                     <GzTooltip Text="Appears on the bottom" Position="TooltipPosition.Bottom">
-                        <GzButton Variant="ButtonVariant.Outline">Bottom</GzButton>
+                        <GzButton Variant="ComponentVariant.Outline">Bottom</GzButton>
                     </GzTooltip>
                     <GzTooltip Text="Appears on the left" Position="TooltipPosition.Left">
-                        <GzButton Variant="ButtonVariant.Outline">Left</GzButton>
+                        <GzButton Variant="ComponentVariant.Outline">Left</GzButton>
                     </GzTooltip>
                 </div>
             </div>
@@ -716,7 +716,7 @@
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex flex-wrap gap-3">
                     <GzButton @onclick="() => _dialogOpen = true">Open Dialog</GzButton>
-                    <GzButton Variant="ButtonVariant.Outline" @onclick="() => _dialogSmOpen = true">Small Dialog</GzButton>
+                    <GzButton Variant="ComponentVariant.Outline" @onclick="() => _dialogSmOpen = true">Small Dialog</GzButton>
                 </div>
             </div>
 
@@ -732,15 +732,15 @@
                     </div>
                 </ChildContent>
                 <Footer>
-                    <GzButton Variant="ButtonVariant.Ghost" @onclick="() => _dialogOpen = false">Cancel</GzButton>
+                    <GzButton Variant="ComponentVariant.Ghost" @onclick="() => _dialogOpen = false">Cancel</GzButton>
                     <GzButton @onclick="() => _dialogOpen = false">Save Changes</GzButton>
                 </Footer>
             </GzDialog>
 
-            <GzDialog @bind-Open="_dialogSmOpen" Title="Confirm Action" Description="Are you sure you want to continue?" Size="DialogSize.Sm">
+            <GzDialog @bind-Open="_dialogSmOpen" Title="Confirm Action" Description="Are you sure you want to continue?" Size="ComponentSize.Sm">
                 <Footer>
-                    <GzButton Variant="ButtonVariant.Ghost" @onclick="() => _dialogSmOpen = false">Cancel</GzButton>
-                    <GzButton Variant="ButtonVariant.Destructive" @onclick="() => _dialogSmOpen = false">Delete</GzButton>
+                    <GzButton Variant="ComponentVariant.Ghost" @onclick="() => _dialogSmOpen = false">Cancel</GzButton>
+                    <GzButton Variant="ComponentVariant.Destructive" @onclick="() => _dialogSmOpen = false">Delete</GzButton>
                 </Footer>
             </GzDialog>
         </div>
@@ -755,7 +755,7 @@
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <GzDropdownMenu>
                     <Trigger>
-                        <GzButton Variant="ButtonVariant.Outline">
+                        <GzButton Variant="ComponentVariant.Outline">
                             <ChildContent>Open Menu</ChildContent>
                         </GzButton>
                     </Trigger>
@@ -782,7 +782,7 @@
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <GzPopover Align="start">
                     <Trigger>
-                        <GzButton Variant="ButtonVariant.Outline">Open Popover</GzButton>
+                        <GzButton Variant="ComponentVariant.Outline">Open Popover</GzButton>
                     </Trigger>
                     <ChildContent>
                         <div class="space-y-4">
@@ -812,12 +812,12 @@
 
             <div class="space-y-4 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex flex-wrap gap-3">
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Show("Event created", "Your event has been scheduled for tomorrow at 3pm."))">Default</GzButton>
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Success("Changes saved", "Your profile has been updated successfully."))">Success</GzButton>
-                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Destructive" OnClick="@(() => ToastService.Error("Delete failed", "Something went wrong. Please try again."))">Error</GzButton>
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Info("New update available", "Version 2.4 is ready to install."))">Info</GzButton>
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => ToastService.Warning("Storage almost full", "You have used 95% of your storage."))">Warning</GzButton>
-                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Outline" OnClick="@(() => ToastService.Show(new ToastItem { Title = "Undo available", Message = "Message moved to trash.", ActionLabel = "Undo", OnAction = () => ToastService.Success("Restored", "Message moved back to inbox."), Duration = 8000 }))">With Action</GzButton>
+                    <GzButton Size="ComponentSize.Sm" OnClick="@(() => ToastService.Show("Event created", "Your event has been scheduled for tomorrow at 3pm."))">Default</GzButton>
+                    <GzButton Size="ComponentSize.Sm" OnClick="@(() => ToastService.Success("Changes saved", "Your profile has been updated successfully."))">Success</GzButton>
+                    <GzButton Size="ComponentSize.Sm" Variant="ComponentVariant.Destructive" OnClick="@(() => ToastService.Error("Delete failed", "Something went wrong. Please try again."))">Error</GzButton>
+                    <GzButton Size="ComponentSize.Sm" OnClick="@(() => ToastService.Info("New update available", "Version 2.4 is ready to install."))">Info</GzButton>
+                    <GzButton Size="ComponentSize.Sm" OnClick="@(() => ToastService.Warning("Storage almost full", "You have used 95% of your storage."))">Warning</GzButton>
+                    <GzButton Size="ComponentSize.Sm" Variant="ComponentVariant.Outline" OnClick="@(() => ToastService.Show(new ToastItem { Title = "Undo available", Message = "Message moved to trash.", ActionLabel = "Undo", OnAction = () => ToastService.Success("Restored", "Message moved back to inbox."), Duration = 8000 }))">With Action</GzButton>
                 </div>
                 <p class="text-xs text-muted-foreground">@L("Inject ToastService and call .Show(), .Success(), .Error(), .Info(), or .Warning() from anywhere.", "قم بحقن ToastService واستدعِ .Show() أو .Success() أو .Error() أو .Info() أو .Warning() من أي مكان.")</p>
             </div>
@@ -898,7 +898,7 @@
                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12h8a4 4 0 100-8H6v8zm0 0h9a4 4 0 010 8H6v-8z" /></svg>
                             </ChildContent>
                         </GzToggle>
-                        <GzToggle Variant="ToggleVariant.Outline" @bind-Pressed="_toggleItalic">
+                        <GzToggle Variant="ComponentVariant.Outline" @bind-Pressed="_toggleItalic">
                             <ChildContent>
                                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l-4 4 4 4M6 16l4-4-4-4" /></svg>
                             </ChildContent>
@@ -958,7 +958,7 @@
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <GzCollapsible>
                     <Trigger>
-                        <GzButton Variant="ButtonVariant.Outline" Size="ButtonSize.Sm">
+                        <GzButton Variant="ComponentVariant.Outline" Size="ComponentSize.Sm">
                             <ChildContent>@L("Toggle Details", "تبديل التفاصيل")</ChildContent>
                         </GzButton>
                     </Trigger>
@@ -1012,7 +1012,7 @@
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex gap-3">
-                    <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _sheetOpen = true)">@L("Open Sheet (End)", "فتح اللوحة (النهاية)")</GzButton>
+                    <GzButton Variant="ComponentVariant.Outline" OnClick="@(() => _sheetOpen = true)">@L("Open Sheet (End)", "فتح اللوحة (النهاية)")</GzButton>
                 </div>
                 <GzSheet @bind-Open="_sheetOpen" Side="SheetSide.End">
                     <Header>
@@ -1031,7 +1031,7 @@
                     </ChildContent>
                     <Footer>
                         <div class="flex justify-end gap-3">
-                            <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _sheetOpen = false)">@L("Cancel", "إلغاء")</GzButton>
+                            <GzButton Variant="ComponentVariant.Outline" OnClick="@(() => _sheetOpen = false)">@L("Cancel", "إلغاء")</GzButton>
                             <GzButton OnClick="@(() => _sheetOpen = false)">@L("Save", "حفظ")</GzButton>
                         </div>
                     </Footer>
@@ -1056,8 +1056,8 @@
                             <h4 class="text-sm font-semibold text-foreground">GlazeUI</h4>
                             <p class="text-xs text-muted-foreground">Premium Blazor + Tailwind v4 design system. 44 components with full RTL support.</p>
                             <div class="flex items-center gap-2 pt-1">
-                                <GzBadge Variant="BadgeVariant.Secondary">Blazor</GzBadge>
-                                <GzBadge Variant="BadgeVariant.Secondary">Tailwind v4</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary">Blazor</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary">Tailwind v4</GzBadge>
                             </div>
                         </div>
                     </ChildContent>
@@ -1097,7 +1097,7 @@
             </div>
 
             <div class="space-y-6 rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
-                <GzButton Variant="ButtonVariant.Outline" OnClick="@(() => _commandOpen = true)">
+                <GzButton Variant="ComponentVariant.Outline" OnClick="@(() => _commandOpen = true)">
                     <ChildContent>
                         <span>@L("Open Command Palette", "فتح لوحة الأوامر")</span>
                         <kbd class="ms-2 rounded border border-border/50 bg-muted px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">⌘K</kbd>
@@ -1133,7 +1133,7 @@
                                 <p class="mt-0.5 truncate text-xs text-muted-foreground">@context.Item.Description</p>
                             </div>
                             <div class="mt-2 flex items-center justify-between">
-                                <GzBadge Variant="BadgeVariant.Secondary">@context.Item.Type</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary">@context.Item.Type</GzBadge>
                                 <span class="text-xs text-muted-foreground">@context.Item.Size</span>
                             </div>
                         </div>
@@ -1157,7 +1157,7 @@
                     <ColumnHeader>
                         <div class="mb-2 flex items-center justify-between">
                             <h3 class="text-sm font-semibold text-foreground">@GetKanbanColumnTitle(context)</h3>
-                            <GzBadge Variant="BadgeVariant.Outline">@(_kanbanColumns.TryGetValue(context, out var items) ? items.Count : 0)</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Outline">@(_kanbanColumns.TryGetValue(context, out var items) ? items.Count : 0)</GzBadge>
                         </div>
                     </ColumnHeader>
                     <ItemTemplate>
@@ -1180,9 +1180,9 @@
 
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex items-center gap-6">
-                    <GzSpinner Size="SpinnerSize.Sm" />
-                    <GzSpinner Size="SpinnerSize.Md" />
-                    <GzSpinner Size="SpinnerSize.Lg" />
+                    <GzSpinner Size="ComponentSize.Sm" />
+                    <GzSpinner Size="ComponentSize.Md" />
+                    <GzSpinner Size="ComponentSize.Lg" />
                 </div>
             </div>
         </div>
@@ -1212,8 +1212,8 @@
 
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex flex-wrap gap-3">
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _alertDefault = true)">Open AlertDialog</GzButton>
-                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Destructive" OnClick="@(() => _alertDestructive = true)">Destructive</GzButton>
+                    <GzButton Size="ComponentSize.Sm" OnClick="@(() => _alertDefault = true)">Open AlertDialog</GzButton>
+                    <GzButton Size="ComponentSize.Sm" Variant="ComponentVariant.Destructive" OnClick="@(() => _alertDestructive = true)">Destructive</GzButton>
                 </div>
 
                 <GzAlertDialog @bind-Visible="_alertDefault"
@@ -1238,9 +1238,9 @@
 
             <div class="rounded-xl border border-border/50 bg-card p-6 shadow-xs sm:p-8">
                 <div class="flex flex-wrap gap-3">
-                    <GzButton Size="ButtonSize.Sm" OnClick="@(() => _drawerBottom = true)">Bottom</GzButton>
-                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Outline" OnClick="@(() => _drawerRight = true)">Right</GzButton>
-                    <GzButton Size="ButtonSize.Sm" Variant="ButtonVariant.Outline" OnClick="@(() => _drawerLeft = true)">Left</GzButton>
+                    <GzButton Size="ComponentSize.Sm" OnClick="@(() => _drawerBottom = true)">Bottom</GzButton>
+                    <GzButton Size="ComponentSize.Sm" Variant="ComponentVariant.Outline" OnClick="@(() => _drawerRight = true)">Right</GzButton>
+                    <GzButton Size="ComponentSize.Sm" Variant="ComponentVariant.Outline" OnClick="@(() => _drawerLeft = true)">Left</GzButton>
                 </div>
 
                 <GzDrawer @bind-Visible="_drawerBottom" Title="Move Goal" Description="Set your daily activity goal.">
@@ -1337,7 +1337,7 @@
                     <GzFormField Label="Email" Id="tab-email">
                         <GzInput Id="tab-email" Type="email" Placeholder="john@example.com" />
                     </GzFormField>
-                    <GzButton Size="ButtonSize.Sm">Save Changes</GzButton>
+                    <GzButton Size="ComponentSize.Sm">Save Changes</GzButton>
                 </div>
             },
             new TabItem
@@ -1351,7 +1351,7 @@
                     <GzFormField Label="New Password" Id="tab-new-pw">
                         <GzInput Id="tab-new-pw" Type="password" Placeholder="Enter new password" />
                     </GzFormField>
-                    <GzButton Size="ButtonSize.Sm">Update Password</GzButton>
+                    <GzButton Size="ComponentSize.Sm">Update Password</GzButton>
                 </div>
             },
             new TabItem

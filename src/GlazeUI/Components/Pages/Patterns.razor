@@ -52,13 +52,13 @@
                             </GzFormField>
                             <div class="flex items-center justify-between">
                                 <GzCheckbox @bind-Checked="_rememberMe">Remember me</GzCheckbox>
-                                <GzButton Variant="ButtonVariant.Link" Size="ButtonSize.Sm">Forgot password?</GzButton>
+                                <GzButton Variant="ComponentVariant.Link" Size="ComponentSize.Sm">Forgot password?</GzButton>
                             </div>
                             <GzButton class="w-full">Sign in</GzButton>
                             <GzSeparator />
                             <p class="text-center text-sm text-muted-foreground">
                                 Don't have an account?
-                                <GzButton Variant="ButtonVariant.Link" Size="ButtonSize.Sm">Sign up</GzButton>
+                                <GzButton Variant="ComponentVariant.Link" Size="ComponentSize.Sm">Sign up</GzButton>
                             </p>
                         </div>
                     </ChildContent>
@@ -128,7 +128,7 @@
                             @foreach (var activity in _recentActivity)
                             {
                                 <div class="flex items-center gap-4">
-                                    <GzAvatar Initials="@activity.Initials" Size="AvatarSize.Sm" />
+                                    <GzAvatar Initials="@activity.Initials" Size="ComponentSize.Sm" />
                                     <div class="min-w-0 flex-1">
                                         <p class="text-sm font-medium text-foreground">@activity.Name</p>
                                         <p class="text-xs text-muted-foreground">@activity.Action</p>
@@ -175,7 +175,7 @@
                                         </li>
                                     }
                                 </ul>
-                                <GzButton class="w-full" Variant="@(plan.Featured ? ButtonVariant.Default : ButtonVariant.Outline)">
+                                <GzButton class="w-full" Variant="@(plan.Featured ? ComponentVariant.Default : ComponentVariant.Outline)">
                                     Get started
                                 </GzButton>
                             </div>
@@ -219,14 +219,14 @@
 
     private List<TabItem> _settingsTabs = new();
 
-    private record ActivityItem(string Initials, string Name, string Action, string Status, BadgeVariant BadgeVariant);
+    private record ActivityItem(string Initials, string Name, string Action, string Status, ComponentVariant BadgeVariant);
 
     private readonly List<ActivityItem> _recentActivity = new()
     {
-        new("JD", "John Doe", "Created new project", "New", BadgeVariant.Default),
-        new("AS", "Alice Smith", "Updated billing info", "Updated", BadgeVariant.Secondary),
-        new("BW", "Bob Wilson", "Submitted support ticket", "Pending", BadgeVariant.Outline),
-        new("CL", "Carol Lee", "Deleted staging environment", "Deleted", BadgeVariant.Destructive),
+        new("JD", "John Doe", "Created new project", "New", ComponentVariant.Default),
+        new("AS", "Alice Smith", "Updated billing info", "Updated", ComponentVariant.Secondary),
+        new("BW", "Bob Wilson", "Submitted support ticket", "Pending", ComponentVariant.Outline),
+        new("CL", "Carol Lee", "Deleted staging environment", "Deleted", ComponentVariant.Destructive),
     };
 
     private record PricingPlan(string Name, string Description, int Price, bool Featured, string[] Features);
@@ -253,7 +253,7 @@
                     <GzFormField Label="Bio" Id="s-bio" Description="Brief description for your profile. Max 160 characters.">
                         <GzTextarea Id="s-bio" Placeholder="Software engineer who loves building tools..." Rows="3" />
                     </GzFormField>
-                    <GzButton Size="ButtonSize.Sm">Update profile</GzButton>
+                    <GzButton Size="ComponentSize.Sm">Update profile</GzButton>
                 </div>
             },
             new TabItem
@@ -264,7 +264,7 @@
                     <GzSwitch @bind-Checked="_settingsNotif">Email notifications</GzSwitch>
                     <GzSwitch @bind-Checked="_settingsMarketing">Marketing emails</GzSwitch>
                     <GzSwitch Checked="true" Disabled="true">Security alerts (always on)</GzSwitch>
-                    <GzButton Size="ButtonSize.Sm">Save preferences</GzButton>
+                    <GzButton Size="ComponentSize.Sm">Save preferences</GzButton>
                 </div>
             },
             new TabItem
@@ -272,10 +272,10 @@
                 Key = "danger",
                 Label = "Danger Zone",
                 Content = @<div class="space-y-4">
-                    <GzAlert Variant="AlertVariant.Destructive" Title="Delete account">
+                    <GzAlert Variant="ComponentVariant.Destructive" Title="Delete account">
                         Once you delete your account, there is no going back. All your data will be permanently removed.
                     </GzAlert>
-                    <GzButton Variant="ButtonVariant.Destructive" Size="ButtonSize.Sm">Delete my account</GzButton>
+                    <GzButton Variant="ComponentVariant.Destructive" Size="ComponentSize.Sm">Delete my account</GzButton>
                 </div>
             }
         };

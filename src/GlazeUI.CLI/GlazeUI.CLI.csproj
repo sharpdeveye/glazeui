@@ -11,7 +11,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>glaze</ToolCommandName>
     <PackageId>GlazeUI.CLI</PackageId>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>SharpDevEye</Authors>
     <Company>GlazeUI Contributors</Company>
     <Description>CLI tool for GlazeUI — add premium Blazor components to your project.</Description>

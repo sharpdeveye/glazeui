@@ -15,7 +15,7 @@
 
 @code {
     /// <summary>Spinner size.</summary>
-    [Parameter] public SpinnerSize Size { get; set; } = SpinnerSize.Md;
+    [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
@@ -28,9 +28,9 @@
 
     private string GetSizeClass() => Size switch
     {
-        SpinnerSize.Sm => "size-4",
-        SpinnerSize.Md => "size-6",
-        SpinnerSize.Lg => "size-8",
+        ComponentSize.Sm => "size-4",
+        ComponentSize.Md => "size-6",
+        ComponentSize.Lg => "size-8",
         _ => "size-6"
     };
 

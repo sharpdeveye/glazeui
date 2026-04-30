@@ -468,35 +468,20 @@ class Program
         if (!File.Exists(importsPath)) return;
 
         var content = File.ReadAllText(importsPath);
-        var requiredUsings = new[]
-        {
-            "@using GlazeUI.Demo.Components.UI.Atoms",
-            "@using GlazeUI.Demo.Components.UI.Molecules",
-            "@using GlazeUI.Demo.Components.UI.Organisms",
-            "@using GlazeUI.Demo.Components.UI.Charts",
-            "@using GlazeUI.Demo.Components.Models",
-            "@using GlazeUI.Demo.Components.Utilities",
-        };
-
-        // Detect the actual root namespace from existing usings
-        var nsMatch = System.Text.RegularExpressions.Regex.Match(content, @"@using\s+(\S+?)\.Components");
-        var rootNs = nsMatch.Success ? nsMatch.Groups[1].Value : null;
-
-        if (rootNs is null) return; // Can't determine namespace
+        var ns = TargetNamespace;
+        var hasComponents = outputDir.TrimEnd(Path.DirectorySeparatorChar)
+            .EndsWith("Components", StringComparison.OrdinalIgnoreCase);
+        var prefix = hasComponents ? $"{ns}.Components" : ns;
 
         var lines = new List<string>();
-        var added = false;
         foreach (var u in new[] { "UI.Atoms", "UI.Molecules", "UI.Organisms", "UI.Charts", "Models", "Utilities" })
         {
-            var usingLine = $"@using {rootNs}.Components.{u}";
+            var usingLine = $"@using {prefix}.{u}";
             if (!content.Contains(usingLine))
-            {
                 lines.Add(usingLine);
-                added = true;
-            }
         }
 
-        if (added)
+        if (lines.Count > 0)
         {
             content = content.TrimEnd() + "\n" + string.Join("\n", lines) + "\n";
             File.WriteAllText(importsPath, content);
@@ -760,6 +745,7 @@ class Program
 
         using var reader = new StreamReader(stream);
         var content = reader.ReadToEnd();
+        content = RewriteNamespaces(content, outputDir);
         File.WriteAllText(targetPath, content);
 
         var verb = overwrite && File.Exists(targetPath) ? "↻" : "+";
@@ -809,7 +795,9 @@ class Program
         if (stream == null) return;
 
         using var reader = new StreamReader(stream);
-        File.WriteAllText(targetPath, reader.ReadToEnd());
+        var content = reader.ReadToEnd();
+        content = RewriteNamespaces(content, outputDir);
+        File.WriteAllText(targetPath, content);
 
         var verb = overwrite ? "↻" : "+";
         Console.ForegroundColor = ConsoleColor.DarkCyan;
@@ -866,6 +854,53 @@ class Program
         var assembly = Assembly.GetExecutingAssembly();
         return assembly.GetManifestResourceNames()
             .FirstOrDefault(n => n.EndsWith(suffix, StringComparison.OrdinalIgnoreCase));
+    }
+
+    /// <summary>
+    /// Detects the target project's root namespace from the nearest .csproj.
+    /// Falls back to directory name if not found.
+    /// </summary>
+    static string DetectRootNamespace()
+    {
+        var projectRoot = FindProjectRoot();
+        var csprojFiles = Directory.GetFiles(projectRoot, "*.csproj");
+        if (csprojFiles.Length > 0)
+        {
+            var content = File.ReadAllText(csprojFiles[0]);
+            // Try <RootNamespace> first
+            var nsMatch = System.Text.RegularExpressions.Regex.Match(
+                content, @"<RootNamespace>(.+?)</RootNamespace>");
+            if (nsMatch.Success) return nsMatch.Groups[1].Value;
+            // Fall back to project file name (without extension)
+            return Path.GetFileNameWithoutExtension(csprojFiles[0]);
+        }
+        return new DirectoryInfo(projectRoot).Name;
+    }
+
+    // Cache so we only detect once per run
+    static string? _cachedTargetNs;
+    static string TargetNamespace => _cachedTargetNs ??= DetectRootNamespace();
+
+    /// <summary>
+    /// Rewrites GlazeUI source namespaces to the target project's namespace.
+    /// e.g. "namespace GlazeUI.Models;" → "namespace MyApp.Components.Models;"
+    ///      "using GlazeUI.Models;"     → "using MyApp.Components.Models;"
+    ///      "using GlazeUI.Utilities;"  → "using MyApp.Components.Utilities;"
+    /// </summary>
+    static string RewriteNamespaces(string content, string outputDir)
+    {
+        var ns = TargetNamespace;
+        // Determine if Components/ is part of the output path
+        var hasComponents = outputDir.TrimEnd(Path.DirectorySeparatorChar)
+            .EndsWith("Components", StringComparison.OrdinalIgnoreCase);
+        var prefix = hasComponents ? $"{ns}.Components" : ns;
+
+        // Rewrite namespace declarations and using directives
+        content = content.Replace("namespace GlazeUI.Models", $"namespace {prefix}.Models");
+        content = content.Replace("namespace GlazeUI.Utilities", $"namespace {prefix}.Utilities");
+        content = content.Replace("using GlazeUI.Models", $"using {prefix}.Models");
+        content = content.Replace("using GlazeUI.Utilities", $"using {prefix}.Utilities");
+        return content;
     }
 
     static string FindOutputDir()

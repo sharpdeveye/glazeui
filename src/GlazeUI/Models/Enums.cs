@@ -1,37 +1,44 @@
 namespace GlazeUI.Models;
 
-// ─── Button ─────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+//  Unified Component Enums — the standard API contract.
+//  ALL components MUST use these instead of per-component enums.
+// ═══════════════════════════════════════════════════════════
 
-/// <summary>Visual style variant for GzButton.</summary>
-public enum ButtonVariant
+/// <summary>Unified visual variant shared across all GlazeUI components.</summary>
+public enum ComponentVariant
 {
     Default,
     Secondary,
     Destructive,
     Outline,
     Ghost,
-    Link
+    Link,
+    Info,
+    Success,
+    Warning
 }
 
-/// <summary>Size preset for GzButton.</summary>
-public enum ButtonSize
+/// <summary>Unified size preset shared across all GlazeUI components.</summary>
+public enum ComponentSize
 {
     Sm,
     Md,
     Lg,
-    Icon
+    Icon,
+    Full
 }
 
-// ─── Badge ──────────────────────────────────────────────
+// ─── Legacy Aliases (backward compat) ───────────────────
+// These exist so existing code using ButtonVariant, BadgeVariant, etc.
+// continues to compile. New code MUST use ComponentVariant / ComponentSize.
 
-/// <summary>Visual style variant for GzBadge.</summary>
-public enum BadgeVariant
-{
-    Default,
-    Secondary,
-    Destructive,
-    Outline
-}
+/// <summary>[DEPRECATED] Use ComponentVariant instead.</summary>
+public enum ButtonVariant { Default, Secondary, Destructive, Outline, Ghost, Link }
+/// <summary>[DEPRECATED] Use ComponentSize instead.</summary>
+public enum ButtonSize { Sm, Md, Lg, Icon }
+/// <summary>[DEPRECATED] Use ComponentVariant instead.</summary>
+public enum BadgeVariant { Default, Secondary, Destructive, Outline }
 
 // ─── Separator ──────────────────────────────────────────
 

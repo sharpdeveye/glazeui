@@ -23,7 +23,7 @@
     [Parameter] public string? Label { get; set; }
 
     /// <summary>Size of the progress bar.</summary>
-    [Parameter] public ProgressSize Size { get; set; } = ProgressSize.Md;
+    [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
     /// <summary>Additional HTML attributes.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
@@ -43,9 +43,9 @@
 
     private string GetSizeClass() => Size switch
     {
-        ProgressSize.Sm => "h-1.5",
-        ProgressSize.Md => "h-2.5",
-        ProgressSize.Lg => "h-4",
+        ComponentSize.Sm => "h-1.5",
+        ComponentSize.Md => "h-2.5",
+        ComponentSize.Lg => "h-4",
         _ => "h-2.5"
     };
 

@@ -24,10 +24,10 @@
     [Parameter] public EventCallback<bool> PressedChanged { get; set; }
 
     /// <summary>Visual variant.</summary>
-    [Parameter] public ToggleVariant Variant { get; set; } = ToggleVariant.Default;
+    [Parameter] public ComponentVariant Variant { get; set; } = ComponentVariant.Default;
 
     /// <summary>Size preset.</summary>
-    [Parameter] public ToggleSize Size { get; set; } = ToggleSize.Md;
+    [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
     /// <summary>Whether the toggle is disabled.</summary>
     [Parameter] public bool Disabled { get; set; }
@@ -54,7 +54,7 @@
 
     private string GetVariantClass() => Variant switch
     {
-        ToggleVariant.Outline => Pressed
+        ComponentVariant.Outline => Pressed
             ? "bg-accent text-accent-foreground border border-border/50 shadow-sm"
             : "border border-border/50 bg-transparent hover:bg-accent hover:text-accent-foreground",
         _ => Pressed
@@ -64,9 +64,9 @@
 
     private string GetSizeClass() => Size switch
     {
-        ToggleSize.Sm => "h-8 px-2",
-        ToggleSize.Md => "h-9 px-3",
-        ToggleSize.Lg => "h-10 px-4",
+        ComponentSize.Sm => "h-8 px-2",
+        ComponentSize.Md => "h-9 px-3",
+        ComponentSize.Lg => "h-10 px-4",
         _ => "h-9 px-3"
     };
 

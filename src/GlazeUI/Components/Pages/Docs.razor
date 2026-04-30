@@ -55,17 +55,17 @@
                             <div class="space-y-2 text-sm text-muted-foreground">
                                 <div class="flex items-center justify-between">
                                     <span>.NET SDK</span>
-                                    <GzBadge Variant="BadgeVariant.Secondary">9.0+</GzBadge>
+                                    <GzBadge Variant="ComponentVariant.Secondary">9.0+</GzBadge>
                                 </div>
                                 <GzSeparator />
                                 <div class="flex items-center justify-between">
                                     <span>Node.js</span>
-                                    <GzBadge Variant="BadgeVariant.Secondary">18+</GzBadge>
+                                    <GzBadge Variant="ComponentVariant.Secondary">18+</GzBadge>
                                 </div>
                                 <GzSeparator />
                                 <div class="flex items-center justify-between">
                                     <span>Tailwind CSS</span>
-                                    <GzBadge Variant="BadgeVariant.Secondary">v4</GzBadge>
+                                    <GzBadge Variant="ComponentVariant.Secondary">v4</GzBadge>
                                 </div>
                             </div>
                         </ChildContent>
@@ -87,7 +87,7 @@ dotnet run</code></pre>
                     </div>
                 </div>
 
-                <GzAlert Variant="AlertVariant.Info" Title="Live Preview">
+                <GzAlert Variant="ComponentVariant.Info" Title="Live Preview">
                     After running, open <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">http://localhost:5011</code> and navigate to <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">/components</code>.
                 </GzAlert>
             </div>
@@ -124,7 +124,7 @@ glaze update --all
 glaze theme rose</code></pre>
             </div>
 
-            <GzAlert Variant="AlertVariant.Info" Title="Dependency Resolution" class="mt-4">
+            <GzAlert Variant="ComponentVariant.Info" Title="Dependency Resolution" class="mt-4">
                 The CLI automatically resolves dependencies. Adding <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">select</code> will also add <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">SelectOption.cs</code>, <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Tw.cs</code>, and <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">Enums.cs</code>.
             </GzAlert>
         </section>
@@ -198,7 +198,7 @@ glaze theme rose</code></pre>
                 <div class="border-b border-border/50 px-4 py-2">
                     <span class="text-xs text-muted-foreground">MyPage.razor</span>
                 </div>
-                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>&lt;GzButton Variant="ButtonVariant.Default"&gt;
+                <pre class="overflow-x-auto p-4 font-mono text-sm text-foreground"><code>&lt;GzButton Variant="ComponentVariant.Default"&gt;
     Click me
 &lt;/GzButton&gt;
 
@@ -255,7 +255,7 @@ glaze theme rose</code></pre>
 }</code></pre>
             </div>
 
-            <GzAlert Variant="AlertVariant.Success" Title="No component changes needed" class="mt-4">
+            <GzAlert Variant="ComponentVariant.Success" Title="No component changes needed" class="mt-4">
                 Components use semantic tokens like <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">bg-primary</code> and <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">text-foreground</code>. Dark mode works automatically.
             </GzAlert>
         </section>
@@ -328,7 +328,7 @@ glaze theme --custom "oklch(0.55 0.20 180)"</code></pre>
 &lt;/html&gt;</code></pre>
             </div>
 
-            <GzAlert Variant="AlertVariant.Info" Title="Logical Properties" class="mt-4">
+            <GzAlert Variant="ComponentVariant.Info" Title="Logical Properties" class="mt-4">
                 GlazeUI uses Tailwind v4 logical properties (<code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">start-0</code>, <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">ps-4</code>, <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">me-2</code>) instead of physical <code class="rounded bg-muted px-1.5 py-0.5 font-mono text-xs">left/right</code>. Components flip automatically.
             </GzAlert>
         </section>
@@ -379,7 +379,7 @@ glaze theme --custom "oklch(0.55 0.20 180)"</code></pre>
                 <ChildContent>
                     <div class="space-y-3 text-sm">
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">1</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">1</GzBadge>
                             <div>
                                 <p class="font-medium text-foreground">TwMerge class composition</p>
                                 <p class="text-muted-foreground">Resolves Tailwind class conflicts. User overrides always win.</p>
@@ -387,7 +387,7 @@ glaze theme --custom "oklch(0.55 0.20 180)"</code></pre>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">2</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">2</GzBadge>
                             <div>
                                 <p class="font-medium text-foreground">GetFilteredAttributes()</p>
                                 <p class="text-muted-foreground">Filters <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">class</code> from splatted attributes so it only flows through TwMerge.</p>
@@ -395,7 +395,7 @@ glaze theme --custom "oklch(0.55 0.20 180)"</code></pre>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">3</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">3</GzBadge>
                             <div>
                                 <p class="font-medium text-foreground">Semantic tokens only</p>
                                 <p class="text-muted-foreground">Zero raw colors (<code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">bg-blue-500</code>). Everything uses <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">bg-primary</code> etc.</p>
@@ -403,7 +403,7 @@ glaze theme --custom "oklch(0.55 0.20 180)"</code></pre>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">4</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">4</GzBadge>
                             <div>
                                 <p class="font-medium text-foreground">CSS-only states</p>
                                 <p class="text-muted-foreground">Hover, focus, active handled via CSS — no SignalR roundtrips.</p>
@@ -411,7 +411,7 @@ glaze theme --custom "oklch(0.55 0.20 180)"</code></pre>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">5</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">5</GzBadge>
                             <div>
                                 <p class="font-medium text-foreground">Full state coverage</p>
                                 <p class="text-muted-foreground">Default, hover, active, focus-visible, disabled, loading — all defined.</p>

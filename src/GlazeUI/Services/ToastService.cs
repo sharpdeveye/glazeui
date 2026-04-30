@@ -37,19 +37,19 @@ public sealed class ToastService
 
     /// <summary>Show a success toast.</summary>
     public void Success(string title, string? message = null, int duration = 5000)
-        => Show(new ToastItem { Title = title, Message = message, Variant = ToastVariant.Success, Duration = duration });
+        => Show(new ToastItem { Title = title, Message = message, Variant = ComponentVariant.Success, Duration = duration });
 
     /// <summary>Show an error toast.</summary>
     public void Error(string title, string? message = null, int duration = 8000)
-        => Show(new ToastItem { Title = title, Message = message, Variant = ToastVariant.Error, Duration = duration });
+        => Show(new ToastItem { Title = title, Message = message, Variant = ComponentVariant.Destructive, Duration = duration });
 
     /// <summary>Show an info toast.</summary>
     public void Info(string title, string? message = null, int duration = 5000)
-        => Show(new ToastItem { Title = title, Message = message, Variant = ToastVariant.Info, Duration = duration });
+        => Show(new ToastItem { Title = title, Message = message, Variant = ComponentVariant.Info, Duration = duration });
 
     /// <summary>Show a warning toast.</summary>
     public void Warning(string title, string? message = null, int duration = 6000)
-        => Show(new ToastItem { Title = title, Message = message, Variant = ToastVariant.Warning, Duration = duration });
+        => Show(new ToastItem { Title = title, Message = message, Variant = ComponentVariant.Warning, Duration = duration });
 
     /// <summary>Dismiss a specific toast by ID.</summary>
     public void Dismiss(string id)

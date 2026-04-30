@@ -21,7 +21,7 @@
         <div class="flex items-center gap-1.5 ms-auto">
             @if (!string.IsNullOrEmpty(_filterText))
             {
-                <GzBadge Variant="BadgeVariant.Secondary">@_filteredItems.Count results</GzBadge>
+                <GzBadge Variant="ComponentVariant.Secondary">@_filteredItems.Count results</GzBadge>
             }
 
             @if (Selectable && _selectedKeys.Count > 0)
@@ -30,7 +30,7 @@
             }
 
             @* Density Toggle *@
-            <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon"
+            <GzButton Variant="ComponentVariant.Ghost" Size="ComponentSize.Icon"
                       aria-label="Toggle density"
                       OnClick="CycleDensity">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -40,7 +40,7 @@
 
             @* Column Visibility Toggle *@
             <div class="relative">
-                <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon"
+                <GzButton Variant="ComponentVariant.Ghost" Size="ComponentSize.Icon"
                           aria-label="Toggle columns"
                           OnClick="() => _showColumnMenu = !_showColumnMenu">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -67,7 +67,7 @@
             @* CSV Export *@
             @if (Exportable)
             {
-                <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon"
+                <GzButton Variant="ComponentVariant.Ghost" Size="ComponentSize.Icon"
                           aria-label="Export CSV"
                           OnClick="ExportCsv">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -177,7 +177,7 @@
                 <GzSelect Options="@_pageSizeSelectOptions"
                           Value="@_effectivePageSize.ToString()"
                           ValueChanged="HandlePageSizeSelect"
-                          Size="SelectSize.Sm" />
+                          Size="ComponentSize.Sm" />
             </div>
         </div>
 

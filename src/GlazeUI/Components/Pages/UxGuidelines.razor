@@ -41,7 +41,7 @@
                     <ChildContent>
                         <div class="space-y-4">
                             <div class="flex items-start gap-3">
-                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">1</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">1</GzBadge>
                                 <div>
                                     <p class="font-medium text-foreground">Clarity over cleverness</p>
                                     <p class="text-sm text-muted-foreground">Users should never guess what a control does. Labels, placeholders, and microcopy should be explicit and actionable.</p>
@@ -49,7 +49,7 @@
                             </div>
                             <GzSeparator />
                             <div class="flex items-start gap-3">
-                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">2</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">2</GzBadge>
                                 <div>
                                     <p class="font-medium text-foreground">Reduce cognitive load</p>
                                     <p class="text-sm text-muted-foreground">Show only what's needed at each step. Progressive disclosure beats information overload. Use tooltips, popovers, and collapsible sections.</p>
@@ -57,7 +57,7 @@
                             </div>
                             <GzSeparator />
                             <div class="flex items-start gap-3">
-                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">3</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">3</GzBadge>
                                 <div>
                                     <p class="font-medium text-foreground">Predictable interaction patterns</p>
                                     <p class="text-sm text-muted-foreground">Same component, same behavior everywhere. A Ghost button always behaves like a Ghost button — never change variant semantics contextually.</p>
@@ -65,7 +65,7 @@
                             </div>
                             <GzSeparator />
                             <div class="flex items-start gap-3">
-                                <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">4</GzBadge>
+                                <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">4</GzBadge>
                                 <div>
                                     <p class="font-medium text-foreground">Accessible by default</p>
                                     <p class="text-sm text-muted-foreground">ARIA attributes, keyboard navigation, and focus management are built in — not bolted on. Every interactive element must be reachable via Tab.</p>
@@ -102,7 +102,7 @@
                     </ChildContent>
                 </GzCard>
 
-                <GzAlert Variant="AlertVariant.Warning" Title="Anti-patterns">
+                <GzAlert Variant="ComponentVariant.Warning" Title="Anti-patterns">
                     Never use more than one Default button in a single visible area. Never use Destructive for reversible actions. Never put a Link variant where a real <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">&lt;a&gt;</code> tag would be semantically correct.
                 </GzAlert>
             </div>
@@ -133,7 +133,7 @@
                     </ChildContent>
                 </GzCard>
 
-                <GzAlert Variant="AlertVariant.Info" Title="Always use GzFormField">
+                <GzAlert Variant="ComponentVariant.Info" Title="Always use GzFormField">
                     Never render a bare GzInput. Always wrap it in GzFormField — it provides the label, description, error message, and required indicator as a unified, accessible group.
                 </GzAlert>
             </div>
@@ -197,7 +197,7 @@
                     </ChildContent>
                 </GzCard>
 
-                <GzAlert Variant="AlertVariant.Warning" Title="Don't overuse dialogs">
+                <GzAlert Variant="ComponentVariant.Warning" Title="Don't overuse dialogs">
                     Dialogs interrupt the user's flow. Use them only for decisions that can't be undone. For informational messages, use GzAlert inline instead.
                 </GzAlert>
             </div>
@@ -212,27 +212,27 @@
                 <ChildContent>
                     <div class="space-y-3 text-sm">
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">Tab</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">Tab</GzBadge>
                             <p class="text-muted-foreground">Every interactive element is reachable via Tab key. Focus rings use <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">focus-visible:ring-2</code> — visible only on keyboard nav.</p>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">Esc</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">Esc</GzBadge>
                             <p class="text-muted-foreground">All overlays (Dialog, Dropdown, Popover, Select) dismiss on Escape. Dialog returns focus to the trigger element.</p>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">ARIA</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">ARIA</GzBadge>
                             <p class="text-muted-foreground">Roles are built in: <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">role=dialog</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">role=combobox</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">role=tablist</code>. Labels always link to controls via <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">for/id</code>.</p>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">RTL</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">RTL</GzBadge>
                             <p class="text-muted-foreground">All components use CSS logical properties (<code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">ms-*</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">me-*</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">start-*</code>, <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">end-*</code>). Set <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">dir="rtl"</code> on <code class="rounded bg-muted px-1 py-0.5 font-mono text-xs">&lt;html&gt;</code> for full RTL support.</p>
                         </div>
                         <GzSeparator />
                         <div class="flex items-start gap-3">
-                            <GzBadge Variant="BadgeVariant.Secondary" class="shrink-0 mt-0.5">Color</GzBadge>
+                            <GzBadge Variant="ComponentVariant.Secondary" class="shrink-0 mt-0.5">Color</GzBadge>
                             <p class="text-muted-foreground">Semantic color variants (Info, Success, Warning, Destructive) use both color and icons. Information is never conveyed by color alone.</p>
                         </div>
                     </div>
