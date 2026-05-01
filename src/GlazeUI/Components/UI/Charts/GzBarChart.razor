@@ -18,14 +18,14 @@
                     {
                         var gy = metrics.PlotY + metrics.PlotH * g / 4.0;
                         <line x1="@metrics.PlotX.ToString(Inv)" y1="@gy.ToString(Inv)"
-                              x2="@(metrics.PlotX + metrics.PlotW).ToString(Inv)" y2="@gy.ToString(Inv)"
+                              x2="@((metrics.PlotX + metrics.PlotW).ToString(Inv))" y2="@gy.ToString(Inv)"
                               stroke="var(--color-border)" stroke-opacity="0.4" stroke-dasharray="4 4" />
                     }
                     else
                     {
                         var gx = metrics.PlotX + metrics.PlotW * g / 4.0;
                         <line x1="@gx.ToString(Inv)" y1="@metrics.PlotY.ToString(Inv)"
-                              x2="@gx.ToString(Inv)" y2="@(metrics.PlotY + metrics.PlotH).ToString(Inv)"
+                              x2="@gx.ToString(Inv)" y2="@((metrics.PlotY + metrics.PlotH).ToString(Inv))"
                               stroke="var(--color-border)" stroke-opacity="0.4" stroke-dasharray="4 4" />
                     }
                 }

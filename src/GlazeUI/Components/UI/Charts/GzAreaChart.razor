@@ -28,7 +28,7 @@
                 {
                     var gy = m.PlotY + m.PlotH * g / 4.0;
                     <line x1="@m.PlotX.ToString(Inv)" y1="@gy.ToString(Inv)"
-                          x2="@(m.PlotX + m.PlotW).ToString(Inv)" y2="@gy.ToString(Inv)"
+                          x2="@((m.PlotX + m.PlotW).ToString(Inv))" y2="@gy.ToString(Inv)"
                           stroke="var(--color-border)" stroke-opacity="0.3" stroke-dasharray="4 4" />
                 }
             }
