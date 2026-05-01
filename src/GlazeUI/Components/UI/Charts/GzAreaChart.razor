@@ -62,7 +62,7 @@
                       class="transition-all duration-500 ease-out" />
             }
 
-            @* Dots (rendered last for z-index) *@
+            @* Dots + tooltip triggers (foreignObject for CSS ::after) *@
             @if (ShowDots)
             {
                 @for (var si = 0; si < Series.Count; si++)
@@ -75,8 +75,13 @@
                     {
                         <circle cx="@p.X.ToString(Inv)" cy="@p.Y.ToString(Inv)"
                                 r="3" fill="var(--color-background)" stroke="@color" stroke-width="2"
-                                data-chart-label="@($"{s.Name} — {p.Label}")" data-chart-value="@p.Val.ToString("N1")" data-chart-color="@color"
-                                class="transition-all duration-200 ease-out opacity-70 hover:opacity-100 cursor-pointer" />
+                                class="transition-all duration-200 ease-out opacity-70 hover:opacity-100" />
+                        <foreignObject x="@((p.X - 12).ToString(Inv))" y="@((p.Y - 12).ToString(Inv))"
+                                       width="24" height="24" style="overflow:visible">
+                            <div data-chart-label="@($"{s.Name} — {p.Label}")" data-chart-value="@p.Val.ToString("N0")"
+                                 style="width:24px;height:24px;position:relative;overflow:visible;"
+                                 class="cursor-pointer"></div>
+                        </foreignObject>
                     }
                 }
             }
