@@ -85,6 +85,8 @@ class Program
         ["areachart"]        = ("Charts",    "GzAreaChart.razor"),
         ["donutchart"]       = ("Charts",    "GzDonutChart.razor"),
         ["radialchart"]      = ("Charts",    "GzRadialChart.razor"),
+        // Toast system
+        ["toaster"]          = ("Organisms", "GzToaster.razor"),
     };
 
     // Shared dependencies
@@ -104,6 +106,8 @@ class Program
         ["chartmodels"]           = ("Models",    "ChartModels.cs"),
         ["toastitem"]             = ("Models",    "ToastItem.cs"),
         ["sidebarstate"]          = ("Models",    "SidebarState.cs"),
+        ["sidebarcontentmodels"]  = ("Models",    "SidebarContentModels.cs"),
+        ["toastservice"]          = ("Services",  "ToastService.cs"),
     };
 
     // Component → required shared file keys
@@ -125,7 +129,9 @@ class Program
         ["barchart"]      = new[] { "chartmodels" },
         ["areachart"]     = new[] { "chartmodels" },
         ["donutchart"]    = new[] { "chartmodels" },
-        ["sidebar"]       = new[] { "sidebarprovider", "sidebarstate", "sidebarinset", "sidebarheader", "sidebarfooter", "sidebarcontent", "sidebargroup", "sidebargrouplabel", "sidebarmenu", "sidebarmenuitem", "sidebarmenubutton", "sidebarmenubadge", "sidebarmenusub", "sidebarrail", "sidebartrigger" },
+        ["sidebar"]       = new[] { "sidebarprovider", "sidebarstate", "sidebarcontentmodels", "sidebarinset", "sidebarheader", "sidebarfooter", "sidebarcontent", "sidebargroup", "sidebargrouplabel", "sidebarmenu", "sidebarmenuitem", "sidebarmenubutton", "sidebarmenubadge", "sidebarmenusub", "sidebarrail", "sidebartrigger" },
+        ["toast"]         = new[] { "toastitem" },
+        ["toaster"]       = new[] { "toast", "toastitem", "toastservice" },
     };
 
     // Bundled theme presets
@@ -474,7 +480,7 @@ class Program
         var prefix = hasComponents ? $"{ns}.Components" : ns;
 
         var lines = new List<string>();
-        foreach (var u in new[] { "UI.Atoms", "UI.Molecules", "UI.Organisms", "UI.Charts", "Models", "Utilities" })
+        foreach (var u in new[] { "UI.Atoms", "UI.Molecules", "UI.Organisms", "UI.Charts", "Models", "Utilities", "Services" })
         {
             var usingLine = $"@using {prefix}.{u}";
             if (!content.Contains(usingLine))
@@ -898,8 +904,10 @@ class Program
         // Rewrite namespace declarations and using directives
         content = content.Replace("namespace GlazeUI.Models", $"namespace {prefix}.Models");
         content = content.Replace("namespace GlazeUI.Utilities", $"namespace {prefix}.Utilities");
+        content = content.Replace("namespace GlazeUI.Services", $"namespace {prefix}.Services");
         content = content.Replace("using GlazeUI.Models", $"using {prefix}.Models");
         content = content.Replace("using GlazeUI.Utilities", $"using {prefix}.Utilities");
+        content = content.Replace("using GlazeUI.Services", $"using {prefix}.Services");
         return content;
     }
 

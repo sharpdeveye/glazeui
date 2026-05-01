@@ -78,7 +78,7 @@
     [Parameter] public bool Disabled { get; set; }
 
     /// <summary>Size preset — Default (h-10) or Sm (h-9).</summary>
-    [Parameter] public SelectSize Size { get; set; } = SelectSize.Default;
+    [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
     /// <summary>Additional HTML attributes.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
@@ -101,7 +101,7 @@
 
     private string TriggerClasses => Tw.Merge(
         "flex w-full items-center justify-between rounded-md cursor-pointer",
-        Size == SelectSize.Sm ? "h-9 px-2.5 text-xs" : "h-10 px-3 py-2 text-sm",
+        Size == ComponentSize.Sm ? "h-9 px-2.5 text-xs" : "h-10 px-3 py-2 text-sm",
         "bg-background inset-ring inset-ring-border/50",
         "transition-all duration-200 ease-out",
         "hover:bg-accent/50",

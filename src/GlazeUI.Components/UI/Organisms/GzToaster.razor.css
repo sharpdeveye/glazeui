@@ -16,16 +16,23 @@
     opacity: calc(1 - var(--toast-index, 0) * 0.2);
 }
 
-/* Hide toasts beyond 3rd when collapsed */
+/* Hide toasts beyond 3rd when collapsed — fully collapse with no gap residue */
 .gz-toaster:not(:hover) ::deep .gz-toast-hidden {
     opacity: 0;
     pointer-events: none;
-    margin-bottom: -100%;
+    position: absolute;
+    visibility: hidden;
 }
 
 /* ─── Expanded state (hovered) ─── */
 .gz-toaster:hover ::deep .gz-toast-wrapper {
-    margin-bottom: 0;
+    margin-bottom: 8px;
     transform: none;
     opacity: 1;
+}
+
+/* When expanded, un-hide previously hidden toasts */
+.gz-toaster:hover ::deep .gz-toast-hidden {
+    position: relative;
+    visibility: visible;
 }

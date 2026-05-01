@@ -11,7 +11,7 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>glaze</ToolCommandName>
     <PackageId>GlazeUI.CLI</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.1.0</Version>
     <Authors>SharpDevEye</Authors>
     <Company>GlazeUI Contributors</Company>
     <Description>CLI tool for GlazeUI — add premium Blazor components to your project.</Description>
@@ -46,6 +46,7 @@
     <EmbeddedResource Include="../GlazeUI/Models/SidebarState.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Models/SidebarContentModels.cs" LinkBase="Templates/Models" />
     <EmbeddedResource Include="../GlazeUI/Styles/input.css" LogicalName="GlazeUI.CLI.Templates.Styles.glazeui.css" />
+    <EmbeddedResource Include="../GlazeUI/Services/ToastService.cs" LinkBase="Templates/Services" />
   </ItemGroup>
 
 </Project>

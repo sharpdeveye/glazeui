@@ -38,7 +38,7 @@ else
     [Parameter] public string? Initials { get; set; }
 
     /// <summary>Avatar size.</summary>
-    [Parameter] public AvatarSize Size { get; set; } = AvatarSize.Md;
+    [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
     /// <summary>Additional HTML attributes.</summary>
     [Parameter(CaptureUnmatchedValues = true)]
@@ -62,25 +62,25 @@ else
 
     private string IconSizeClass => Size switch
     {
-        AvatarSize.Sm => "size-4",
-        AvatarSize.Md => "size-5",
-        AvatarSize.Lg => "size-6",
+        ComponentSize.Sm => "size-4",
+        ComponentSize.Md => "size-5",
+        ComponentSize.Lg => "size-6",
         _             => "size-5"
     };
 
     private string GetSizeClass() => Size switch
     {
-        AvatarSize.Sm => "size-8",
-        AvatarSize.Md => "size-10",
-        AvatarSize.Lg => "size-14",
+        ComponentSize.Sm => "size-8",
+        ComponentSize.Md => "size-10",
+        ComponentSize.Lg => "size-14",
         _             => "size-10"
     };
 
     private string GetTextSizeClass() => Size switch
     {
-        AvatarSize.Sm => "text-xs",
-        AvatarSize.Md => "text-sm",
-        AvatarSize.Lg => "text-lg",
+        ComponentSize.Sm => "text-xs",
+        ComponentSize.Md => "text-sm",
+        ComponentSize.Lg => "text-lg",
         _             => "text-sm"
     };
 

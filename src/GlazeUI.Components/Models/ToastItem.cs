@@ -12,8 +12,8 @@ public class ToastItem
     /// <summary>Toast body message.</summary>
     public string? Message { get; init; }
 
-    /// <summary>Visual variant: Default, Success, Error, Info, Warning.</summary>
-    public ToastVariant Variant { get; init; } = ToastVariant.Default;
+    /// <summary>Visual variant: Default, Success, Destructive, Info, Warning.</summary>
+    public ComponentVariant Variant { get; init; } = ComponentVariant.Default;
 
     /// <summary>Auto-dismiss after this many milliseconds. 0 = never.</summary>
     public int Duration { get; init; } = 5000;

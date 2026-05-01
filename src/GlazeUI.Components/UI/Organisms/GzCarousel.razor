@@ -7,7 +7,7 @@
     @* Track — native scroll-snap handles touch + mouse drag *@
     <div @ref="_track"
          data-gz-carousel="@_id"
-         class="gz-carousel-track flex snap-x snap-mandatory overflow-x-auto scroll-smooth"
+         class="gz-carousel-track flex snap-x snap-mandatory overflow-x-auto overscroll-x-contain scroll-smooth"
          style="gap: @($"{Gap}px");">
         @if (ChildContent is not null)
         {

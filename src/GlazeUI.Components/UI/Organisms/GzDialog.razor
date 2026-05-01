@@ -84,7 +84,7 @@
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
 
     /// <summary>Size preset for the dialog panel.</summary>
-    [Parameter] public DialogSize Size { get; set; } = DialogSize.Md;
+    [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
     /// <summary>Unique HTML id for accessible labelling.</summary>
     [Parameter] public string Id { get; set; } = "gz-dialog";
@@ -105,10 +105,10 @@
 
     private string GetSizeClass() => Size switch
     {
-        DialogSize.Sm   => "w-full max-w-sm",
-        DialogSize.Md   => "w-full max-w-lg",
-        DialogSize.Lg   => "w-full max-w-2xl",
-        DialogSize.Full => "w-full max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]",
+        ComponentSize.Sm   => "w-full max-w-sm",
+        ComponentSize.Md   => "w-full max-w-lg",
+        ComponentSize.Lg   => "w-full max-w-2xl",
+        ComponentSize.Full => "w-full max-w-[calc(100vw-2rem)] max-h-[calc(100vh-2rem)]",
         _ => "w-full max-w-lg"
     };
 

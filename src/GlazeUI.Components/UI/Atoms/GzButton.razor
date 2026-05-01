@@ -31,10 +31,10 @@
     [Parameter] public RenderFragment? Icon { get; set; }
 
     /// <summary>Visual style variant.</summary>
-    [Parameter] public ButtonVariant Variant { get; set; } = ButtonVariant.Default;
+    [Parameter] public ComponentVariant Variant { get; set; } = ComponentVariant.Default;
 
     /// <summary>Size preset.</summary>
-    [Parameter] public ButtonSize Size { get; set; } = ButtonSize.Md;
+    [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
     /// <summary>HTML button type attribute.</summary>
     [Parameter] public string Type { get; set; } = "button";
@@ -71,21 +71,21 @@
 
     private string GetVariantClass() => Variant switch
     {
-        ButtonVariant.Default     => "bg-primary text-primary-foreground shadow-sm inset-shadow-sm inset-shadow-white/20 hover:bg-primary/90",
-        ButtonVariant.Destructive => "bg-destructive text-destructive-foreground shadow-sm inset-shadow-sm inset-shadow-white/20 hover:bg-destructive/90",
-        ButtonVariant.Outline     => "border border-border/50 bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        ButtonVariant.Secondary   => "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ButtonVariant.Ghost       => "hover:bg-accent hover:text-accent-foreground",
-        ButtonVariant.Link        => "text-primary underline-offset-4 hover:underline",
+        ComponentVariant.Default     => "bg-primary text-primary-foreground shadow-sm inset-shadow-sm inset-shadow-white/20 hover:bg-primary/90",
+        ComponentVariant.Destructive => "bg-destructive text-destructive-foreground shadow-sm inset-shadow-sm inset-shadow-white/20 hover:bg-destructive/90",
+        ComponentVariant.Outline     => "border border-border/50 bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        ComponentVariant.Secondary   => "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ComponentVariant.Ghost       => "hover:bg-accent hover:text-accent-foreground",
+        ComponentVariant.Link        => "text-primary underline-offset-4 hover:underline",
         _ => ""
     };
 
     private string GetSizeClass() => Size switch
     {
-        ButtonSize.Sm   => "h-8 rounded-md px-3 text-xs",
-        ButtonSize.Md   => "h-9 px-4 py-2",
-        ButtonSize.Lg   => "h-10 rounded-md px-8",
-        ButtonSize.Icon => "size-9",
+        ComponentSize.Sm   => "h-8 rounded-md px-3 text-xs",
+        ComponentSize.Md   => "h-9 px-4 py-2",
+        ComponentSize.Lg   => "h-10 rounded-md px-8",
+        ComponentSize.Icon => "size-9",
         _ => ""
     };
 

@@ -21,7 +21,7 @@
         <div class="flex items-center gap-1.5 ms-auto">
             @if (!string.IsNullOrEmpty(_filterText))
             {
-                <GzBadge Variant="BadgeVariant.Secondary">@_filteredItems.Count results</GzBadge>
+                <GzBadge Variant="ComponentVariant.Secondary">@_filteredItems.Count results</GzBadge>
             }
 
             @if (Selectable && _selectedKeys.Count > 0)
@@ -30,7 +30,7 @@
             }
 
             @* Density Toggle *@
-            <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon"
+            <GzButton Variant="ComponentVariant.Ghost" Size="ComponentSize.Icon"
                       aria-label="Toggle density"
                       OnClick="CycleDensity">
                 <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -40,7 +40,7 @@
 
             @* Column Visibility Toggle *@
             <div class="relative">
-                <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon"
+                <GzButton Variant="ComponentVariant.Ghost" Size="ComponentSize.Icon"
                           aria-label="Toggle columns"
                           OnClick="() => _showColumnMenu = !_showColumnMenu">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -67,7 +67,7 @@
             @* CSV Export *@
             @if (Exportable)
             {
-                <GzButton Variant="ButtonVariant.Ghost" Size="ButtonSize.Icon"
+                <GzButton Variant="ComponentVariant.Ghost" Size="ComponentSize.Icon"
                           aria-label="Export CSV"
                           OnClick="ExportCsv">
                     <svg class="size-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
@@ -80,7 +80,7 @@
 
     @* ─── Table ───────────────────────────── *@
     <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full text-sm" aria-busy="@Loading.ToString().ToLower()">
             <thead class="@(_stickyHeader ? "sticky top-0 z-10" : "")">
                 <tr class="border-b border-border/50 bg-muted/50">
                     @if (Selectable)
@@ -96,6 +96,7 @@
                     {
                         <th class="@HeaderCellClass(col)"
                             style="@(col.Width is not null ? $"width:{col.Width}" : "")"
+                            aria-sort="@GetAriaSort(col)"
                             @onclick="() => HandleSort(col)">
                             <div class="flex items-center gap-1.5">
                                 <span>@col.Header</span>
@@ -130,7 +131,7 @@
                 else if (_pagedItems.Count == 0)
                 {
                     <tr>
-                        <td colspan="@(VisibleColumns.Count + (Selectable ? 1 : 0))" class="px-4 py-16 text-center">
+                        <td colspan="@(VisibleColumns.Count + (Selectable ? 1 : 0))" class="px-4 py-16 text-center" role="status">
                             <div class="flex flex-col items-center gap-3">
                                 <svg class="size-12 text-muted-foreground/40" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
@@ -170,14 +171,15 @@
     </div>
 
     @* ─── Footer / Pagination ────────────── *@
-    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 px-4 py-3 text-sm text-muted-foreground">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-t border-border/30 px-4 py-3 text-sm text-muted-foreground relative">
         <div class="flex items-center gap-2">
             <span>Rows per page</span>
             <div class="w-[70px]">
                 <GzSelect Options="@_pageSizeSelectOptions"
                           Value="@_effectivePageSize.ToString()"
                           ValueChanged="HandlePageSizeSelect"
-                          Size="SelectSize.Sm" />
+                          Size="ComponentSize.Sm"
+                          OpenUp="true" />
             </div>
         </div>
 
@@ -432,6 +434,13 @@
         2 => "px-5 py-4",
         _ => "px-4 py-2.5",
     };
+
+    private string GetAriaSort(DataTableColumn<TItem> col)
+    {
+        if (!col.Sortable) return "none";
+        if (_sortColumn != col || _sortDirection == SortDirection.None) return "none";
+        return _sortDirection == SortDirection.Ascending ? "ascending" : "descending";
+    }
 
     // ─── CSV Export ─────────────────────────────────
     private void ExportCsv()

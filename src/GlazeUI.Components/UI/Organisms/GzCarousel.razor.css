@@ -5,6 +5,8 @@
     -ms-overflow-style: none;   /* IE/Edge */
     scrollbar-width: none;      /* Firefox */
     -webkit-overflow-scrolling: touch; /* iOS momentum scroll */
+    overscroll-behavior-x: contain; /* Prevent scroll chaining to page */
+    touch-action: pan-x;        /* Constrain touch to horizontal only */
 }
 
 ::deep .gz-carousel-track::-webkit-scrollbar {

@@ -26,12 +26,12 @@ public class ComponentRenderTests : BunitContext
     }
 
     [Theory]
-    [InlineData(ButtonVariant.Secondary, "bg-secondary")]
-    [InlineData(ButtonVariant.Destructive, "bg-destructive")]
-    [InlineData(ButtonVariant.Outline, "border")]
-    [InlineData(ButtonVariant.Ghost, "hover:bg-accent")]
-    [InlineData(ButtonVariant.Link, "underline-offset")]
-    public void Button_Variants_RenderCorrectClasses(ButtonVariant variant, string expectedClass)
+    [InlineData(ComponentVariant.Secondary, "bg-secondary")]
+    [InlineData(ComponentVariant.Destructive, "bg-destructive")]
+    [InlineData(ComponentVariant.Outline, "border")]
+    [InlineData(ComponentVariant.Ghost, "hover:bg-accent")]
+    [InlineData(ComponentVariant.Link, "underline-offset")]
+    public void Button_Variants_RenderCorrectClasses(ComponentVariant variant, string expectedClass)
     {
         var cut = Render<GzButton>(p => p
             .Add(b => b.Variant, variant)
@@ -71,7 +71,7 @@ public class ComponentRenderTests : BunitContext
     public void Badge_Outline_RendersWithBorderClass()
     {
         var cut = Render<GzBadge>(p => p
-            .Add(b => b.Variant, BadgeVariant.Outline)
+            .Add(b => b.Variant, ComponentVariant.Outline)
             .AddChildContent("Status"));
         Assert.Contains("border", cut.Find("span").GetAttribute("class"));
     }
