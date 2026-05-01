@@ -68,12 +68,15 @@
                 trackEl.addEventListener('pointerenter', () => { state.paused = true; });
                 trackEl.addEventListener('pointerleave', () => { state.paused = false; });
 
-                // Autoplay
+                // Autoplay — uses trackEl.scrollTo to stay contained (NOT scrollIntoView)
                 if (autoplay && interval > 0) {
                     state.autoTimer = setInterval(() => {
                         if (state.paused) return;
                         var next = (state.activeIndex + 1) % slides.length;
-                        slides[next]?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                        var slide = slides[next];
+                        if (slide) {
+                            trackEl.scrollTo({ left: slide.offsetLeft - trackEl.offsetLeft, behavior: 'smooth' });
+                        }
                     }, interval);
                 }
             },
@@ -81,7 +84,9 @@
                 var trackEl = document.querySelector('[data-gz-carousel="' + id + '"]');
                 if (!trackEl) return;
                 var slide = trackEl.children[index];
-                if (slide) slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                if (slide) {
+                    trackEl.scrollTo({ left: slide.offsetLeft - trackEl.offsetLeft, behavior: 'smooth' });
+                }
             },
             dispose: function(id) {
                 var s = this._instances[id];
