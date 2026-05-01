@@ -14,17 +14,9 @@
                     @foreach (var s in slices)
                     {
                         <path d="@s.Path" fill="@s.Color"
-                              class="transition-all duration-300 ease-out opacity-90 hover:opacity-100"
-                              stroke="var(--color-background)" stroke-width="2" />
-                    }
-                    @foreach (var s in slices)
-                    {
-                        <foreignObject x="@((s.MidX - 16).ToString(Inv))" y="@((s.MidY - 16).ToString(Inv))"
-                                       width="32" height="32" style="overflow:visible">
-                            <div data-chart-label="@s.Label" data-chart-value="@s.Value.ToString("N0") (@s.Pct.ToString("F1")%)"
-                                 style="width:32px;height:32px;position:relative;overflow:visible;"
-                                 class="cursor-pointer"></div>
-                        </foreignObject>
+                              class="transition-all duration-300 ease-out opacity-90 hover:opacity-100 cursor-pointer"
+                              stroke="var(--color-background)" stroke-width="2"
+                              data-chart-label="@s.Label" data-chart-value="@s.Value.ToString("N0") (@s.Pct.ToString("F1")%)" data-chart-color="@s.Color" />
                     }
                 </svg>
 
@@ -85,7 +77,7 @@
         "var(--color-chart-4)", "var(--color-chart-5)"
     };
 
-    private record struct Slice(string Path, string Color, string Label, double Value, double Pct, double MidX, double MidY);
+    private record struct Slice(string Path, string Color, string Label, double Value, double Pct);
 
     private List<Slice> ComputeSlices(double total)
     {
@@ -107,10 +99,7 @@
             var color = d.Color ?? ChartColors[i % ChartColors.Length];
 
             var path = BuildArcPath(cx, cy, outerR, innerR, startAngle, endAngle);
-            var midAngle = startAngle + sweep / 2;
-            var midR = (outerR + innerR) / 2;
-            var mid = PolarToCart(cx, cy, midR, midAngle);
-            slices.Add(new Slice(path, color, d.Label, d.Value, pct, mid.x, mid.y));
+            slices.Add(new Slice(path, color, d.Label, d.Value, pct));
             startAngle = endAngle;
         }
         return slices;

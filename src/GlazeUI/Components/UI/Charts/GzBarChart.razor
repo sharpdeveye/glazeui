@@ -48,13 +48,8 @@
                     <rect x="@bx.ToString(Inv)" y="@by.ToString(Inv)"
                           width="@barW.ToString(Inv)" height="@barH.ToString(Inv)"
                           rx="@BarRadius" fill="@color"
-                          class="transition-all duration-300 ease-out opacity-90 hover:opacity-100" />
-                    <foreignObject x="@bx.ToString(Inv)" y="@by.ToString(Inv)"
-                                   width="@barW.ToString(Inv)" height="@barH.ToString(Inv)" style="overflow:visible">
-                        <div data-chart-label="@d.Label" data-chart-value="@d.Value.ToString("N0")"
-                             style="width:100%;height:100%;position:relative;overflow:visible;"
-                             class="cursor-pointer"></div>
-                    </foreignObject>
+                          data-chart-label="@d.Label" data-chart-value="@d.Value.ToString("N1")" data-chart-color="@color"
+                          class="transition-all duration-300 ease-out opacity-90 hover:opacity-100 cursor-pointer" />
 
                     @if (ShowValues)
                     {
@@ -76,13 +71,8 @@
                     <rect x="@bx.ToString(Inv)" y="@by.ToString(Inv)"
                           width="@barW.ToString(Inv)" height="@barH.ToString(Inv)"
                           rx="@BarRadius" fill="@color"
-                          class="transition-all duration-300 ease-out opacity-90 hover:opacity-100" />
-                    <foreignObject x="@bx.ToString(Inv)" y="@by.ToString(Inv)"
-                                   width="@barW.ToString(Inv)" height="@barH.ToString(Inv)" style="overflow:visible">
-                        <div data-chart-label="@d.Label" data-chart-value="@d.Value.ToString("N0")"
-                             style="width:100%;height:100%;position:relative;overflow:visible;"
-                             class="cursor-pointer"></div>
-                    </foreignObject>
+                          data-chart-label="@d.Label" data-chart-value="@d.Value.ToString("N1")" data-chart-color="@color"
+                          class="transition-all duration-300 ease-out opacity-90 hover:opacity-100 cursor-pointer" />
 
                     @if (ShowLabels)
                     {
