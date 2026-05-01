@@ -77,9 +77,6 @@
     /// <summary>Whether the select is disabled.</summary>
     [Parameter] public bool Disabled { get; set; }
 
-    /// <summary>Open dropdown upward instead of downward.</summary>
-    [Parameter] public bool OpenUp { get; set; }
-
     /// <summary>Size preset — Default (h-10) or Sm (h-9).</summary>
     [Parameter] public ComponentSize Size { get; set; } = ComponentSize.Md;
 
@@ -117,14 +114,10 @@
         _isOpen ? "rotate-180" : ""
     );
 
-    private string DropdownClass => Tw.Merge(
-        "absolute z-50 w-full overflow-hidden rounded-md border border-border/50 bg-popover p-1",
-        "text-popover-foreground shadow-lg max-h-60 overflow-y-auto",
-        "animate-in fade-in-0 zoom-in-95 duration-150",
-        OpenUp
-            ? "bottom-full mb-1 slide-in-from-bottom-2"
-            : "mt-1 slide-in-from-top-2"
-    );
+    private const string DropdownClass =
+        "absolute z-50 mt-1 w-full overflow-hidden rounded-md border border-border/50 bg-popover p-1 " +
+        "text-popover-foreground shadow-lg max-h-60 overflow-y-auto " +
+        "animate-in fade-in-0 zoom-in-95 slide-in-from-top-2 duration-150";
 
     private string GetOptionClass(bool isSelected, bool isHighlighted) => Tw.Merge(
         "relative flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-sm cursor-pointer",

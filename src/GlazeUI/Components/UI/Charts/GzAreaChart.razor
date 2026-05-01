@@ -1,86 +1,116 @@
 @* GzAreaChart — Multi-series line chart with gradient fills.
-   Pure SVG. Supports curved/linear lines, dots, grid, labels. *@
+   Pure SVG. Supports curved/linear lines, dots, grid, labels.
+   Self-contained tooltips via HTML overlay. *@
 
 <div @attributes="GetFilteredAttributes()" class="@ComputedClass">
     @if (Series is not null && Series.Count > 0 && Series[0].Values.Count > 0)
     {
         var m = ComputeMetrics();
 
-        <svg width="100%" height="@Height" viewBox="0 0 @m.SvgW @m.SvgH"
-             preserveAspectRatio="xMidYMid meet" role="img" aria-label="@AriaLabel">
+        <div class="relative w-full">
+            <svg class="block w-full" viewBox="0 0 @m.SvgW @m.SvgH"
+                 preserveAspectRatio="xMidYMid meet" role="img" aria-label="@AriaLabel">
 
-            <defs>
-                @for (var si = 0; si < Series.Count; si++)
+                <defs>
+                    @for (var si = 0; si < Series.Count; si++)
+                    {
+                        var gradId = $"{_uid}-grad-{si}";
+                        var color = Series[si].Color ?? ChartColors[si % ChartColors.Length];
+                        <linearGradient id="@gradId" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="@color" stop-opacity="0.25" />
+                            <stop offset="100%" stop-color="@color" stop-opacity="0.02" />
+                        </linearGradient>
+                    }
+                </defs>
+
+                @* Grid *@
+                @if (ShowGrid)
                 {
-                    var gradId = $"{_uid}-grad-{si}";
-                    var color = Series[si].Color ?? ChartColors[si % ChartColors.Length];
-                    <linearGradient id="@gradId" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="@color" stop-opacity="0.25" />
-                        <stop offset="100%" stop-color="@color" stop-opacity="0.02" />
-                    </linearGradient>
+                    @for (var g = 0; g <= 4; g++)
+                    {
+                        var gy = m.PlotY + m.PlotH * g / 4.0;
+                        <line x1="@m.PlotX.ToString(Inv)" y1="@gy.ToString(Inv)"
+                              x2="@((m.PlotX + m.PlotW).ToString(Inv))" y2="@gy.ToString(Inv)"
+                              stroke="var(--color-border)" stroke-opacity="0.3" stroke-dasharray="4 4" />
+                    }
                 }
-            </defs>
 
-            @* Grid *@
-            @if (ShowGrid)
-            {
-                @for (var g = 0; g <= 4; g++)
+                @* X-axis labels *@
+                @if (ShowLabels && Labels is not null)
                 {
-                    var gy = m.PlotY + m.PlotH * g / 4.0;
-                    <line x1="@m.PlotX.ToString(Inv)" y1="@gy.ToString(Inv)"
-                          x2="@((m.PlotX + m.PlotW).ToString(Inv))" y2="@gy.ToString(Inv)"
-                          stroke="var(--color-border)" stroke-opacity="0.3" stroke-dasharray="4 4" />
+                    var labelStep = Math.Max(1, Labels.Count / 6);
+                    @for (var i = 0; i < Labels.Count; i += labelStep)
+                    {
+                        var lx = m.PlotX + (m.PlotW * i / Math.Max(1, Labels.Count - 1));
+                        @SvgText(lx.ToString(Inv), (m.PlotY + m.PlotH + 16).ToString(Inv), "middle", TruncateLabel(Labels[i], 6))
+                    }
                 }
-            }
 
-            @* X-axis labels *@
-            @if (ShowLabels && Labels is not null)
-            {
-                var labelStep = Math.Max(1, Labels.Count / 6);
-                @for (var i = 0; i < Labels.Count; i += labelStep)
-                {
-                    var lx = m.PlotX + (m.PlotW * i / Math.Max(1, Labels.Count - 1));
-                    @SvgText(lx.ToString(Inv), (m.PlotY + m.PlotH + 16).ToString(Inv), "middle", TruncateLabel(Labels[i], 6))
-                }
-            }
-
-            @* Series: area fills, then lines, then dots (z-order) *@
-            @for (var si = 0; si < Series.Count; si++)
-            {
-                var s = Series[si];
-                var pts = ComputeSeriesPoints(s, m);
-                var color = s.Color ?? ChartColors[si % ChartColors.Length];
-                var gradId = $"{_uid}-grad-{si}";
-
-                @* Area fill *@
-                <path d="@BuildAreaPath(pts, m)" fill="url(#@gradId)"
-                      class="transition-all duration-500 ease-out" />
-
-                @* Line *@
-                <path d="@BuildLinePath(pts)" fill="none"
-                      stroke="@color" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      class="transition-all duration-500 ease-out" />
-            }
-
-            @* Dots (rendered last for z-index) *@
-            @if (ShowDots)
-            {
+                @* Series: area fills, then lines, then dots (z-order) *@
                 @for (var si = 0; si < Series.Count; si++)
                 {
                     var s = Series[si];
                     var pts = ComputeSeriesPoints(s, m);
                     var color = s.Color ?? ChartColors[si % ChartColors.Length];
+                    var gradId = $"{_uid}-grad-{si}";
 
-                    @foreach (var p in pts)
+                    @* Area fill *@
+                    <path d="@BuildAreaPath(pts, m)" fill="url(#@gradId)"
+                          class="transition-all duration-500 ease-out" />
+
+                    @* Line *@
+                    <path d="@BuildLinePath(pts)" fill="none"
+                          stroke="@color" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                          class="transition-all duration-500 ease-out" />
+                }
+
+                @* Dots (rendered last for z-index) *@
+                @if (ShowDots)
+                {
+                    @for (var si = 0; si < Series.Count; si++)
                     {
-                        <circle cx="@p.X.ToString(Inv)" cy="@p.Y.ToString(Inv)"
-                                r="3" fill="var(--color-background)" stroke="@color" stroke-width="2"
-                                data-chart-label="@($"{s.Name} — {p.Label}")" data-chart-value="@p.Val.ToString("N1")" data-chart-color="@color"
-                                class="transition-all duration-200 ease-out opacity-70 hover:opacity-100 cursor-pointer" />
+                        var s = Series[si];
+                        var pts = ComputeSeriesPoints(s, m);
+                        var color = s.Color ?? ChartColors[si % ChartColors.Length];
+
+                        @foreach (var p in pts)
+                        {
+                            <circle cx="@p.X.ToString(Inv)" cy="@p.Y.ToString(Inv)"
+                                    r="3" fill="var(--color-background)" stroke="@color" stroke-width="2"
+                                    class="transition-all duration-200 ease-out" />
+                        }
                     }
                 }
+            </svg>
+
+            @* ─── HTML Tooltip Overlay ──────────────── *@
+            @if (ShowDots)
+            {
+                <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+                    @for (var si = 0; si < Series.Count; si++)
+                    {
+                        var s = Series[si];
+                        var pts = ComputeSeriesPoints(s, m);
+                        var color = s.Color ?? ChartColors[si % ChartColors.Length];
+
+                        @foreach (var p in pts)
+                        {
+                            var leftPct = (p.X / m.SvgW * 100).ToString(Inv);
+                            var topPct = (p.Y / m.SvgH * 100).ToString(Inv);
+
+                            <div class="group absolute pointer-events-auto"
+                                 style="left: @(leftPct)%; top: @(topPct)%; transform: translate(-50%, -50%);">
+                                <div class="size-5 cursor-pointer rounded-full"></div>
+                                <div role="tooltip"
+                                     class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md invisible opacity-0 transition-all duration-150 ease-out group-hover:visible group-hover:opacity-100 z-50">
+                                    <span class="inline-block size-2 rounded-full me-1.5 align-middle" style="background-color: @color;"></span>@s.Name — @p.Label: @FormatValue(p.Val)
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
             }
-        </svg>
+        </div>
 
         @* Legend *@
         @if (ShowLegend && Series.Count > 1)
@@ -96,6 +126,13 @@
                 }
             </div>
         }
+    }
+    else
+    {
+        @* Empty state *@
+        <div class="flex items-center justify-center text-sm text-muted-foreground" style="height: @(Height)px;">
+            No data
+        </div>
     }
 </div>
 
@@ -138,7 +175,7 @@
         var padLeft = 10.0;
         var padBottom = ShowLabels ? 28.0 : 8.0;
         var padTop = 8.0;
-        var svgW = 500.0;
+        var svgW = 600.0;
         var plotW = svgW - padLeft - 10;
         var plotH = Height - padTop - padBottom;
         return new(svgW, Height, padLeft, padTop, plotW, plotH, minVal, maxVal, range);
@@ -199,6 +236,12 @@
     {
         if (label.Length <= max) return label;
         return label[..(max - 1)] + "…";
+    }
+
+    private static string FormatValue(double val)
+    {
+        if (Math.Abs(val) >= 1000) return val.ToString("N0");
+        return val.ToString("G4");
     }
 
     private string ComputedClass => Tw.Merge("w-full", GetUserClass());

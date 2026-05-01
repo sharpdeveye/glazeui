@@ -1,5 +1,5 @@
 @* GzDonutChart — Pie / Donut ring chart with legend and center content.
-   Pure SVG arcs rendered from C#. CSS-only hover state. *@
+   Pure SVG arcs rendered from C#. Self-contained HTML tooltips. *@
 
 <div @attributes="GetFilteredAttributes()" class="@ComputedClass">
     @if (Data is not null && Data.Count > 0)
@@ -14,16 +14,41 @@
                     @foreach (var s in slices)
                     {
                         <path d="@s.Path" fill="@s.Color"
-                              class="transition-all duration-300 ease-out opacity-90 hover:opacity-100 cursor-pointer"
-                              stroke="var(--color-background)" stroke-width="2"
-                              data-chart-label="@s.Label" data-chart-value="@s.Value.ToString("N0") (@s.Pct.ToString("F1")%)" data-chart-color="@s.Color" />
+                              class="transition-all duration-300 ease-out opacity-90 hover:opacity-100"
+                              stroke="var(--color-background)" stroke-width="2" />
                     }
                 </svg>
+
+                @* Tooltip overlay — positioned over each slice's midpoint *@
+                <div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+                    @foreach (var s in slices)
+                    {
+                        var cx = Size / 2.0;
+                        var cy = Size / 2.0;
+                        var outerR = (Size - 4) / 2.0;
+                        var midR = InnerRadius > 0 ? outerR * (1 + InnerRadius) / 2 : outerR * 0.65;
+                        var midAngle = s.StartDeg + s.SweepDeg / 2;
+                        var rad = midAngle * Math.PI / 180;
+                        var mx = cx + midR * Math.Cos(rad);
+                        var my = cy + midR * Math.Sin(rad);
+                        var leftPct = (mx / Size * 100).ToString(Inv);
+                        var topPct = (my / Size * 100).ToString(Inv);
+
+                        <div class="group absolute pointer-events-auto cursor-pointer"
+                             style="left: @(leftPct)%; top: @(topPct)%; transform: translate(-50%, -50%);">
+                            <div class="size-6 rounded-full"></div>
+                            <div role="tooltip"
+                                 class="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md bg-foreground px-3 py-1.5 text-xs text-background shadow-md invisible opacity-0 transition-all duration-150 ease-out group-hover:visible group-hover:opacity-100 z-50">
+                                <span class="inline-block size-2 rounded-full me-1.5 align-middle" style="background-color: @s.Color;"></span>@s.Label: @s.Value.ToString("N0") (@s.Pct.ToString("F1")%)
+                            </div>
+                        </div>
+                    }
+                </div>
 
                 @* Center content *@
                 @if (CenterContent is not null || ShowTotal)
                 {
-                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                         @if (CenterContent is not null)
                         {
                             @CenterContent
@@ -53,6 +78,13 @@
             }
         </div>
     }
+    else
+    {
+        @* Empty state *@
+        <div class="flex items-center justify-center text-sm text-muted-foreground" style="height: @(Size)px;">
+            No data
+        </div>
+    }
 </div>
 
 @code {
@@ -77,7 +109,7 @@
         "var(--color-chart-4)", "var(--color-chart-5)"
     };
 
-    private record struct Slice(string Path, string Color, string Label, double Value, double Pct);
+    private record struct Slice(string Path, string Color, string Label, double Value, double Pct, double StartDeg, double SweepDeg);
 
     private List<Slice> ComputeSlices(double total)
     {
@@ -98,11 +130,38 @@
             var endAngle = startAngle + sweep;
             var color = d.Color ?? ChartColors[i % ChartColors.Length];
 
-            var path = BuildArcPath(cx, cy, outerR, innerR, startAngle, endAngle);
-            slices.Add(new Slice(path, color, d.Label, d.Value, pct));
+            // Handle single-item full circle edge case
+            string path;
+            if (Data.Count == 1)
+            {
+                path = BuildFullCirclePath(cx, cy, outerR, innerR);
+            }
+            else
+            {
+                path = BuildArcPath(cx, cy, outerR, innerR, startAngle, endAngle);
+            }
+
+            slices.Add(new Slice(path, color, d.Label, d.Value, pct, startAngle, sweep));
             startAngle = endAngle;
         }
         return slices;
+    }
+
+    private string BuildFullCirclePath(double cx, double cy, double outerR, double innerR)
+    {
+        if (InnerRadius == 0)
+        {
+            return $"M{cx.ToString(Inv)},{(cy - outerR).ToString(Inv)} " +
+                   $"A{outerR.ToString(Inv)},{outerR.ToString(Inv)} 0 1 1 {cx.ToString(Inv)},{(cy + outerR).ToString(Inv)} " +
+                   $"A{outerR.ToString(Inv)},{outerR.ToString(Inv)} 0 1 1 {cx.ToString(Inv)},{(cy - outerR).ToString(Inv)} Z";
+        }
+
+        return $"M{cx.ToString(Inv)},{(cy - outerR).ToString(Inv)} " +
+               $"A{outerR.ToString(Inv)},{outerR.ToString(Inv)} 0 1 1 {cx.ToString(Inv)},{(cy + outerR).ToString(Inv)} " +
+               $"A{outerR.ToString(Inv)},{outerR.ToString(Inv)} 0 1 1 {cx.ToString(Inv)},{(cy - outerR).ToString(Inv)} Z " +
+               $"M{cx.ToString(Inv)},{(cy - innerR).ToString(Inv)} " +
+               $"A{innerR.ToString(Inv)},{innerR.ToString(Inv)} 0 1 0 {cx.ToString(Inv)},{(cy + innerR).ToString(Inv)} " +
+               $"A{innerR.ToString(Inv)},{innerR.ToString(Inv)} 0 1 0 {cx.ToString(Inv)},{(cy - innerR).ToString(Inv)} Z";
     }
 
     private string BuildArcPath(double cx, double cy, double outerR, double innerR,
